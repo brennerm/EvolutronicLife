@@ -1,4 +1,5 @@
 from WindowManager import WindowManager
+from MapManager import MapManager
 import curses
 from Option_Pane import OptionPane
 from time import sleep, time
@@ -9,8 +10,7 @@ class ElectronicLife(object):
 
     def __init__(self):
         self._win_manager = WindowManager()
-
-        self._the_map = maps.map_1
+        self._map_manager = MapManager(maps.map_1)
 
     def run(self):
 
@@ -31,14 +31,13 @@ class ElectronicLife(object):
             #self._win_manager["game_win"].addstr(0, 0, 4759*"-")
             #self._win_manager["game_win"].insstr(33, 0, "-")
 
-            i = 0
-            for row in self._the_map:
-                self._win_manager["game_win"].addstr(i, 0, row)
-                i += 1
-
             self._win_manager["info_win"].addstr(0, 0, "time: " + str(time())
                                                  + " steps per s: " + str(round(1/step, 1)))
+            self._map_manager.update()
+            self._map_manager.draw_map(self._win_manager["game_win"])
+
             self._win_manager.update()
+
 
             c = self._win_manager.main_win.getch()
 
