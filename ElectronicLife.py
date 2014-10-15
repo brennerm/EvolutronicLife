@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.4
+
 from WindowManager import WindowManager
 import curses
 from Option_Pane import OptionPane
