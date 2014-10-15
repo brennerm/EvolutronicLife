@@ -1,7 +1,7 @@
 import curses
 
 
-class OptionPane():
+class OptionPane(object):
     def __init__(self, options, width,  pos_y, pos_x):
         if not isinstance(options, list):
             raise ValueError("options is not of type \"list\"")
