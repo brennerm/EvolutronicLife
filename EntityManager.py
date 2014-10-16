@@ -8,6 +8,8 @@ class EntityManager(object):
 
         self._map_manager = map_manager
 
+        self._map_manager = map_manager
+
     @property
     def entities(self):
         return self._entities
