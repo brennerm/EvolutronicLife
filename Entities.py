@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 
 class Entity(object):
@@ -37,6 +37,21 @@ class Grass(Entity):
         super(Grass, self).__init__(pos_y, pos_x)
         self._token = "*"
         self._movable = False
+
+    @staticmethod
+    def reproduce(env):
+        possible_fields = []
+        for row in env:
+            for cell in row:
+                if isinstance(cell, Empty):
+                    possible_fields.append(cell)
+
+        if len(possible_fields) == 0:
+            return None
+
+        new_field = choice(possible_fields)
+
+        return Grass(new_field.pos_y, new_field.pos_x)
 
 
 class Animal(Entity):
