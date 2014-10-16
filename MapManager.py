@@ -5,7 +5,7 @@ from Entities import *
 class MapManager(object):
     def __init__(self, init_map):
         self._map = init_map
-        self._em = EntityManager()
+        self._em = EntityManager(self)
 
         self._map_width = len(init_map[0])
         self._map_height = len(init_map)
@@ -89,9 +89,9 @@ class MapManager(object):
                                       [x][x][x][x][x]
         :return: part of map as two dimensional list
         """
-        length = 2 * scope + 1
+        env = []
 
-        env = [None for y in range(length)]
+        for offset in range(-scope, scope + 1):
+            env.append(self._map[pos_y + offset][(pos_x - scope):(pos_x + scope + 1)])
 
-        for y in range(length):
-            env[y] = self._map[pos_y][(pos_x - scope):(pos_x + scope)]
+        return env
