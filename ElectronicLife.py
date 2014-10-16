@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.4
+
 from WindowManager import WindowManager
 from MapManager import MapManager
 import curses
