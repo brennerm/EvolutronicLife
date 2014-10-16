@@ -15,6 +15,9 @@ class ElectronicLife(object):
         self._map_manager = MapManager(maps.map_1)
 
     def run(self):
+        """
+        the main game loop + some initial configurations
+        """
 
         self._win_manager.init_curses()
 
@@ -30,8 +33,6 @@ class ElectronicLife(object):
             start = time()
 
             self._win_manager.clear()
-            #self._win_manager["game_win"].addstr(0, 0, 4759*"-")
-            #self._win_manager["game_win"].insstr(33, 0, "-")
 
             self._win_manager["info_win"].addstr(0, 0, "time: " + str(time())
                                                  + " steps per s: " + str(round(1/step, 1)))
