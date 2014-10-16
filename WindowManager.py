@@ -13,6 +13,9 @@ class WindowManager(object):
         return self._main_win
 
     def init_curses(self):
+        """
+        starts and configures curses as needed
+        """
         self._main_win = curses.initscr()
         curses.start_color()
         curses.noecho()
@@ -23,20 +26,34 @@ class WindowManager(object):
         self._main_win.refresh()
 
     def deinit_curses(self):
+        """
+        unloads curses
+        """
         curses.nocbreak()
         self._main_win.keypad(0)
         curses.echo()
         curses.endwin()
 
     def add_static_sub_win(self, key, value):
+        """
+        adds a window, which is not updated frequently
+        :param key: name of window
+        :param value: the actual window
+        """
         self._static_sub_wins[key] = value
         value.refresh()
 
     def clear(self):
+        """
+        clears content of all windows
+        """
         for window in self._sub_wins.values():
             window.clear()
 
     def update(self):
+        """
+        updates content of all windows
+        """
         for window in self._sub_wins.values():
             window.refresh()
 
