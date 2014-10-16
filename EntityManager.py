@@ -2,8 +2,9 @@ from Entities import *
 
 
 class EntityManager(object):
-    def __init__(self):
+    def __init__(self, map_manager):
         self._entities = []
+        self._map_manager = map_manager
 
     @property
     def entities(self):
