@@ -30,13 +30,13 @@ class EntityManager(object):
         """
         updates all entities accordingly
         """
-        new_entites = []
+        new_entities = []
         for entity in self._entities:
             if isinstance(entity, Animal):
                 entity.move()
 
-            if isinstance(entity, Grass):
-                new_object = entity.reproduce(self._map_manager.get_env(entity.pos_y, entity.pos_x, 1))
+            if isinstance(entity, Vegetation):
+                new_object = entity.update(self._map_manager.get_env(entity.pos_y, entity.pos_x, 1))
                 if not new_object is None:
-                    new_entites.append(new_object)
-        self._entities.extend(new_entites)
+                    new_entities.append(new_object)
+        self._entities.extend(new_entities)
