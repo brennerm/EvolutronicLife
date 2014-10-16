@@ -41,7 +41,6 @@ class ElectronicLife(object):
 
             self._win_manager.update()
 
-
             c = self._win_manager.main_win.getch()
 
             if c == 265:
