@@ -58,9 +58,21 @@ class WindowManager(object):
             window.refresh()
 
     def __getitem__(self, key):
+        """
+        overloading function for the getting [] operator
+        enables getting sub windows through WindowManager()["main_window"]
+        :param key: key of the window
+        :return:
+        """
         if not key in self._sub_wins:
             raise IndexError("window " + str(key) + " is not available")
         return self._sub_wins[key]
 
     def __setitem__(self, key, value):
+        """
+        overloading function for the setting [] operator
+        enables setting sub windows through WindowManager()["main_window"] = main_window
+        :param key: key of the  window
+        :param value: the actual window
+        """
         self._sub_wins[key] = value
