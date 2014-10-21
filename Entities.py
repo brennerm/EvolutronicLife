@@ -56,6 +56,48 @@ class Animal(Entity):
         self._pos_x += dir_x
 
 
+class Beach(Entity):
+    def __init__(self, pos_y, pos_x):
+        super(Beach, self).__init__(pos_y, pos_x)
+        self._token = ":"
+        self._movable = False
+
+
+class Water(Entity):
+    def __init__(self, pos_y, pos_x):
+        super(Water, self).__init__(pos_y, pos_x)
+        self._token = "~"
+        self._movable = False
+
+        self._toggler = False
+
+    def __str__(self):
+        self._toggler = not self._toggler
+
+        if self._toggler:
+            return self._token
+        else:
+            return " "
+
+
+class AlterWater(Entity):
+    def __init__(self, pos_y, pos_x):
+        super(AlterWater, self).__init__(pos_y, pos_x)
+        self._token = "~"
+        self._movable = False
+
+        self._toggler = True
+
+    def __str__(self):
+
+        self._toggler = not self._toggler
+
+        if self._toggler:
+            return self._token
+        else:
+            return " "
+
+
 class HorizLimitUp(Entity):
     def __init__(self, pos_y, pos_x):
         super(HorizLimitUp, self).__init__(pos_y, pos_x)
@@ -82,6 +124,9 @@ available_entities = {
     " ": Empty,
     "*": Grass,
     "#": Animal,
+    ":": Beach,
+    "~": Water,
+    "∽": AlterWater,
     "_": HorizLimitUp,
     "‾": HorizLimitDown,
     "|": VertLimit
