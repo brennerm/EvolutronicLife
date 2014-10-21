@@ -8,7 +8,7 @@ from time import sleep, time
 import maps
 
 
-class ElectronicLife(object):
+class EvolutronicLife(object):
 
     def __init__(self):
         self._win_manager = WindowManager()
@@ -70,4 +70,4 @@ class ElectronicLife(object):
         return 0
 
 if __name__ == "__main__":
-    ElectronicLife().run()
+    EvolutronicLife().run()
