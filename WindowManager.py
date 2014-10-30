@@ -1,4 +1,5 @@
 import curses
+from Window import Window
 
 
 class WindowManager(object):
@@ -6,7 +7,6 @@ class WindowManager(object):
     def __init__(self):
         self._main_win = None
         self._sub_wins = {}
-        self._static_sub_wins = {}
 
     @property
     def main_win(self):
@@ -25,6 +25,8 @@ class WindowManager(object):
         self._main_win.keypad(1)
         self._main_win.refresh()
 
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
+
     def deinit_curses(self):
         """
         unloads curses
@@ -33,15 +35,6 @@ class WindowManager(object):
         self._main_win.keypad(0)
         curses.echo()
         curses.endwin()
-
-    def add_static_sub_win(self, key, value):
-        """
-        adds a window, which is not updated frequently
-        :param key: name of window
-        :param value: the actual window
-        """
-        self._static_sub_wins[key] = value
-        value.refresh()
 
     def clear(self):
         """
@@ -55,7 +48,7 @@ class WindowManager(object):
         updates content of all windows
         """
         for window in self._sub_wins.values():
-            window.refresh()
+            window.update()
 
     def __getitem__(self, key):
         """
@@ -75,4 +68,6 @@ class WindowManager(object):
         :param key: key of the  window
         :param value: the actual window
         """
+        if not isinstance(value, Window):
+            raise TypeError("window has to be of type Window")
         self._sub_wins[key] = value

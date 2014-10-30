@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.4
 
 from WindowManager import WindowManager
+from Window import Window, OptionPane
 from MapManager import MapManager
 import curses
-from Option_Pane import OptionPane
 from time import sleep, time
 import maps
 
@@ -21,10 +21,9 @@ class EvolutronicLife(object):
 
         self._win_manager.init_curses()
 
-        self._win_manager["info_win"] = curses.newwin(1, 140, 0, 0)
-        self._win_manager["game_win"] = curses.newwin(35, 140, 1, 0)
-        self._win_manager.add_static_sub_win("option_pane",
-                                             OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0).return_option_pane_window())
+        self._win_manager["info_win"] = Window(1, 140, 0, 0)
+        self._win_manager["game_win"] = Window(35, 140, 1, 0)
+        self._win_manager["option_pane"] = OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0)
 
         start_time = time()
         sec_per_step = 0.5
@@ -36,13 +35,13 @@ class EvolutronicLife(object):
 
             self._win_manager.clear()
 
-            self._win_manager["info_win"].addstr(0, 0,
-                                                 "{:5s} {:5.1f}".format('time:', round(time() - start_time, 1))
-                                                 + "{:13s} {:4.1f}".format(' steps per s:', round(1 / sec_per_step, 1))
-                                                 + "{:4s} {:4d}".format(' step:', step))
+            self._win_manager["info_win"].curses_window.addstr(0, 0,
+                                                               "{:5s} {:5.1f}".format('time:', round(time() - start_time, 1))
+                                                               + "{:13s} {:4.1f}".format(' steps per s:', round(1 / sec_per_step, 1))
+                                                               + "{:4s} {:4d}".format(' step:', step))
 
             self._map_manager.update()
-            self._map_manager.draw_map(self._win_manager["game_win"])
+            self._map_manager.draw_map(self._win_manager["game_win"].curses_window)
 
             self._win_manager.update()
 
