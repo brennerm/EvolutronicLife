@@ -77,7 +77,7 @@ class Water(Entity):
         if self._toggler:
             return self._token
         else:
-            return " "
+            return "∽"
 
 
 class AlterWater(Entity):
@@ -95,7 +95,7 @@ class AlterWater(Entity):
         if self._toggler:
             return self._token
         else:
-            return " "
+            return "∽"
 
 
 class HorizLimitTop(Entity):

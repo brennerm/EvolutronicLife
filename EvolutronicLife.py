@@ -27,7 +27,7 @@ class EvolutronicLife(object):
                                              OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0).return_option_pane_window())
 
         start_time = time()
-        step_per_s = 0.5
+        sec_per_step = 0.5
         step = 0
         keep_running = True
         while keep_running:
@@ -38,7 +38,7 @@ class EvolutronicLife(object):
 
             self._win_manager["info_win"].addstr(0, 0,
                                                  "{:5s} {:5.1f}".format('time:', round(time() - start_time, 1))
-                                                 + "{:13s} {:4.1f}".format(' steps per s:', round(1 / step_per_s, 1))
+                                                 + "{:13s} {:4.1f}".format(' steps per s:', round(1 / sec_per_step, 1))
                                                  + "{:4s} {:4d}".format(' step:', step))
 
             self._map_manager.update()
@@ -56,18 +56,18 @@ class EvolutronicLife(object):
                     if c == 268:
                         keep_running = False
             if c == 266:
-                step_per_s = round(step_per_s - 0.1, 1)
-                if step_per_s <= 0:
-                    step_per_s = 0.1
+                sec_per_step = round(sec_per_step - 0.1, 1)
+                if sec_per_step <= 0:
+                    sec_per_step = 0.1
             if c == 267:
-                step_per_s = round(step_per_s + 0.1, 1)
-                if step_per_s > 2:
-                    step_per_s = 2
+                sec_per_step = round(sec_per_step + 0.1, 1)
+                if sec_per_step > 2:
+                    sec_per_step = 2
             if c == 268:
                 keep_running = False
 
-            if time() - start < step_per_s:
-                sleep(step_per_s - (time() - start))
+            if time() - start < sec_per_step:
+                sleep(sec_per_step - (time() - start))
 
         self._win_manager.deinit_curses()
 
