@@ -6,10 +6,6 @@ class EntityManager(object):
         self._entities = []
         self._map_manager = map_manager
 
-        self._map_manager = map_manager
-
-        self._map_manager = map_manager
-
     @property
     def entities(self):
         return self._entities
@@ -36,7 +32,7 @@ class EntityManager(object):
                 entity.move()
 
             if isinstance(entity, Vegetation):
-                new_object = entity.update(self._map_manager.get_env(entity.pos_y, entity.pos_x, 1))
+                new_object = entity.update(self._map_manager)
                 if not new_object is None:
                     new_entities.append(new_object)
         self._entities.extend(new_entities)

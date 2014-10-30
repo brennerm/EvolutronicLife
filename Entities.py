@@ -45,9 +45,20 @@ class Vegetation(Entity):
             self._steps_to_reproduce = randint(3, 7)
             return self.reproduce(env)
 
-    @staticmethod
-    def reproduce(env):
-        pass
+    def reproduce(self, map_manager):
+        env = map_manager.get_env(self.pos_y, self.pos_x, 1)
+        possible_fields = []
+        for row in env:
+            for cell in row:
+                if isinstance(cell, Empty):
+                    possible_fields.append(cell)
+
+        if len(possible_fields) == 0:
+            return None
+
+        new_field = choice(possible_fields)
+
+        return Grass(new_field.pos_y, new_field.pos_x)
 
 
 class Jungle(Vegetation):
@@ -69,20 +80,13 @@ class Jungle(Vegetation):
             self._toggler = not self._toggler
             return self._anim_token
 
-    @staticmethod
-    def reproduce(env):
-        possible_fields = []
-        for row in env:
-            for cell in row:
-                if isinstance(cell, Empty):
-                    possible_fields.append(cell)
 
-        if len(possible_fields) == 0:
-            return None
-
-        new_field = choice(possible_fields)
-
-        return Grass(new_field.pos_y, new_field.pos_x)
+class Bush(Vegetation):
+    def __init__(self, pos_y, pos_x):
+        super(Bush, self).__init__(pos_y, pos_x)
+        self._token = "ʬ"
+        self._movable = False
+        self._lvl = 1
 
 
 class Grass(Vegetation):
@@ -90,21 +94,7 @@ class Grass(Vegetation):
         super(Grass, self).__init__(pos_y, pos_x)
         self._token = "ʷ"
         self._movable = False
-
-    @staticmethod
-    def reproduce(env):
-        possible_fields = []
-        for row in env:
-            for cell in row:
-                if isinstance(cell, Empty):
-                    possible_fields.append(cell)
-
-        if len(possible_fields) == 0:
-            return None
-
-        new_field = choice(possible_fields)
-
-        return Grass(new_field.pos_y, new_field.pos_x)
+        self._lvl = 0
 
 
 class Animal(Entity):
@@ -149,6 +139,7 @@ class VertLimit(Entity):
 available_entities = {
     " ": Empty,
     "ʷ": Grass,
+    "ʬ": Bush,
     "ϒ": Jungle,
     "#": Animal,
     "_": HorizLimitUp,
