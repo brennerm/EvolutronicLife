@@ -28,4 +28,16 @@ class OptionPane(object):
                 raise Exception("given width is not sufficient for displaying all options")
         return opt_win
 
+    def replace_option(self, old_option, new_option):
+
+        i = 0
+        for option in list(self._options):
+
+            if option == old_option:
+                self._options[i] = new_option
+                return
+            i += 1
+
+        raise ValueError("option " + old_option + " is not in option pane")
+
 

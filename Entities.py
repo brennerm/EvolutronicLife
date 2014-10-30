@@ -98,16 +98,16 @@ class AlterWater(Entity):
             return " "
 
 
-class HorizLimitUp(Entity):
+class HorizLimitTop(Entity):
     def __init__(self, pos_y, pos_x):
-        super(HorizLimitUp, self).__init__(pos_y, pos_x)
+        super(HorizLimitTop, self).__init__(pos_y, pos_x)
         self._token = "_"
         self._movable = False
 
 
-class HorizLimitDown(Entity):
+class HorizLimitBottom(Entity):
     def __init__(self, pos_y, pos_x):
-        super(HorizLimitDown, self).__init__(pos_y, pos_x)
+        super(HorizLimitBottom, self).__init__(pos_y, pos_x)
         self._token = "‾"
         self._movable = False
 
@@ -127,7 +127,7 @@ available_entities = {
     ":": Beach,
     "~": Water,
     "∽": AlterWater,
-    "_": HorizLimitUp,
-    "‾": HorizLimitDown,
+    "_": HorizLimitTop,
+    "‾": HorizLimitBottom,
     "|": VertLimit
 }

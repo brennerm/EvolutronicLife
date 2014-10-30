@@ -26,21 +26,25 @@ class EvolutronicLife(object):
         self._win_manager.add_static_sub_win("option_pane",
                                              OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0).return_option_pane_window())
 
-        step = 0.5
+        start_time = time()
+        step_per_s = 0.5
+        step = 0
         keep_running = True
         while keep_running:
-
+            step += 1
             start = time()
 
             self._win_manager.clear()
 
-            self._win_manager["info_win"].addstr(0, 0, "time: " + str(time())
-                                                 + " steps per s: " + str(round(1/step, 1)))
+            self._win_manager["info_win"].addstr(0, 0,
+                                                 "{:5s} {:5.1f}".format('time:', round(time() - start_time, 1))
+                                                 + "{:13s} {:4.1f}".format(' steps per s:', round(1 / step_per_s, 1))
+                                                 + "{:4s} {:4d}".format(' step:', step))
+
             self._map_manager.update()
             self._map_manager.draw_map(self._win_manager["game_win"])
 
             self._win_manager.update()
-
 
             c = self._win_manager.main_win.getch()
 
@@ -52,18 +56,18 @@ class EvolutronicLife(object):
                     if c == 268:
                         keep_running = False
             if c == 266:
-                step = round(step - 0.1, 1)
-                if step <= 0:
-                    step = 0.1
+                step_per_s = round(step_per_s - 0.1, 1)
+                if step_per_s <= 0:
+                    step_per_s = 0.1
             if c == 267:
-                step = round(step + 0.1, 1)
-                if step > 2:
-                    step = 2
+                step_per_s = round(step_per_s + 0.1, 1)
+                if step_per_s > 2:
+                    step_per_s = 2
             if c == 268:
                 keep_running = False
 
-            if time() - start < step:
-                sleep(step - (time() - start))
+            if time() - start < step_per_s:
+                sleep(step_per_s - (time() - start))
 
         self._win_manager.deinit_curses()
 
