@@ -5,14 +5,13 @@ from Window import Window, OptionPane
 from MapManager import MapManager
 import curses
 from time import sleep, time
-import maps
 
 
 class EvolutronicLife(object):
 
     def __init__(self):
         self._win_manager = WindowManager()
-        self._map_manager = MapManager(maps.map_1)
+        self._map_manager = MapManager('map1')
 
     def run(self):
         """
