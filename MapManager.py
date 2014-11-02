@@ -3,8 +3,8 @@ from Entities import *
 
 
 class MapManager(object):
-    def __init__(self, map_file):
-        map_path = 'maps/' + map_file + '.map'
+    def __init__(self, map_filename):
+        map_path = 'maps/' + map_filename + '.map'
         self._map = [list(row.rstrip('\n')) for row in open(map_path)]
         self._em = EntityManager(self)
 

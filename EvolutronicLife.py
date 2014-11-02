@@ -5,13 +5,14 @@ from Window import Window, OptionPane
 from MapManager import MapManager
 import curses
 from time import sleep, time
+from argparse import ArgumentParser
 
 
 class EvolutronicLife(object):
 
-    def __init__(self):
+    def __init__(self, map_filename):
         self._win_manager = WindowManager()
-        self._map_manager = MapManager('map1')
+        self._map_manager = MapManager(map_filename)
 
     def run(self):
         """
@@ -71,5 +72,13 @@ class EvolutronicLife(object):
 
         return 0
 
+
 if __name__ == "__main__":
-    EvolutronicLife().run()
+    parser = ArgumentParser(description='Evolutronic Life')
+    parser.add_argument(
+        '-m', '--map', default='map1', choices=['map1'],
+        help='The map with which to start the simulation'
+    )
+    args = parser.parse_args()
+    
+    EvolutronicLife(args.map).run()
