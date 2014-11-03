@@ -1,5 +1,5 @@
-from EntityManager import EntityManager
-from Entities import *
+from lib.EntityManager import EntityManager
+from lib.Entities import *
 
 
 class MapManager(object):

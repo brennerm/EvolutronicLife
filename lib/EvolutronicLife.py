@@ -1,11 +1,8 @@
-#!/usr/bin/env python3.4
-
-from WindowManager import WindowManager
-from Window import Window, OptionPane
-from MapManager import MapManager
+from lib.WindowManager import WindowManager
+from lib.Window import Window, OptionPane
+from lib.MapManager import MapManager
 import curses
 from time import sleep, time
-from argparse import ArgumentParser
 
 
 class EvolutronicLife(object):
@@ -71,14 +68,3 @@ class EvolutronicLife(object):
         self._win_manager.deinit_curses()
 
         return 0
-
-
-if __name__ == "__main__":
-    parser = ArgumentParser(description='Evolutronic Life')
-    parser.add_argument(
-        '-m', '--map', default='map1', choices=['map1'],
-        help='The map with which to start the simulation'
-    )
-    args = parser.parse_args()
-    
-    EvolutronicLife(args.map).run()
