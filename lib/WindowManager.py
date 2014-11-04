@@ -1,5 +1,5 @@
 import curses
-from Window import Window
+from lib.Window import Window
 
 
 class WindowManager(object):

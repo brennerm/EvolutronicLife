@@ -1,18 +1,15 @@
-#!/usr/bin/env python3.4
-
-from WindowManager import WindowManager
-from Window import Window, OptionPane
-from MapManager import MapManager
+from lib.WindowManager import WindowManager
+from lib.Window import Window, OptionPane
+from lib.MapManager import MapManager
 import curses
 from time import sleep, time
-import maps
 
 
 class EvolutronicLife(object):
 
-    def __init__(self):
+    def __init__(self, map_filename):
         self._win_manager = WindowManager()
-        self._map_manager = MapManager(maps.map_1)
+        self._map_manager = MapManager(map_filename)
 
     def run(self):
         """
@@ -71,6 +68,3 @@ class EvolutronicLife(object):
         self._win_manager.deinit_curses()
 
         return 0
-
-if __name__ == "__main__":
-    EvolutronicLife().run()
