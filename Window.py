@@ -30,9 +30,6 @@ class OptionPane(Window):
         index = 1
         offset = 0
 
-        with open("log", "a") as fd:
-            fd.write("option pane update")
-
         for option in self._options:
             try:
                 self._curses_window.addstr(0, offset, "F" + str(index), curses.A_BOLD)
