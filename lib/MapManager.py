@@ -1,14 +1,15 @@
-from EntityManager import EntityManager
-from Entities import *
+from lib.EntityManager import EntityManager
+from lib.Entities import *
 
 
 class MapManager(object):
-    def __init__(self, init_map):
-        self._map = init_map
+    def __init__(self, map_filename):
+        map_path = 'maps/' + map_filename + '.map'
+        self._map = [list(row.rstrip('\n')) for row in open(map_path)]
         self._em = EntityManager(self)
 
-        self._map_width = len(init_map[0])
-        self._map_height = len(init_map)
+        self._map_width = len(self._map[1])
+        self._map_height = len(self._map)
 
         self.parse_map()
 

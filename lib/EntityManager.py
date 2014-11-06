@@ -1,4 +1,4 @@
-from Entities import *
+from lib.Entities import *
 
 
 class EntityManager(object):

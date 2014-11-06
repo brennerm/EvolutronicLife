@@ -3,23 +3,18 @@
 from threading import Thread
 from time import sleep, time
 
-step_speed = 0.5
-keep_running = True
-
 
 class KeyListener(Thread):
 
     def __init__(self, window):
         Thread.__init__(self)
         self._window = window
+        self.step_speed = 0.5
+        self.keep_running = True
 
     #@property
     def run(self):
-
-        global step_speed
-        global keep_running
-
-        while keep_running:
+        while self.keep_running:
 
             c = self._window.getch()
 
@@ -29,20 +24,20 @@ class KeyListener(Thread):
                     if c == 265:
                         break
                     if c == 268:
-                        keep_running = False
+                        self.keep_running = False
             if c == 266:
-                step_speed = round(step_speed - 0.1, 1)
-                if step_speed <= 0:
-                    step_speed = 0.1
+                self.step_speed = round(self.step_speed - 0.1, 1)
+                if self.step_speed <= 0:
+                    self.step_speed = 0.1
             if c == 267:
-                step_speed = round(step_speed + 0.1, 1)
-                if step_speed > 2:
-                    step_speed = 2
+                self.step_speed = round(self.step_speed + 0.1, 1)
+                if self.step_speed > 2:
+                    self.step_speed = 2
             if c == 268:
                 #global keep_running
-                keep_running = False
+                self.keep_running = False
                 with open("log", "a") as f:
-                    f.write(str(keep_running))
+                    f.write(str(self.keep_running))
 
             sleep(0.01)
 
