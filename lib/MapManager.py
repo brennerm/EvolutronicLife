@@ -47,6 +47,10 @@ class MapManager(object):
         for entity in self._em.entities:
             if isinstance(entity, Empty):
                 continue
+            if entity.pos_y > 34 or entity.pos_y < 0 or entity.pos_x > 139 or entity.pos_x < 0:
+                continue
+            if entity.pos_y == 34 and entity.pos_x == 139:
+                continue
             new_map[entity.pos_y][entity.pos_x] = entity
 
         self._map = new_map
