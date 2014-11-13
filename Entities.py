@@ -63,14 +63,6 @@ class Vegetation(Entity):
     def reproduce(self, map_manager):
         env = map_manager.get_env(self.pos_y, self.pos_x, 1)
 
-        if self._lvl == 2:
-            with open("log", "a") as f:
-                for row in env:
-                    for cell in row:
-                        f.write(str(cell))
-                    f.write("\n")
-                f.write("\n")
-
         possible_fields = []
         for row in env:
             for cell in row:
