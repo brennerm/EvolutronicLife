@@ -54,6 +54,8 @@ class MapManager(object):
                 continue
             if entity.pos_y == 34 and entity.pos_x == 139:
                 continue
+            if entity.pos_y == 0 and entity.pos_x == 139:
+                continue
             new_map[entity.pos_y][entity.pos_x] = entity
 
         self._map = new_map

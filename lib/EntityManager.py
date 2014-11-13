@@ -24,6 +24,9 @@ class EntityManager(object):
             "ʬ": Vegetation(1, pos_y, pos_x),
             "Y": Vegetation(2, pos_y, pos_x),
             "#": Animal(pos_y, pos_x),
+            "~": Water(pos_y, pos_x),
+            "∽": AlterWater(pos_y, pos_x),
+            ":": Beach(pos_y, pos_x),
             "_": HorizLimitTop(pos_y, pos_x),
             "‾": HorizLimitBottom(pos_y, pos_x),
             "|": VertLimit(pos_y, pos_x)

@@ -1,5 +1,5 @@
 from random import randint, choice
-import globals
+import lib.globals as globals
 
 
 class Entity(object):
