@@ -1,5 +1,6 @@
 from EntityManager import EntityManager
 from Entities import *
+import globals
 
 
 class MapManager(object):
@@ -40,11 +41,16 @@ class MapManager(object):
         tells the entity manager to update all entities and applies all changes to the map
         """
         self._em.update()
+        globals.anim_toggler = not globals.anim_toggler
 
         new_map = self.create_new_map()
 
         for entity in self._em.entities:
             if isinstance(entity, Empty):
+                continue
+            if entity.pos_y > 34 or entity.pos_y < 0 or entity.pos_x > 139 or entity.pos_x < 0:
+                continue
+            if entity.pos_y == 34 and entity.pos_x == 139:
                 continue
             new_map[entity.pos_y][entity.pos_x] = entity
 
@@ -57,9 +63,7 @@ class MapManager(object):
         """
         i = 0
         for row in self._map:
-            line = ""
-            for cell in row:
-                    line += str(cell)
+            line = "".join(str(cell) for cell in row)
             window.addstr(i, 0, line)
             i += 1
 

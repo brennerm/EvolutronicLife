@@ -17,10 +17,22 @@ class EntityManager(object):
         :param pos_y: y-coordinate of Entity
         :param pos_x: x-coordinate of Entity
         """
+
+        available_entities = {
+            " ": Empty(pos_y, pos_x),
+            "ʷ": Vegetation(0, pos_y, pos_x),
+            "ʬ": Vegetation(1, pos_y, pos_x),
+            "Y": Vegetation(2, pos_y, pos_x),
+            "#": Animal(pos_y, pos_x),
+            "_": HorizLimitUp(pos_y, pos_x),
+            "‾": HorizLimitDown(pos_y, pos_x),
+            "|": VertLimit(pos_y, pos_x)
+        }
+
         try:
-            self._entities.append((available_entities[token])(pos_y, pos_x))
+            self._entities.append(available_entities[token])
         except KeyError:
-            raise KeyError(token + " is no valid entity! check your map, boon!!!")
+            raise KeyError("your map contains this unexpected token: " + token)
 
     def update(self):
         """

@@ -1,4 +1,5 @@
 from random import randint, choice
+import globals
 
 
 class Entity(object):
@@ -33,11 +34,21 @@ class Empty(Entity):
 
 
 class Vegetation(Entity):
-    def __init__(self, pos_y, pos_x):
+    def __init__(self, lvl, pos_y, pos_x):
         super(Vegetation, self).__init__(pos_y, pos_x)
 
-        self._lvl = 0
+        self._tokens = ["ʷ", "ʬ", "Y"]
+        self._anim_tokens = ["ʷ", "ʬ", "ϒ"]
+
+        self._lvl = lvl
         self._steps_to_reproduce = randint(3, 7)
+        self.chance_to_evolve = 1
+
+    def __str__(self):
+        if globals.anim_toggler:
+            return self._tokens[self._lvl]
+        else:
+            return self._anim_tokens[self._lvl]
 
     def update(self, env):
         self._steps_to_reproduce -= 1
@@ -54,47 +65,22 @@ class Vegetation(Entity):
                     possible_fields.append(cell)
 
         if len(possible_fields) == 0:
-            return None
+            return self.evolve(env)
 
         new_field = choice(possible_fields)
 
-        return Grass(new_field.pos_y, new_field.pos_x)
+        return Vegetation(0, new_field.pos_y, new_field.pos_x)
 
+    def evolve(self, env):
+        if self._lvl == 2:
+            return None
+        chance = randint(0, 100)
+        if self.chance_to_evolve < chance:
+            self.chance_to_evolve += 1
+            return None
 
-class Jungle(Vegetation):
-    def __init__(self, pos_y, pos_x):
-        super(Jungle, self).__init__(pos_y, pos_x)
-        self._token = "ϒ"
-
-        self._movable = False
-        self._lvl = 2
-
-        self._anim_token = "Υ"
-        self._toggler = True
-
-    def __str__(self):
-        if self._toggler:
-            self._toggler = not self._toggler
-            return self._token
-        else:
-            self._toggler = not self._toggler
-            return self._anim_token
-
-
-class Bush(Vegetation):
-    def __init__(self, pos_y, pos_x):
-        super(Bush, self).__init__(pos_y, pos_x)
-        self._token = "ʬ"
-        self._movable = False
-        self._lvl = 1
-
-
-class Grass(Vegetation):
-    def __init__(self, pos_y, pos_x):
-        super(Grass, self).__init__(pos_y, pos_x)
-        self._token = "ʷ"
-        self._movable = False
-        self._lvl = 0
+        if all(isinstance(cell, Vegetation) for row in env for cell in row):
+            return Vegetation(min(self._lvl + 1, 2), self.pos_y, self.pos_x)
 
 
 class Animal(Entity):
@@ -133,16 +119,3 @@ class VertLimit(Entity):
         super(VertLimit, self).__init__(pos_y, pos_x)
         self._token = "|"
         self._movable = False
-
-
-
-available_entities = {
-    " ": Empty,
-    "ʷ": Grass,
-    "ʬ": Bush,
-    "ϒ": Jungle,
-    "#": Animal,
-    "_": HorizLimitUp,
-    "‾": HorizLimitDown,
-    "|": VertLimit
-}
