@@ -34,6 +34,14 @@ class EntityManager(object):
         except KeyError:
             raise KeyError("your map contains this unexpected token: " + token)
 
+    def replace_entity(self, new_entity):
+
+        for entity in self._entities:
+            if (entity.pos_y == new_entity.pos_y) and (entity.pos_x == new_entity.pos_x):
+                self._entities.remove(entity)
+
+        self._entities.append(new_entity)
+
     def update(self):
         """
         updates all entities accordingly
@@ -47,4 +55,5 @@ class EntityManager(object):
                 new_object = entity.update(self._map_manager)
                 if not new_object is None:
                     new_entities.append(new_object)
-        self._entities.extend(new_entities)
+        for new_entity in new_entities:
+            self.replace_entity(new_entity)

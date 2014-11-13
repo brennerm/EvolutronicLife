@@ -50,6 +50,10 @@ class Vegetation(Entity):
         else:
             return self._anim_tokens[self._lvl]
 
+    @property
+    def lvl(self):
+        return self._lvl
+
     def update(self, env):
         self._steps_to_reproduce -= 1
         if self._steps_to_reproduce == 0:
@@ -79,7 +83,7 @@ class Vegetation(Entity):
             self.chance_to_evolve += 1
             return None
 
-        if all(isinstance(cell, Vegetation) for row in env for cell in row):
+        if all(isinstance(cell, Vegetation) and cell.lvl >= max(self._lvl - 1, 0) for row in env for cell in row):
             return Vegetation(min(self._lvl + 1, 2), self.pos_y, self.pos_x)
 
 
