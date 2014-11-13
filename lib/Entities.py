@@ -1,5 +1,5 @@
 from random import randint, choice
-import lib.globals as globals
+import lib.globals as global_vars
 
 
 class Entity(object):
@@ -45,7 +45,7 @@ class Vegetation(Entity):
         self.chance_to_evolve = 1
 
     def __str__(self):
-        if globals.anim_toggler:
+        if global_vars.anim_toggler:
             return self._tokens[self._lvl]
         else:
             return self._anim_tokens[self._lvl]
@@ -118,12 +118,8 @@ class Water(Entity):
         self._token = "~"
         self._movable = False
 
-        self._toggler = False
-
     def __str__(self):
-        self._toggler = not self._toggler
-
-        if self._toggler:
+        if global_vars.anim_toggler:
             return self._token
         else:
             return "∽"
@@ -135,13 +131,9 @@ class AlterWater(Entity):
         self._token = "~"
         self._movable = False
 
-        self._toggler = True
-
     def __str__(self):
 
-        self._toggler = not self._toggler
-
-        if self._toggler:
+        if global_vars.anim_toggler:
             return self._token
         else:
             return "∽"

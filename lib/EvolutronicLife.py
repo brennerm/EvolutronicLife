@@ -1,7 +1,6 @@
 from lib.WindowManager import WindowManager
 from lib.Window import Window, OptionPane
 from lib.MapManager import MapManager
-import curses
 from time import sleep, time
 
 

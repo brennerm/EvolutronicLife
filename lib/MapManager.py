@@ -1,6 +1,6 @@
 from lib.EntityManager import EntityManager
 from lib.Entities import *
-import lib.globals as globals
+import lib.globals as global_vars
 
 
 class MapManager(object):
@@ -43,7 +43,7 @@ class MapManager(object):
         tells the entity manager to update all entities and applies all changes to the map
         """
         self._em.update()
-        globals.anim_toggler = not globals.anim_toggler
+        global_vars.anim_toggler = not global_vars.anim_toggler
 
         new_map = self.create_new_map()
 
