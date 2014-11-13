@@ -1,4 +1,4 @@
-from Entities import *
+from lib.Entities import *
 
 
 class EntityManager(object):
@@ -24,8 +24,8 @@ class EntityManager(object):
             "ʬ": Vegetation(1, pos_y, pos_x),
             "Y": Vegetation(2, pos_y, pos_x),
             "#": Animal(pos_y, pos_x),
-            "_": HorizLimitUp(pos_y, pos_x),
-            "‾": HorizLimitDown(pos_y, pos_x),
+            "_": HorizLimitTop(pos_y, pos_x),
+            "‾": HorizLimitBottom(pos_y, pos_x),
             "|": VertLimit(pos_y, pos_x)
         }
 
