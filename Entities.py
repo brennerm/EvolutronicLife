@@ -40,7 +40,7 @@ class Vegetation(Entity):
         self._tokens = ["ʷ", "ʬ", "Y"]
         self._anim_tokens = ["ʷ", "ʬ", "ϒ"]
 
-        self._lvl = lvl
+        self._lvl = min(lvl, 2)
         self._steps_to_reproduce = randint(3, 7)
         self.chance_to_evolve = 1
 
@@ -54,14 +54,23 @@ class Vegetation(Entity):
     def lvl(self):
         return self._lvl
 
-    def update(self, env):
+    def update(self, map_manager):
         self._steps_to_reproduce -= 1
         if self._steps_to_reproduce == 0:
             self._steps_to_reproduce = randint(3, 7)
-            return self.reproduce(env)
+            return self.reproduce(map_manager)
 
     def reproduce(self, map_manager):
         env = map_manager.get_env(self.pos_y, self.pos_x, 1)
+
+        if self._lvl == 2:
+            with open("log", "a") as f:
+                for row in env:
+                    for cell in row:
+                        f.write(str(cell))
+                    f.write("\n")
+                f.write("\n")
+
         possible_fields = []
         for row in env:
             for cell in row:
@@ -78,13 +87,13 @@ class Vegetation(Entity):
     def evolve(self, env):
         if self._lvl == 2:
             return None
-        chance = randint(0, 100)
-        if self.chance_to_evolve < chance:
+        rand_int = randint(0, 100)
+        if self.chance_to_evolve < rand_int:
             self.chance_to_evolve += 1
             return None
 
-        if all(isinstance(cell, Vegetation) and cell.lvl >= max(self._lvl - 1, 0) for row in env for cell in row):
-            return Vegetation(min(self._lvl + 1, 2), self.pos_y, self.pos_x)
+        if all(isinstance(cell, Vegetation) and cell.lvl >= max(self._lvl, 0) for row in env for cell in row):
+            return Vegetation(self._lvl + 1, self.pos_y, self.pos_x)
 
 
 class Animal(Entity):

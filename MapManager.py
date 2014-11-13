@@ -21,7 +21,8 @@ class MapManager(object):
         for row in self._map:
             x = 0
             for cell in row:
-                self._em.add_entity(cell, y, x)
+                if cell != " ":
+                    self._em.add_entity(cell, y, x)
                 x += 1
             y += 1
 
