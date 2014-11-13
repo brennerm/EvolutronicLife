@@ -96,7 +96,12 @@ class MapManager(object):
         """
         env = []
 
-        for offset in range(-scope, scope + 1):
-            env.append(self._map[pos_y + offset][(pos_x - scope):(pos_x + scope + 1)])
-
+        for offset_y in range(-scope, scope + 1):
+            row = []
+            for offset_x in range(-scope, scope + 1):
+                try:
+                    row.append(self._map[pos_y + offset_y][pos_x + offset_x])
+                except IndexError:
+                    continue
+            env.append(row)
         return env
