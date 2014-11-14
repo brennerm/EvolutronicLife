@@ -25,13 +25,12 @@ class EvolutronicLife(object):
         self._win_manager["game_win"] = Window(35, 140, 1, 0)
         self._win_manager["option_pane"] = OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0)
 
-        win = self._win_manager.main_win
-        key_listener = KeyListener(win)
+        key_listener = KeyListener(self._win_manager)
         key_listener.start()
 
         step = 0
         start_time = time()
-        while key_listener.keep_running:
+        while not key_listener.quit:
             step += 1
             start = time()
 
@@ -47,8 +46,11 @@ class EvolutronicLife(object):
 
             self._win_manager.update()
 
-            if time() - start < key_listener.step_speed:
+            if (time() - start) < key_listener.step_speed:
                 sleep(key_listener.step_speed - (time() - start))
+
+            while key_listener.pause and not key_listener.quit:
+                sleep(0.01)
 
         self._win_manager.deinit_curses()
         key_listener.join()
