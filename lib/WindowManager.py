@@ -9,7 +9,7 @@ class WindowManager(object):
         self._info_win = InfoWindow(1, 140, 0, 0)
         self._map_win = MapWindow(35, 140, 1, 0)
         self._option_pane = OptionPane(
-            ["Pause", "Faster", "Slower", "Exit"], 1, 140, 36, 0
+            1, 140, 36, 0, "Pause", "Faster", "Slower", "Exit"
         )
 
 

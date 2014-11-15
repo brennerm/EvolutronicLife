@@ -46,10 +46,7 @@ class MapWindow(Window):
 
 
 class OptionPane(Window):
-    def __init__(self, options, height, width,  pos_y, pos_x):
-        if not isinstance(options, list):
-            raise ValueError('options is not of type "list"')
-
+    def __init__(self, height, width,  pos_y, pos_x, *options):
         super(OptionPane, self).__init__(height, width, pos_y, pos_x)
 
         self._options = options
