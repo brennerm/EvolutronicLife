@@ -5,6 +5,19 @@ class EntityManager(object):
     def __init__(self, map_manager):
         self._map_manager = map_manager
         self._entities = []
+        self._entity_dict = {
+            " ": Empty,
+            "ʷ": Vegetation,
+            "ʬ": Vegetation,
+            "Y": Vegetation,
+            "#": Animal,
+            "~": Water,
+            "∽": AlterWater,
+            ":": Beach,
+            "_": HorizLimitTop,
+            "‾": HorizLimitBottom,
+            "|": VertLimit
+        }
 
 
     @property
@@ -14,25 +27,16 @@ class EntityManager(object):
     def add_entity(self, token, pos_y, pos_x):
         """
         add entity
-        :param token: used to determine, which kind of entity needs to be added
+        :param token: used to determine which kind of entity needs to be added
         :param pos_y: y-coordinate of Entity
         :param pos_x: x-coordinate of Entity
         """
-        self._entity_dict = {
-            " ": Empty(pos_y, pos_x),
-            "ʷ": Vegetation(0, pos_y, pos_x),
-            "ʬ": Vegetation(1, pos_y, pos_x),
-            "Y": Vegetation(2, pos_y, pos_x),
-            "#": Animal(pos_y, pos_x),
-            "~": Water(pos_y, pos_x),
-            "∽": AlterWater(pos_y, pos_x),
-            ":": Beach(pos_y, pos_x),
-            "_": HorizLimitTop(pos_y, pos_x),
-            "‾": HorizLimitBottom(pos_y, pos_x),
-            "|": VertLimit(pos_y, pos_x)
-        }
         try:
-            self._entities.append(self._entity_dict[token])
+            entity_class = self._entity_dict[token]
+            arg_list = [pos_y, pos_x]
+            if token in "ʷʬY":
+                arg_list.insert(0, "ʷʬY".index(token))
+            self._entities.append(entity_class(*arg_list))
         except KeyError:
             raise KeyError("your map contains this unexpected token: " + token)
 
@@ -50,7 +54,7 @@ class EntityManager(object):
 
     def update(self):
         """
-        updates all entities accordingly
+        updates all entities
         """
         new_entities = []
         for entity in self._entities:
