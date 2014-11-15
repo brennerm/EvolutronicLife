@@ -25,28 +25,29 @@ class EvolutronicLife(object):
             self._win_manager.clear()
 
             self._map_manager.update()
-            self._map_manager.draw_map(self._win_manager.game_win.curses_window)
+            self._map_manager.draw_map(self._win_manager._game_win.curses_window)
 
             self._win_manager.update(start_time, sec_per_step, step)
 
-            c = self._win_manager.main_win.getch()
+            c = self.getch()
 
-            if c == 265:
+            if c == 265:        #F1 / Pause
                 while True:
-                    c = self._win_manager.main_win.getch()
+                    c = self.getch()
                     if c == 265:
                         break
                     if c == 268:
                         keep_running = False
-            elif c == 266:
+                        break
+            elif c == 266:      #F2 / Faster
                 sec_per_step = round(sec_per_step - 0.1, 1)
                 if sec_per_step <= 0:
                     sec_per_step = 0.1
-            elif c == 267:
+            elif c == 267:      #F3 / Slower
                 sec_per_step = round(sec_per_step + 0.1, 1)
                 if sec_per_step > 2:
                     sec_per_step = 2
-            elif c == 268:
+            elif c == 268:      #F4 / Exit
                 keep_running = False
 
             if time() - start < sec_per_step:
@@ -55,3 +56,7 @@ class EvolutronicLife(object):
         self._win_manager.deinit_curses()
 
         return 0
+
+
+    def getch(self):
+        return self._win_manager.getch()

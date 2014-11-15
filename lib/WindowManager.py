@@ -6,14 +6,10 @@ class WindowManager(object):
 
     def __init__(self):
         self.init_curses()
-        self.info_win = InfoWindow(1, 140, 0, 0)
-        self.game_win = Window(35, 140, 1, 0)
-        self.option_pane = OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0)
+        self._info_win = InfoWindow(1, 140, 0, 0)
+        self._game_win = Window(35, 140, 1, 0)
+        self._option_pane = OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0)
 
-
-    @property
-    def main_win(self):
-        return self._main_win
 
     def init_curses(self):
         """
@@ -43,14 +39,17 @@ class WindowManager(object):
         """
         clears content of all windows
         """
-        self.info_win.clear()
-        self.game_win.clear()
-        self.option_pane.clear()
+        self._info_win.clear()
+        self._game_win.clear()
+        self._option_pane.clear()
 
     def update(self, start_time, sec_per_step, step):
         """
         updates content of all windows
         """
-        self.info_win.update(start_time, sec_per_step, step)
-        self.game_win.update()
-        self.option_pane.update()
+        self._info_win.update(start_time, sec_per_step, step)
+        self._game_win.update()
+        self._option_pane.update()
+
+    def getch(self):
+        return self._main_win.getch()
