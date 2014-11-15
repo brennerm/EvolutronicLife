@@ -1,4 +1,5 @@
 import curses
+from time import time
 
 
 class Window(object):
@@ -16,10 +17,21 @@ class Window(object):
         self._curses_window.refresh()
 
 
+class InfoWindow(Window):
+
+    def update(self, start_time, sec_per_step, step):
+        self._curses_window.addstr(0, 0,
+            "{:5s} {:5.1f}".format('time:', round(time() - start_time, 1))
+            + "{:13s} {:4.1f}".format(' steps per s:', round(1 / sec_per_step, 1))
+            + "{:4s} {:4d}".format(' step:', step)
+        )
+        self._curses_window.refresh()
+
+
 class OptionPane(Window):
     def __init__(self, options, width,  pos_y, pos_x):
         if not isinstance(options, list):
-            raise ValueError("options is not of type \"list\"")
+            raise ValueError('options is not of type "list"')
 
         super(OptionPane, self).__init__(1, width, pos_y, pos_x)
 

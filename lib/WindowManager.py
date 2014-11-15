@@ -1,12 +1,15 @@
 import curses
-from lib.Window import Window
+from lib.Window import *
 
 
 class WindowManager(object):
 
     def __init__(self):
-        self._main_win = None
-        self._sub_wins = {}
+        self.init_curses()
+        self.info_win = InfoWindow(1, 140, 0, 0)
+        self.game_win = Window(35, 140, 1, 0)
+        self.option_pane = OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0)
+
 
     @property
     def main_win(self):
@@ -40,34 +43,14 @@ class WindowManager(object):
         """
         clears content of all windows
         """
-        for window in self._sub_wins.values():
-            window.clear()
+        self.info_win.clear()
+        self.game_win.clear()
+        self.option_pane.clear()
 
-    def update(self):
+    def update(self, start_time, sec_per_step, step):
         """
         updates content of all windows
         """
-        for window in self._sub_wins.values():
-            window.update()
-
-    def __getitem__(self, key):
-        """
-        overloading function for the getting [] operator
-        enables getting sub windows through WindowManager()["main_window"]
-        :param key: key of the window
-        :return:
-        """
-        if not key in self._sub_wins:
-            raise IndexError("window " + str(key) + " is not available")
-        return self._sub_wins[key]
-
-    def __setitem__(self, key, value):
-        """
-        overloading function for the setting [] operator
-        enables setting sub windows through WindowManager()["main_window"] = main_window
-        :param key: key of the  window
-        :param value: the actual window
-        """
-        if not isinstance(value, Window):
-            raise TypeError("window has to be of type Window")
-        self._sub_wins[key] = value
+        self.info_win.update(start_time, sec_per_step, step)
+        self.game_win.update()
+        self.option_pane.update()
