@@ -77,13 +77,12 @@ class OptionPane(Window):
 
         self._curses_window.refresh()
 
-    def replace_option(self, old_option, new_option):
+    def replace_option(self, option_to_replace, new_option):
         i = 0
         for option in list(self._options):
-
-            if option == old_option:
+            if option == option_to_replace:
                 self._options[i] = new_option
                 return
             i += 1
 
-        raise ValueError("option " + old_option + " is not in option pane")
+        raise ValueError("option " + option_to_replace + " is not in option pane")

@@ -1,5 +1,4 @@
 from lib.EntityManager import EntityManager
-from lib.Entities import *
 import lib.globals as global_vars
 
 
@@ -37,9 +36,14 @@ class MapManager(object):
         creates a new map with the size of the initial map, filled with Empty objects
         :return: empty map
         """
-        new_map = [[Empty(y, x) for x in range(self._map_width)] for y in range(self._map_height - 1)]
+        new_map = [
+            [self._em.placeholder(y, x) for x in range(self._map_width)]
+            for y in range(self._map_height - 1)
+        ]
         #curses cant draw last element in last row(window[max_height, max_width])
-        new_map.append([Empty(self._map_height, x) for x in range(self._map_width - 1)])
+        new_map.append(
+            [self._em.placeholder(self._map_height, x) for x in range(self._map_width - 1)]
+        )
 
         return new_map
 
@@ -53,7 +57,7 @@ class MapManager(object):
         new_map = self.create_new_map()
 
         for entity in self._em.entities:
-            if isinstance(entity, Empty):
+            if self._em.is_placeholder(entity):
                 continue
             if entity.pos_y > 34 or entity.pos_y < 0 or entity.pos_x > 139 or entity.pos_x < 0:
                 continue

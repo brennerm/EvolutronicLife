@@ -28,25 +28,25 @@ class EvolutronicLife(object):
                 self._map_manager.map, start_time, sec_per_step, step
             )
 
-            c = self.getch()
+            key = self.pressed_key()
 
-            if c == 265:        #F1 / Pause
+            if key == 265:        #F1 / Pause
                 while True:
-                    c = self.getch()
-                    if c == 265:
+                    key = self.pressed_key()
+                    if key == 265:
                         break
-                    if c == 268:
+                    if key == 268:
                         keep_running = False
                         break
-            elif c == 266:      #F2 / Faster
+            elif key == 266:      #F2 / Faster
                 sec_per_step = round(sec_per_step - 0.1, 1)
                 if sec_per_step <= 0:
                     sec_per_step = 0.1
-            elif c == 267:      #F3 / Slower
+            elif key == 267:      #F3 / Slower
                 sec_per_step = round(sec_per_step + 0.1, 1)
                 if sec_per_step > 2:
                     sec_per_step = 2
-            elif c == 268:      #F4 / Exit
+            elif key == 268:      #F4 / Exit
                 keep_running = False
 
             if time() - start < sec_per_step:
@@ -57,5 +57,5 @@ class EvolutronicLife(object):
         return 0
 
 
-    def getch(self):
+    def pressed_key(self):
         return self._win_manager.getch()
