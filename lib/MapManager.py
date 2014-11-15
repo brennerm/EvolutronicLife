@@ -14,6 +14,11 @@ class MapManager(object):
 
         self.parse_map()
 
+
+    @property
+    def map(self):
+        return self._map
+
     def parse_map(self):
         """
         parses the initial map and adds new entities to the entity manager accordingly
@@ -60,16 +65,6 @@ class MapManager(object):
 
         self._map = new_map
 
-    def draw_map(self, window):
-        """
-        draws map in given curses window
-        :param window: curses window
-        """
-        i = 0
-        for row in self._map:
-            line = "".join(str(cell) for cell in row)
-            window.addstr(i, 0, line)
-            i += 1
 
     def get_field(self, pos_y, pos_x):
         """

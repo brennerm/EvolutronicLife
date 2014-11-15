@@ -6,8 +6,9 @@ from time import sleep, time
 class EvolutronicLife(object):
 
     def __init__(self, map_filename):
-        self._win_manager = WindowManager()
         self._map_manager = MapManager(map_filename)
+        self._win_manager = WindowManager()
+
 
     def run(self):
         """
@@ -22,12 +23,10 @@ class EvolutronicLife(object):
             step += 1
             start = time()
 
-            self._win_manager.clear()
-
             self._map_manager.update()
-            self._map_manager.draw_map(self._win_manager._game_win.curses_window)
-
-            self._win_manager.update(start_time, sec_per_step, step)
+            self._win_manager.update(
+                self._map_manager.map, start_time, sec_per_step, step
+            )
 
             c = self.getch()
 

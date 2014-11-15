@@ -1,5 +1,5 @@
 import curses
-from lib.Window import *
+from lib.Window import InfoWindow, MapWindow, OptionPane
 
 
 class WindowManager(object):
@@ -7,8 +7,10 @@ class WindowManager(object):
     def __init__(self):
         self.init_curses()
         self._info_win = InfoWindow(1, 140, 0, 0)
-        self._game_win = Window(35, 140, 1, 0)
-        self._option_pane = OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0)
+        self._map_win = MapWindow(35, 140, 1, 0)
+        self._option_pane = OptionPane(
+            ["Pause", "Faster", "Slower", "Exit"], 1, 140, 36, 0
+        )
 
 
     def init_curses(self):
@@ -35,20 +37,12 @@ class WindowManager(object):
         curses.echo()
         curses.endwin()
 
-    def clear(self):
-        """
-        clears content of all windows
-        """
-        self._info_win.clear()
-        self._game_win.clear()
-        self._option_pane.clear()
-
-    def update(self, start_time, sec_per_step, step):
+    def update(self, the_map, start_time, sec_per_step, step):
         """
         updates content of all windows
         """
         self._info_win.update(start_time, sec_per_step, step)
-        self._game_win.update()
+        self._map_win.update(the_map)
         self._option_pane.update()
 
     def getch(self):
