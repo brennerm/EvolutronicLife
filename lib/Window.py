@@ -22,6 +22,7 @@ class InfoWindow(Window):
             + "{:13s} {:4.1f}".format(' steps per s:', round(1 / sec_per_step, 1))
             + "{:4s} {:4d}".format(' step:', step)
         )
+
         self._curses_window.refresh()
 
 
@@ -33,8 +34,6 @@ class MapWindow(Window):
         draws map onto map window
         :param the_map: the current game map
         """
-        self._curses_window.clear()
-
         i = 0
         for row in the_map:
             line = "".join(str(cell) for cell in row)
@@ -57,8 +56,6 @@ class OptionPane(Window):
         """
         updates the option pane with the current options
         """
-        self._curses_window.clear()
-
         index = 1
         offset = 0
         for option in self._options:
