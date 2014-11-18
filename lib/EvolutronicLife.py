@@ -39,6 +39,5 @@ class EvolutronicLife(object):
             while self._key_listener.pause and not self._key_listener.quit:
                 sleep(0.01)
 
-
         self._win_manager.deinit_curses()
         self._key_listener.join()
