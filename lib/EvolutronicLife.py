@@ -1,5 +1,8 @@
-from lib.WindowManager import WindowManager
+#!/usr/bin/env python3.4
+
 from lib.Window import Window, OptionPane
+from lib.WindowManager import WindowManager
+from lib.KeyListener import KeyListener
 from lib.MapManager import MapManager
 from time import sleep, time
 
@@ -8,6 +11,7 @@ class EvolutronicLife(object):
 
     def __init__(self, map_filename):
         self._win_manager = WindowManager()
+        self._win_manager.init_curses()
         self._map_manager = MapManager(map_filename)
 
     def run(self):
@@ -21,11 +25,12 @@ class EvolutronicLife(object):
         self._win_manager["game_win"] = Window(35, 140, 1, 0)
         self._win_manager["option_pane"] = OptionPane(["Pause", "Faster", "Slower", "Exit"], 140, 36, 0)
 
-        start_time = time()
-        sec_per_step = 0.5
+        key_listener = KeyListener(self._win_manager)
+        key_listener.start()
+
         step = 0
-        keep_running = True
-        while keep_running:
+        start_time = time()
+        while not key_listener.quit:
             step += 1
             start = time()
 
@@ -33,7 +38,7 @@ class EvolutronicLife(object):
 
             self._win_manager["info_win"].curses_window.addstr(0, 0,
                                                                "{:5s} {:5.1f}".format('time:', round(time() - start_time, 1))
-                                                               + "{:13s} {:4.1f}".format(' steps per s:', round(1 / sec_per_step, 1))
+                                                               + "{:13s} {:4.1f}".format(' steps per s:', round(1 / key_listener.step_speed, 1))
                                                                + "{:4s} {:4d}".format(' step:', step))
 
             self._map_manager.update()
@@ -41,29 +46,12 @@ class EvolutronicLife(object):
 
             self._win_manager.update()
 
-            c = self._win_manager.main_win.getch()
+            if (time() - start) < key_listener.step_speed:
+                sleep(key_listener.step_speed - (time() - start))
 
-            if c == 265:
-                while True:
-                    c = self._win_manager.main_win.getch()
-                    if c == 265:
-                        break
-                    if c == 268:
-                        keep_running = False
-            if c == 266:
-                sec_per_step = round(sec_per_step - 0.1, 1)
-                if sec_per_step <= 0:
-                    sec_per_step = 0.1
-            if c == 267:
-                sec_per_step = round(sec_per_step + 0.1, 1)
-                if sec_per_step > 2:
-                    sec_per_step = 2
-            if c == 268:
-                keep_running = False
-
-            if time() - start < sec_per_step:
-                sleep(sec_per_step - (time() - start))
+            while key_listener.pause and not key_listener.quit:
+                sleep(0.01)
 
         self._win_manager.deinit_curses()
-
+        key_listener.join()
         return 0
