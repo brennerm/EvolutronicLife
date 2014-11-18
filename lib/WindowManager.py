@@ -40,13 +40,25 @@ class WindowManager(object):
     def update(self, the_map, start_time, sec_per_step, step):
         """
         updates content of all windows
+        :param the_map: the game map in the current state
+        :param start_time: the time of the game start
+        :param sec_per_step: duration of a step in seconds
+        :param step: the number of the current step
         """
         self._info_win.update(start_time, sec_per_step, step)
         self._map_win.update(the_map)
         self._option_pane.update()
 
-    def replace_option(self, old, new):
-        self._option_pane.replace_option(old, new)
+    def replace_option(self, option_to_replace, new_option):
+        """
+        replaces option_to_replace with new_option in the_option pane
+        :param option_to_replace: the option to replace
+        :param new_option: the new option to take its place
+        """
+        self._option_pane.replace_option(option_to_replace, new_option)
 
     def key_pressed(self):
+        """
+        returns the current pressed key
+        """
         return self._main_win.getch()

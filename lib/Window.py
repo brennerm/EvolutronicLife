@@ -70,5 +70,10 @@ class OptionPane(Window):
         self._curses_window.refresh()
 
     def replace_option(self, option_to_replace, new_option):
+        """
+        replaces option_to_replace with new_option
+        :param option_to_replace: the option to replace
+        :param new_option: the new option to take its place
+        """
         self._options[self._options.index(option_to_replace)] = new_option
         self.update()

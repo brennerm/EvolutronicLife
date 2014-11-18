@@ -26,6 +26,10 @@ class KeyListener(Thread):
         return self._quit
 
     def run(self):
+        """
+        periodically querys the keyboard keypress and acts accordingly in its
+        own thread. responds to the following keypresses: F1, F2, F3, F4
+        """
         while not self._quit:
 
             key = self._win_manager.key_pressed()
