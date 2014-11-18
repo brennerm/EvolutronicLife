@@ -39,7 +39,7 @@ class WindowManager(object):
 
     def update(self, the_map, start_time, sec_per_step, step):
         """
-        updates content of all windows
+        updates content of info and map window
         :param the_map: the game map in the current state
         :param start_time: the time of the game start
         :param sec_per_step: duration of a step in seconds
@@ -47,7 +47,6 @@ class WindowManager(object):
         """
         self._info_win.update(start_time, sec_per_step, step)
         self._map_win.update(the_map)
-        self._option_pane.update()
 
     def replace_option(self, option_to_replace, new_option):
         """

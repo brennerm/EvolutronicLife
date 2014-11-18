@@ -48,6 +48,7 @@ class OptionPane(Window):
 
         self._options = list(options)
         self._width = width
+        self.update()
 
 
     def update(self):
