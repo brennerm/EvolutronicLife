@@ -57,6 +57,7 @@ class EntityManager(object):
         """
         updates all entities
         """
+        new_entities = []
         for entity in self._entities:
             if entity.is_movable:
                 entity.move()

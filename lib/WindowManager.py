@@ -45,5 +45,8 @@ class WindowManager(object):
         self._map_win.update(the_map)
         self._option_pane.update()
 
-    def getch(self):
+    def replace_option(self, old, new):
+        self._option_pane.replace_option(old, new)
+
+    def key_pressed(self):
         return self._main_win.getch()

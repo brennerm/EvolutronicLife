@@ -48,7 +48,7 @@ class OptionPane(Window):
     def __init__(self, height, width,  pos_y, pos_x, *options):
         super(OptionPane, self).__init__(height, width, pos_y, pos_x)
 
-        self._options = options
+        self._options = list(options)
         self._width = width
 
 
@@ -56,6 +56,8 @@ class OptionPane(Window):
         """
         updates the option pane with the current options
         """
+        self._curses_window.clear()
+        
         index = 1
         offset = 0
         for option in self._options:
@@ -76,6 +78,7 @@ class OptionPane(Window):
         for option in list(self._options):
             if option == option_to_replace:
                 self._options[i] = new_option
+                self.update()
                 return
             i += 1
 

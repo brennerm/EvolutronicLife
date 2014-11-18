@@ -28,31 +28,29 @@ class KeyListener(Thread):
     def run(self):
         while not self._quit:
 
-            c = self._win_manager.main_win.getch()
+            key = self._win_manager.key_pressed()
 
-            if c == 265:
+            if key == 265:          #F1 / Pause,Resume
                 self._pause = True
-                self._win_manager["option_pane"].replace_option("Pause", "Resume")
-                self._win_manager["option_pane"].clear()
-                self._win_manager["option_pane"].update()
+                self._win_manager.replace_option("Pause", "Resume")
                 while not self._quit:
-                    c = self._win_manager.main_win.getch()
-                    if c == 265:
+                    key = self._win_manager.key_pressed()
+                    if key == 265:
                         self._pause = False
-                        self._win_manager["option_pane"].replace_option("Resume", "Pause")
+                        self._win_manager.replace_option("Resume", "Pause")
                         break
-                    if c == 268:
+                    if key == 268:
                         self._quit = True
                     sleep(0.01)
-            if c == 266:
+            if key == 266:          #F2 / Faster
                 self._step_speed = round(self._step_speed - 0.1, 1)
                 if self._step_speed <= 0:
                     self._step_speed = 0.1
-            if c == 267:
+            if key == 267:          #F3 / Slower
                 self._step_speed = round(self._step_speed + 0.1, 1)
                 if self._step_speed > 2:
                     self._step_speed = 2
-            if c == 268:
+            if key == 268:          #F4 / Quit
                 self._quit = True
 
             sleep(0.01)
