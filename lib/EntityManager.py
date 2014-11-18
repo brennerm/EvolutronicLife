@@ -52,13 +52,13 @@ class EntityManager(object):
                 break
         self._entities.append(new_entity)
 
+
     def update(self):
         """
         updates all entities
         """
-        new_entities = []
         for entity in self._entities:
-            if isinstance(entity, Animal):
+            if entity.is_movable:
                 entity.move()
             elif isinstance(entity, Vegetation):
                 new_object = entity.update(self._map_manager)

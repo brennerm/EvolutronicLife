@@ -1,4 +1,7 @@
+#!/usr/bin/env python3.4
+
 from lib.WindowManager import WindowManager
+from lib.KeyListener import KeyListener
 from lib.MapManager import MapManager
 from time import sleep, time
 
@@ -19,7 +22,10 @@ class EvolutronicLife(object):
         step = 0
         keep_running = True
 
-        while keep_running:
+        key_listener = KeyListener(self._win_manager)
+        key_listener.start()
+
+        while not key_listener.quit:
             step += 1
             start = time()
 
@@ -28,34 +34,14 @@ class EvolutronicLife(object):
                 self._map_manager.map, start_time, sec_per_step, step
             )
 
-            key = self.pressed_key()
 
-            if key == 265:        #F1 / Pause
-                while True:
-                    key = self.pressed_key()
-                    if key == 265:
-                        break
-                    if key == 268:
-                        keep_running = False
-                        break
-            elif key == 266:      #F2 / Faster
-                sec_per_step = round(sec_per_step - 0.1, 1)
-                if sec_per_step <= 0:
-                    sec_per_step = 0.1
-            elif key == 267:      #F3 / Slower
-                sec_per_step = round(sec_per_step + 0.1, 1)
-                if sec_per_step > 2:
-                    sec_per_step = 2
-            elif key == 268:      #F4 / Exit
-                keep_running = False
+            if (time() - start) < key_listener.step_speed:
+                sleep(key_listener.step_speed - (time() - start))
 
-            if time() - start < sec_per_step:
-                sleep(sec_per_step - (time() - start))
+            while key_listener.pause and not key_listener.quit:
+                sleep(0.01)
+
 
         self._win_manager.deinit_curses()
-
+        key_listener.join()
         return 0
-
-
-    def pressed_key(self):
-        return self._win_manager.getch()
