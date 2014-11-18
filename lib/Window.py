@@ -34,11 +34,9 @@ class MapWindow(Window):
         draws map onto map window
         :param the_map: the current game map
         """
-        i = 0
-        for row in the_map:
+        for i, row in enumerate(the_map):
             line = "".join(str(cell) for cell in row)
             self._curses_window.addstr(i, 0, line)
-            i += 1
 
         self._curses_window.refresh()
 
@@ -57,29 +55,25 @@ class OptionPane(Window):
         updates the option pane with the current options
         """
         self._curses_window.clear()
-        
-        index = 1
+
         offset = 0
-        for option in self._options:
+        for i, option in enumerate(self._options, start=1):
             try:
-                self._curses_window.addstr(0, offset, "F" + str(index), curses.A_BOLD)
-                offset += 1 + len(str(index))
+                self._curses_window.addstr(0, offset, "F" + str(i), curses.A_BOLD)
+                offset += 1 + len(str(i))
 
                 self._curses_window.addstr(0, offset, option, curses.color_pair(1))
                 offset += 1 + len(option) + 1
-                index += 1
             except:
                 raise Exception("given width is not sufficient for displaying all options")
 
         self._curses_window.refresh()
 
     def replace_option(self, option_to_replace, new_option):
-        i = 0
-        for option in list(self._options):
+        for i, option in enumerate(self._options):
             if option == option_to_replace:
                 self._options[i] = new_option
                 self.update()
                 return
-            i += 1
 
         raise ValueError("option " + option_to_replace + " is not in option pane")

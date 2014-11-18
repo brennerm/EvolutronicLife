@@ -22,14 +22,10 @@ class MapManager(object):
         """
         parses the initial map and adds new entities to the entity manager accordingly
         """
-        y = 0
-        for row in self._map:
-            x = 0
-            for cell in row:
+        for y, row in enumerate(self._map):
+            for x, cell in enumerate(row):
                 if cell != " ":
                     self._em.add_entity(cell, y, x)
-                x += 1
-            y += 1
 
     def create_new_map(self):
         """
