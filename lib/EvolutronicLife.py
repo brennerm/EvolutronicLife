@@ -4,6 +4,7 @@ from lib.WindowManager import WindowManager
 from lib.KeyListener import KeyListener
 from lib.MapManager import MapManager
 from time import sleep, time
+import lib.globals as global_vars
 
 
 class EvolutronicLife(object):
@@ -23,20 +24,20 @@ class EvolutronicLife(object):
 
         self._key_listener.start()
 
-        while not self._key_listener.quit:
+        while not global_vars.quit:
             step += 1
             start = time()
 
             self._map_manager.update()
             self._win_manager.update(
                 self._map_manager.map, start_time,
-                self._key_listener.step_duration, step
+                global_vars.step_duration, step
             )
 
-            if (time() - start) < self._key_listener.step_duration:
-                sleep(self._key_listener.step_duration - (time() - start))
+            if (time() - start) < global_vars.step_duration:
+                sleep(global_vars.step_duration - (time() - start))
 
-            while self._key_listener.pause and not self._key_listener.quit:
+            while global_vars.pause and not global_vars.quit:
                 sleep(0.01)
 
         self._win_manager.deinit_curses()
