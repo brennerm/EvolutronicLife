@@ -40,12 +40,14 @@ class KeyListener(Thread):
                 )
                 if global_vars.step_duration <= 0:
                     global_vars.step_duration = 0.1
+                self._win_manager.update()
             elif key == 267:          #F3 / Slower
                 global_vars.step_duration = round(
                     global_vars.step_duration + 0.1, 1
                 )
                 if global_vars.step_duration > 2:
                     global_vars.step_duration = 2
+                self._win_manager.update()
             elif key == 268:          #F4 / Quit
                 global_vars.quit = True
 

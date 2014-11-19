@@ -1,5 +1,6 @@
 import curses
 from time import time
+import lib.globals as global_vars
 
 
 class Window(object):
@@ -9,18 +10,23 @@ class Window(object):
 
 
 class InfoWindow(Window):
+    def __init__(self, height, width, pos_y, pos_x):
+        self.simulation_start = time()
+        super().__init__(height, width, pos_y, pos_x)
 
-    def update(self, start_time, sec_per_step, step):
+
+    def update(self):
         """
         puts updated information into info window
-        :param start_time: time of simulation start in secs
-        :param sec_per_step: length of one step in secs
-        :param step: the count of the current step
         """
         self._curses_window.addstr(0, 0,
-            "{:5s} {:5.1f}".format('time:', round(time() - start_time, 1))
-            + "{:13s} {:4.1f}".format(' steps per s:', round(1 / sec_per_step, 1))
-            + "{:4s} {:4d}".format(' step:', step)
+            "{:5s} {:5.1f}".format(
+                'time:', round(time() - self.simulation_start, 1)
+            )
+            + "\t{:13s} {:4.1f}".format(
+                ' steps per s:', round(1 / global_vars.step_duration, 1)
+            )
+            + "\t{:4s} {:4d}".format(' step:', global_vars.step)
         )
 
         self._curses_window.refresh()

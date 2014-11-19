@@ -37,16 +37,14 @@ class WindowManager(object):
         curses.echo()
         curses.endwin()
 
-    def update(self, the_map, start_time, sec_per_step, step):
+    def update(self, the_map=None):
         """
-        updates content of info and map window
+        updates content of info window and also the map window, if a map is given
         :param the_map: the game map in the current state
-        :param start_time: the time of the game start
-        :param sec_per_step: duration of a step in seconds
-        :param step: the number of the current step
         """
-        self._info_win.update(start_time, sec_per_step, step)
-        self._map_win.update(the_map)
+        self._info_win.update()
+        if(the_map):
+            self._map_win.update(the_map)
 
     def replace_option(self, option_to_replace, new_option):
         """

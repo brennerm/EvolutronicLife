@@ -19,23 +19,17 @@ class EvolutronicLife(object):
         """
         the main game loop
         """
-        start_time = time()
-        step = 0
-
         self._key_listener.start()
 
         while not global_vars.quit:
-            step += 1
-            start = time()
+            global_vars.step += 1
+            step_start = time()
 
             self._map_manager.update()
-            self._win_manager.update(
-                self._map_manager.map, start_time,
-                global_vars.step_duration, step
-            )
+            self._win_manager.update(self._map_manager.map)
 
-            if (time() - start) < global_vars.step_duration:
-                sleep(global_vars.step_duration - (time() - start))
+            if (time() - step_start) < global_vars.step_duration:
+                sleep(global_vars.step_duration - (time() - step_start))
 
             while global_vars.pause and not global_vars.quit:
                 sleep(0.01)
