@@ -7,7 +7,7 @@ class Entity(object):
         self._pos_y = pos_y
         self._pos_x = pos_x
         self._movable = False
-
+        self._is_limit = False
         self._token = ""
 
     def __str__(self):
@@ -24,6 +24,9 @@ class Entity(object):
     @property
     def pos_x(self):
         return self._pos_x
+
+    def set_tile(self, new_tile):
+        self._tile = new_tile
 
 
 class Empty(Entity):
@@ -139,22 +142,29 @@ class AlterWater(Entity):
             return "∽"
 
 
+class Limit(Entity):
+    def __init__(self, pos_y, pos_x):
+        super().__init__(pos_y, pos_x)
+        self._movable = False
+        self._is_limit = True
+
+    def is_limit(self):
+        return self._is_limit
+
+
 class HorizLimitTop(Entity):
     def __init__(self, pos_y, pos_x):
-        super(HorizLimitTop, self).__init__(pos_y, pos_x)
+        super().__init__(pos_y, pos_x)
         self._token = "_"
-        self._movable = False
 
 
 class HorizLimitBottom(Entity):
     def __init__(self, pos_y, pos_x):
-        super(HorizLimitBottom, self).__init__(pos_y, pos_x)
+        super().__init__(pos_y, pos_x)
         self._token = "‾"
-        self._movable = False
 
 
 class VertLimit(Entity):
     def __init__(self, pos_y, pos_x):
-        super(VertLimit, self).__init__(pos_y, pos_x)
+        super().__init__(pos_y, pos_x)
         self._token = "|"
-        self._movable = False
