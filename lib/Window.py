@@ -19,6 +19,8 @@ class InfoWindow(Window):
         """
         puts updated information into info window
         """
+        self._curses_window.clear()
+
         self._curses_window.addstr(0, 0,
             "{:5s} {:5.1f}".format(
                 'time:', round(time() - self.simulation_start, 1)
@@ -40,6 +42,8 @@ class MapWindow(Window):
         draws map onto map window
         :param the_map: the current game map
         """
+        self._curses_window.clear()
+
         for i, row in enumerate(the_map):
             line = "".join(str(cell) for cell in row)
             self._curses_window.addstr(i, 0, line)
