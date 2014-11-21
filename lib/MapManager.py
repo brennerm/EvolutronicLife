@@ -13,8 +13,9 @@ class MapManager(object):
 
     def _init_map(self, map_path):
         """
-        initialises internal map (2D-list) with tiles. also puts entities
-        on those tiles if there is one on that position.
+        initialises internal map (2D-list) with tiles and puts entity
+        on each tile if there is one on that position. also adds all found
+        entities to the entity manager.
         :param map_path: relative path to the map file
         :return: tile_map
         """
@@ -24,7 +25,8 @@ class MapManager(object):
             tile_map.append([])
             for x, token in enumerate(row.rstrip('\n')):
                 tile = Tile(y, x)
-                self._em.add_entity(token, tile)
+                if token != " ":    #empty space is not an entity
+                    self._em.add_entity(token, tile)
                 tile_map[-1].append(tile)
 
         return tile_map
@@ -34,7 +36,7 @@ class MapManager(object):
     def map(self):
         """
         builds a token map from the tile map
-        :return: token_map
+        :return: textual representation of the current map
         """
         return [map(str, row) for row in self._map]
 

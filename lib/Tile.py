@@ -22,8 +22,16 @@ class Tile(object):
     def empty(self):
         """
         returns true if tile holds no entity, false otherwise
+        :return: boolean stating whether the tile holds no entity
         """
-        return bool(self._entity_stack)
+        return not self._entity_stack
+
+    def walkable(self):
+        """
+        returns whether this tile can be walked upon by an entity
+        :return: boolean indicating whether an entity can step on this tile
+        """
+        return self.empty() or not self.entity.is_limit()
 
     def push_entity(self, entity):
         """

@@ -13,9 +13,6 @@ class Entity(object):
     def __str__(self):
         return self._token
 
-    @property
-    def is_movable(self):
-        return self._movable
 
     @property
     def pos_y(self):
@@ -81,7 +78,6 @@ class Animal(Entity):
     def __init__(self, tile):
         super().__init__(tile)
         self._token = "#"
-        self._movable = True
         self._food = 5
         self._lvl = 0
 
@@ -91,7 +87,7 @@ class Animal(Entity):
     def move(self, env):
         self._tile.pop_entity(self)
         walkable_tiles = [
-            tile for row in env for tile in row if not tile.entity.is_limit()
+            tile for row in env for tile in row if tile.walkable()
         ]
         if walkable_tiles:
             self._associate_tile(choice(walkable_tiles))

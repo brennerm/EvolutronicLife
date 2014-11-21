@@ -29,14 +29,10 @@ class EntityManager(object):
 
     def add_entity(self, token, tile):
         """
-        translates given token to an actual entity and adds it to the entities
-        list, if it is not empty space. also returns the entity.
+        creates actual entity from the token and adds it to the entities list
         :param token: textual token representing the entity
-        :param pos_y: y coord of the entity
-        :param pos_x: x coord of the entity
+        :param tile: the tile to be associated with the entity
         """
-        if token == " ":
-            return
         try:
             entity_class = self._entity_dict[token]
             arg_list = [tile]
@@ -49,7 +45,7 @@ class EntityManager(object):
 
     def update(self):
         """
-        updates all entities
+        updates all entities and adds potential new entities to entities list
         """
         new_entities = []
 
@@ -64,7 +60,7 @@ class EntityManager(object):
                     new_plant = entity.grow(
                         self._map_manager.get_env(entity.pos_y, entity.pos_x, 1)
                     )
-                    if new_plant:   #might not have grown yet
+                    if new_plant:   #might not have grown into new plant
                         new_entities.append(new_plant)
 
         self._entities.extend(new_entities)

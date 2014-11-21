@@ -46,7 +46,10 @@ class MapWindow(Window):
 
         for i, row in enumerate(the_map):
             line = "".join(str(cell) for cell in row)
-            self._curses_window.addstr(i, 0, line)
+            try:
+                self._curses_window.addstr(i, 0, line)
+            except curses.error:
+                pass
 
         self._curses_window.refresh()
 
