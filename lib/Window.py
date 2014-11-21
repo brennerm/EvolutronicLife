@@ -11,8 +11,8 @@ class Window(object):
 
 class InfoWindow(Window):
     def __init__(self, height, width, pos_y, pos_x):
-        self.simulation_start = time()
         super().__init__(height, width, pos_y, pos_x)
+        self.simulation_start = time()
 
 
     def update(self):
@@ -49,7 +49,7 @@ class MapWindow(Window):
             try:
                 self._curses_window.addstr(i, 0, line)
             except curses.error:
-                pass
+                pass    #curses throws error @ adding last element of last row
 
         self._curses_window.refresh()
 

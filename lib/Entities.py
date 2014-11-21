@@ -6,13 +6,13 @@ class Entity(object):
     def __init__(self, tile):
         self._movable = False
         self._is_limit = False
+        self._blocks_step = False
         if tile:
             self._associate_tile(tile)
 
 
     def __str__(self):
         return self._token
-
 
     @property
     def pos_y(self):
@@ -24,6 +24,9 @@ class Entity(object):
 
     def is_limit(self):
         return self._is_limit
+
+    def blocks_step(self):
+        return self._blocks_step
 
     def _associate_tile(self, new_tile):
         self._tile = new_tile
@@ -80,6 +83,7 @@ class Animal(Entity):
         self._token = "#"
         self._food = 5
         self._lvl = 0
+        self._blocks_step = True
 
     def act(self):
         pass
@@ -99,6 +103,7 @@ class Beach(Entity):
         super().__init__(tile)
         self._token = ":"
         self._is_limit = True
+        self._blocks_step = True
 
 
 class Water(Entity):
@@ -106,6 +111,7 @@ class Water(Entity):
         super().__init__(tile)
         self._tokens = ("~", "∽")
         self._is_limit = True
+        self._blocks_step = True
 
     def __str__(self):
         return self._tokens[global_vars.anim_toggler]
@@ -115,6 +121,7 @@ class Limit(Entity):    #shall only be used as placeholder!
     def __init__(self, tile=None):
         super().__init__(tile)
         self._is_limit = True
+        self._blocks_step = True
 
 
 class HorizLimitTop(Limit):

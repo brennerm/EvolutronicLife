@@ -34,21 +34,24 @@ class KeyListener(Thread):
                         global_vars.quit = True
                         break
                     sleep(0.01)
-            elif key == 266:          #F2 / Faster
+
+            elif key == 266:        #F2 / Faster
                 global_vars.step_duration = round(
                     global_vars.step_duration - 0.1, 1
                 )
                 if global_vars.step_duration <= 0:
                     global_vars.step_duration = 0.1
                 self._win_manager.update()
-            elif key == 267:          #F3 / Slower
+
+            elif key == 267:        #F3 / Slower
                 global_vars.step_duration = round(
                     global_vars.step_duration + 0.1, 1
                 )
                 if global_vars.step_duration > 2:
                     global_vars.step_duration = 2
                 self._win_manager.update()
-            elif key == 268:          #F4 / Quit
+
+            elif key == 268:        #F4 / Quit
                 global_vars.quit = True
 
             sleep(0.01)

@@ -31,7 +31,7 @@ class Tile(object):
         returns whether this tile can be walked upon by an entity
         :return: boolean indicating whether an entity can step on this tile
         """
-        return self.empty() or not self.entity.is_limit()
+        return self.empty() or not self.entity.blocks_step()
 
     def push_entity(self, entity):
         """
