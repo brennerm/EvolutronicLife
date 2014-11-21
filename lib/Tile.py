@@ -50,4 +50,4 @@ class Tile(object):
         returns the string representation of the topmost entity of the
         entity stack, or " " if the entity stack is empty
         """
-        return " " if self.empty() else str(self._entity_stack[-1])
+        return " " if self.empty() else str(self.entity)
