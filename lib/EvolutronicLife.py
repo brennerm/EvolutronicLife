@@ -10,8 +10,8 @@ import lib.globals as global_vars
 class EvolutronicLife(object):
 
     def __init__(self, map_filename):
-        self._map_manager = MapManager(map_filename)
         self._win_manager = WindowManager()
+        self._map_manager = MapManager(map_filename)
         self._key_listener = KeyListener(self._win_manager)
 
 

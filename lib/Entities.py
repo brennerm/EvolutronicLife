@@ -3,12 +3,12 @@ import lib.globals as global_vars
 
 
 class Entity(object):
-    def __init__(self, pos_y, pos_x):
-        self._pos_y = pos_y
-        self._pos_x = pos_x
+    def __init__(self, tile):
         self._movable = False
         self._is_limit = False
-        self._token = ""
+        if tile:
+            self._associate_tile(tile)
+
 
     def __str__(self):
         return self._token
@@ -19,152 +19,121 @@ class Entity(object):
 
     @property
     def pos_y(self):
-        return self._pos_y
+        return self._tile.pos_y
 
     @property
     def pos_x(self):
-        return self._pos_x
+        return self._tile.pos_x
 
-    def set_tile(self, new_tile):
+    def is_limit(self):
+        return self._is_limit
+
+    def _associate_tile(self, new_tile):
         self._tile = new_tile
+        new_tile.push_entity(self)
 
-
-class Empty(Entity):
-    def __init__(self, pos_y, pos_x):
-        super(Empty, self).__init__(pos_y, pos_x)
-        self._token = " "
-        self._movable = False
 
 
 class Vegetation(Entity):
-    def __init__(self, lvl, pos_y, pos_x):
-        super(Vegetation, self).__init__(pos_y, pos_x)
+    def __init__(self, lvl, tile):
+        super().__init__(tile)
 
-        self._tokens = ["ʷ", "ʬ", "Y"]
-        self._anim_tokens = ["ʷ", "ʬ", "ϒ"]
-
-        self._lvl = min(lvl, 2)
+        self._tokens = (("ʷ", "ʬ", "Y"), ("ʷ", "ʬ", "ϒ"))
+        self._lvl = lvl
         self._steps_to_reproduce = randint(3, 7)
-        self.chance_to_evolve = 1
+        self._chance_to_evolve = 1
 
     def __str__(self):
-        if global_vars.anim_toggler:
-            return self._tokens[self._lvl]
-        else:
-            return self._anim_tokens[self._lvl]
+        return self._tokens[global_vars.anim_toggler][self._lvl]
 
     @property
     def lvl(self):
         return self._lvl
 
-    def update(self, map_manager):
+    def wants_to_grow(self):
         self._steps_to_reproduce -= 1
         if self._steps_to_reproduce == 0:
             self._steps_to_reproduce = randint(3, 7)
-            return self.reproduce(map_manager)
+            return True
+        return False
 
-    def reproduce(self, map_manager):
-        env = map_manager.get_env(self.pos_y, self.pos_x, 1)
+    def grow(self, env):
+        free_tiles = [tile for row in env for tile in row if tile.empty()]
+        if len(free_tiles) != 0:     #reproduce if plant has space
+            return Vegetation(0, choice(free_tiles))
+        self._evolve(env)            #try to rise in lvl when not reproducing
 
-        possible_fields = []
-        for row in env:
-            for cell in row:
-                if isinstance(cell, Empty):
-                    possible_fields.append(cell)
-
-        if len(possible_fields) == 0:
-            return self.evolve(env)
-
-        new_field = choice(possible_fields)
-
-        return Vegetation(0, new_field.pos_y, new_field.pos_x)
-
-    def evolve(self, env):
+    def _evolve(self, env):
         if self._lvl == 2:
-            return None
-        rand_int = randint(0, 100)
-        if self.chance_to_evolve < rand_int:
-            self.chance_to_evolve += 1
-            return None
+            return
+        if self._chance_to_evolve < randint(0, 100):
+            self._chance_to_evolve += 1
+            return
+        if all(
+            isinstance(tile.entity, Vegetation) and tile.entity.lvl >= self._lvl or
+            tile.entity.is_limit() for row in env for tile in row):
 
-        if all(isinstance(cell, Vegetation) and cell.lvl >= max(self._lvl, 0) for row in env for cell in row):
-            return Vegetation(self._lvl + 1, self.pos_y, self.pos_x)
+            self._lvl = min(self._lvl + 1, 2)
+
 
 
 class Animal(Entity):
-    def __init__(self, pos_y, pos_x):
-        super(Animal, self).__init__(pos_y, pos_x)
+    def __init__(self, tile):
+        super().__init__(tile)
         self._token = "#"
         self._movable = True
-
         self._food = 5
         self._lvl = 0
 
-    def move(self):
-        dir_x = randint(-1, 1)
-        dir_y = randint(-1, 1)
+    def act(self):
+        pass
 
-        self._pos_y += dir_y
-        self._pos_x += dir_x
+    def move(self, env):
+        self._tile.pop_entity(self)
+        walkable_tiles = [
+            tile for row in env for tile in row if not tile.entity.is_limit()
+        ]
+        if walkable_tiles:
+            self._associate_tile(choice(walkable_tiles))
+
 
 
 class Beach(Entity):
-    def __init__(self, pos_y, pos_x):
-        super(Beach, self).__init__(pos_y, pos_x)
+    def __init__(self, tile):
+        super().__init__(tile)
         self._token = ":"
-        self._movable = False
+        self._is_limit = True
 
 
 class Water(Entity):
-    def __init__(self, pos_y, pos_x):
-        super(Water, self).__init__(pos_y, pos_x)
-        self._token = "~"
-        self._movable = False
-
-    def __str__(self):
-        if global_vars.anim_toggler:
-            return self._token
-        else:
-            return "∽"
-
-
-class AlterWater(Entity):
-    def __init__(self, pos_y, pos_x):
-        super(AlterWater, self).__init__(pos_y, pos_x)
-        self._token = "~"
-        self._movable = False
-
-    def __str__(self):
-
-        if global_vars.anim_toggler:
-            return self._token
-        else:
-            return "∽"
-
-
-class Limit(Entity):
-    def __init__(self, pos_y, pos_x):
-        super().__init__(pos_y, pos_x)
-        self._movable = False
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._tokens = ("~", "∽")
         self._is_limit = True
 
-    def is_limit(self):
-        return self._is_limit
+    def __str__(self):
+        return self._tokens[global_vars.anim_toggler]
 
 
-class HorizLimitTop(Entity):
-    def __init__(self, pos_y, pos_x):
-        super().__init__(pos_y, pos_x)
+class Limit(Entity):    #shall only be used as placeholder!
+    def __init__(self, tile=None):
+        super().__init__(tile)
+        self._is_limit = True
+
+
+class HorizLimitTop(Limit):
+    def __init__(self, tile):
+        super().__init__(tile)
         self._token = "_"
 
 
-class HorizLimitBottom(Entity):
-    def __init__(self, pos_y, pos_x):
-        super().__init__(pos_y, pos_x)
+class HorizLimitBottom(Limit):
+    def __init__(self, tile):
+        super().__init__(tile)
         self._token = "‾"
 
 
-class VertLimit(Entity):
-    def __init__(self, pos_y, pos_x):
-        super().__init__(pos_y, pos_x)
+class VertLimit(Limit):
+    def __init__(self,tile):
+        super().__init__(tile)
         self._token = "|"
