@@ -1,5 +1,5 @@
 from random import randint, choice
-import lib.globals as global_vars
+import globals as global_vars
 
 
 class Entity(object):
@@ -117,7 +117,7 @@ class Water(Entity):
         return self._tokens[global_vars.anim_toggler]
 
 
-class Limit(Entity):    #shall only be used as placeholder!
+class Limit(Entity): #shall only be directly initialised as placeholder!
     def __init__(self, tile=None):
         super().__init__(tile)
         self._is_limit = True

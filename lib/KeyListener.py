@@ -1,7 +1,7 @@
-import lib.WindowManager as WinMan
 from threading import Thread
 from time import sleep
-import lib.globals as global_vars
+import WindowManager as WinMan
+import globals as global_vars
 
 
 class KeyListener(Thread):

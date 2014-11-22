@@ -1,8 +1,8 @@
-import lib.WindowManager as WinMan
-import lib.MapManager as MapMan
-import lib.globals as global_vars
-from lib.KeyListener import KeyListener
 from time import sleep, time
+from KeyListener import KeyListener
+import WindowManager as WinMan
+import MapManager as MapMan
+import globals as global_vars
 
 
 def run(map_filename):

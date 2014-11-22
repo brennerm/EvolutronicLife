@@ -1,5 +1,5 @@
 import curses
-from lib.Window import InfoWindow, MapWindow, OptionPane
+from Window import InfoWindow, MapWindow, OptionPane
 
 
 #start and configure curses as needed

@@ -1,6 +1,6 @@
 import curses
 from time import time
-import lib.globals as global_vars
+import globals as global_vars
 
 
 class Window(object):

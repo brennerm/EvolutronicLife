@@ -1,6 +1,6 @@
-from lib.Tile import Tile
-from lib.Entities import *
-import lib.globals as global_vars
+from Tile import Tile
+from Entities import *
+import globals as global_vars
 
 
 _entities = []
@@ -51,7 +51,8 @@ def _parse_map(map_path):
 
 def _init_entity(token, tile):
     """
-    creates actual entity from the token and adds it to the entities list
+    initialises actual entity from the token and adds it to the entities list.
+    the entity will associate itself with the given tile
     :param token: textual token representing the entity
     :param tile: the tile to be associated with the entity
     """
