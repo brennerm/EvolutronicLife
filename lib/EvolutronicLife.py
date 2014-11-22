@@ -1,3 +1,4 @@
+import atexit
 from time import sleep, time
 from KeyListener import KeyListener
 import WindowManager as WinMan
@@ -9,6 +10,8 @@ def run(map_filename):
     """
     the main game loop. runs until user hits quit button (F4)
     """
+    atexit.register(WinMan.terminate)
+
     key_listener = KeyListener()
     key_listener.start()
     MapMan.init_map(map_filename)
@@ -26,5 +29,4 @@ def run(map_filename):
         while global_vars.pause and not global_vars.quit:
             sleep(0.01)
 
-    WinMan.terminate()
     key_listener.join()
