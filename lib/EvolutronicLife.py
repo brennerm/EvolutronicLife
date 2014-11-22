@@ -7,11 +7,11 @@ from time import sleep, time
 
 def run(map_filename):
     """
-    the main game loop
+    the main game loop. runs until user hits quit button (F4)
     """
     key_listener = KeyListener()
     key_listener.start()
-    MapMan.init(map_filename)
+    MapMan.init_map(map_filename)
 
     while not global_vars.quit:
         global_vars.step += 1
@@ -26,5 +26,5 @@ def run(map_filename):
         while global_vars.pause and not global_vars.quit:
             sleep(0.01)
 
-    WinMan.deinit_curses()
+    WinMan.terminate()
     key_listener.join()

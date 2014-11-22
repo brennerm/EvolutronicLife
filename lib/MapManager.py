@@ -1,20 +1,38 @@
-import lib.EntityManager as EntMan
 from lib.Tile import Tile
+from lib.Entities import *
 import lib.globals as global_vars
 
 
-def init(map_filename):
+_entities = []
+_entity_dict = {
+    "ʷ": Vegetation,
+    "ʬ": Vegetation,
+    "Y": Vegetation,
+    "#": Animal,
+    "~": Water,
+    "∽": Water,
+    ":": Beach,
+    "_": HorizLimitTop,
+    "‾": HorizLimitBottom,
+    "|": VertLimit
+}
+
+
+def init_map(map_filename):
+    """
+    sets up the tile_map and map dimension info as global module vars
+    :param map_filename: relative path to the map file
+    """
     global _tile_map, _map_width, _map_height
-    _tile_map = _init_map('maps/' + map_filename + '.map')
+    _tile_map = _parse_map('maps/' + map_filename + '.map')
     _map_width = len(_tile_map[0])
     _map_height = len(_tile_map)
 
 
-def _init_map(map_path):
+def _parse_map(map_path):
     """
-    initialises internal map (2D-list) with tiles and puts entity
-    on each tile if there is one on that position. also adds all found
-    entities to the entity manager.
+    initialises internal map (2D-list) with tiles and puts initialised entity
+    on each tile if there is one on that position.
     :param map_path: relative path to the map file
     :return: tile_map
     """
@@ -25,10 +43,26 @@ def _init_map(map_path):
         for x, token in enumerate(row.rstrip('\n')):
             tile = Tile(y, x)
             if token != " ":    #empty space is not an entity
-                EntMan.add_entity(token, tile)
+                _init_entity(token, tile)
             tile_map[-1].append(tile)
 
     return tile_map
+
+
+def _init_entity(token, tile):
+    """
+    creates actual entity from the token and adds it to the entities list
+    :param token: textual token representing the entity
+    :param tile: the tile to be associated with the entity
+    """
+    try:
+        entity_class = _entity_dict[token]
+        arg_list = [tile]
+        if token in "ʷʬY":     #needs lvl if it is vegetation
+            arg_list.insert(0, "ʷʬY".index(token))
+        _entities.append(entity_class(*arg_list))
+    except KeyError:
+        raise KeyError("your map contains this unexpected token: " + token)
 
 
 def token_map():
@@ -41,13 +75,28 @@ def token_map():
 
 def update():
     """
-    tells the entity manager to update all entities
+    updates all entities. adds potential new entities to entities list and
+    removes potential dead/eaten entities from the entities list
     """
     global_vars.anim_toggler = not global_vars.anim_toggler
-    EntMan.update()
+    new_entities = []
+
+    for entity in _entities:
+        if isinstance(entity, Animal):
+            entity.act()
+            entity.move(_get_env(entity.pos_y, entity.pos_x, 1))
+        elif isinstance(entity, Vegetation):
+            if entity.wants_to_grow():
+                new_plant = entity.grow(
+                    _get_env(entity.pos_y, entity.pos_x, 1)
+                )
+                if new_plant:   #might not have grown into new plant
+                    new_entities.append(new_plant)
+
+    _entities.extend(new_entities)
 
 
-def get_env(pos_y, pos_x, scope):
+def _get_env(pos_y, pos_x, scope):
     """
     calculates part of map around a specific object with a given range.
     parts that are outside of the map will be filled with tiles holding
@@ -72,6 +121,6 @@ def get_env(pos_y, pos_x, scope):
             try:
                 env[-1].append(_tile_map[y_on_map][x_on_map])
             except IndexError:
-                env[-1].append(Tile(EntMan.placeholder_limit()))
+                env[-1].append(Tile(entity=Limit()))
 
     return env

@@ -1,7 +1,7 @@
 class Tile(object):
     def __init__(self, pos_y=None, pos_x=None, entity=None):
         self._entity_stack = []
-        if entity:      #can be None for empty space
+        if entity:      #can be initialised without entity
             self._entity_stack.append(entity)
         self._pos_y = pos_y
         self._pos_x = pos_x
