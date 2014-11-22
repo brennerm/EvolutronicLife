@@ -2,60 +2,56 @@ import curses
 from lib.Window import InfoWindow, MapWindow, OptionPane
 
 
-class WindowManager(object):
+#start and configure curses as needed
+_main_win = curses.initscr()
+curses.start_color()
+curses.noecho()
+curses.cbreak()
+curses.curs_set(0)
+_main_win.nodelay(1)
+_main_win.keypad(1)
+_main_win.refresh()
+curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
 
-    def __init__(self):
-        self.init_curses()
-        self._info_win = InfoWindow(1, 140, 0, 0)
-        self._map_win = MapWindow(35, 140, 1, 0)
-        self._option_pane = OptionPane(
-            1, 140, 36, 0, "Pause", "Faster", "Slower", "Exit"
-        )
+#init subwindows
+_info_win = InfoWindow(1, 140, 0, 0)
+_map_win = MapWindow(35, 140, 1, 0)
+_option_pane = OptionPane(
+    1, 140, 36, 0, "Pause", "Faster", "Slower", "Exit"
+)
 
 
-    def init_curses(self):
-        """
-        starts and configures curses as needed
-        """
-        self._main_win = curses.initscr()
-        curses.start_color()
-        curses.noecho()
-        curses.cbreak()
-        curses.curs_set(0)
-        self._main_win.nodelay(1)
-        self._main_win.keypad(1)
-        self._main_win.refresh()
+def deinit_curses():
+    """
+    unloads curses
+    """
+    curses.nocbreak()
+    _main_win.keypad(0)
+    curses.echo()
+    curses.endwin()
 
-        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
 
-    def deinit_curses(self):
-        """
-        unloads curses
-        """
-        curses.nocbreak()
-        self._main_win.keypad(0)
-        curses.echo()
-        curses.endwin()
+def update(the_map=None):
+    """
+    updates content of info window and also the map window, if a map is given
+    :param the_map: the game map in the current state
+    """
+    _info_win.update()
+    if(the_map):
+        _map_win.update(the_map)
 
-    def update(self, the_map=None):
-        """
-        updates content of info window and also the map window, if a map is given
-        :param the_map: the game map in the current state
-        """
-        self._info_win.update()
-        if(the_map):
-            self._map_win.update(the_map)
 
-    def replace_option(self, option_to_replace, new_option):
-        """
-        replaces option_to_replace with new_option in the_option pane
-        :param option_to_replace: the option to replace
-        :param new_option: the new option to take its place
-        """
-        self._option_pane.replace_option(option_to_replace, new_option)
+def replace_option(option_to_replace, new_option):
+    """
+    replaces option_to_replace with new_option in the_option pane
+    :param option_to_replace: the option to replace
+    :param new_option: the new option to take its place
+    """
+    _option_pane.replace_option(option_to_replace, new_option)
 
-    def key_pressed(self):
-        """
-        returns the current pressed key
-        """
-        return self._main_win.getch()
+
+def key_pressed():
+    """
+    returns the current pressed key
+    """
+    return _main_win.getch()

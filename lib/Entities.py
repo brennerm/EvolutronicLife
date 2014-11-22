@@ -59,9 +59,9 @@ class Vegetation(Entity):
 
     def grow(self, env):
         free_tiles = [tile for row in env for tile in row if tile.empty()]
-        if len(free_tiles) != 0:     #reproduce if plant has space
+        if free_tiles:       #reproduce if plant has space
             return Vegetation(0, choice(free_tiles))
-        self._evolve(env)            #try to rise in lvl when not reproducing
+        self._evolve(env)    #try to rise in lvl when not reproducing
 
     def _evolve(self, env):
         if self._lvl == 2:

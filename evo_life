@@ -2,7 +2,7 @@
 
 from os import listdir
 from argparse import ArgumentParser
-from lib.EvolutronicLife import EvolutronicLife
+import lib.EvolutronicLife as EvoLife
 
 
 if __name__ == "__main__":
@@ -14,4 +14,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     
-    EvolutronicLife(args.map).run()
+    EvoLife.run(args.map)
