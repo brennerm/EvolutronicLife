@@ -20,17 +20,23 @@ class Entity(object):
     def pos_x(self):
         return self._tile.pos_x
 
-    def is_limit(self):
-        return self._is_limit
-
     def blocks_step(self):
         return self._blocks_step
 
     def _associate_tile(self, new_tile):
+        """
+        pushes this entity on the given tile and set reference to the tile
+        :param new_tile: the tile to move onto
+        """
         self._tile = new_tile
         new_tile.push_entity(self)
 
     def _die(self):
+        """
+        kills this entity by popping it from the corresponding tiles' entity
+        stack and returning it for destruction
+        :return: this entity
+        """
         self._tile.pop_entity(self)
         return self
 
