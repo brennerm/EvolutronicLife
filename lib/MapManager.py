@@ -93,16 +93,12 @@ def update():
                     dead_entities.append(dead_entity)
                 else:   #animal moves if it can't find food
                     entity.move(env)
-            else:
-                entity.move(env) #delete me
-            """
             else:   #animal tries to reproduce only if it is not hungry
                 new_animal = entity.try_reproduce(env)
                 if new_animal:
                     new_entities.append(new_animal)
                 else:   #animal moves if it can't find partner
                     entity.move(env)
-            """
 
         elif isinstance(entity, Vegetation):
             if entity.wants_to_grow():
@@ -110,9 +106,9 @@ def update():
                 if new_plant:   #might not have grown into new plant
                     new_entities.append(new_plant)
 
+    _entities.extend(new_entities)
     for deceased in dead_entities:
         _entities.remove(deceased)
-    _entities.extend(new_entities)
 
 
 def _get_env(pos_y, pos_x, scope):

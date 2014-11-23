@@ -83,13 +83,24 @@ class Vegetation(Entity):
 class Animal(Entity):
     def __init__(self, tile):
         super().__init__(tile)
-        self._food = 5
-        self._energy = 5
+        self._food = 10
+        self._energy = 10
         self._lvl = 0
+        self._rdy_to_copulate = False
         self._blocks_step = True
+
+    @property
+    def lvl(self):
+        return self._lvl
 
     def is_hungry(self):
         return not self._food
+
+    def is_horny(self):
+        return self._rdy_to_copulate
+
+    def have_sex(self):
+        self._rdy_to_copulate = False
 
     def move(self, env):
         self._tile.pop_entity(self)
@@ -102,6 +113,7 @@ class Animal(Entity):
             self._food -= 1
         else:
             self._energy -= 1
+            self._rdy_to_copulate = False
 
     def __str__(self):
         return self._tokens[self._lvl]
@@ -119,12 +131,32 @@ class Herbivore(Animal):
             if tile.holds_entity(Vegetation, self._lvl)
         ]
         if eatable_plants:
-            self._food = 5
-            self._energy = 5
+            self._food = 10
+            self._energy = 10
+            self._rdy_to_copulate = True
             return choice(eatable_plants)._die()
         elif not self._energy:
             return self._die()
 
+    def try_reproduce(self, env):
+        mating_partners = [
+            tile.entity(Herbivore, self._lvl) for row in env for tile in row
+            if tile.holds_entity(Herbivore, self._lvl)
+        ]
+        mating_partners = [
+            mate for mate in mating_partners
+            if mate.is_horny() and mate != self
+        ]
+
+        if mating_partners:
+            partner = choice(mating_partners)
+            self._rdy_to_copulate = False
+            partner.have_sex()
+            birthplaces = [
+                tile for row in env for tile in row if tile.walkable()
+            ]
+            tile = choice(birthplaces) if birthplaces else self._tile
+            return Herbivore(tile)
 
 
 class Beach(Entity):
