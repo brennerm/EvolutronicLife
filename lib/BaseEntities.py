@@ -12,16 +12,20 @@ class Entity(object):
     def __str__(self):
         return self._token
 
+
     @property
     def pos_y(self):
         return self._tile.pos_y
+
 
     @property
     def pos_x(self):
         return self._tile.pos_x
 
+
     def blocks_step(self):
         return self._blocks_step
+
 
     def _associate_tile(self, new_tile):
         """
@@ -30,6 +34,7 @@ class Entity(object):
         """
         self._tile = new_tile
         new_tile.push_entity(self)
+
 
     def _die(self):
         """

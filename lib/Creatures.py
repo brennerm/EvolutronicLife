@@ -124,6 +124,7 @@ class Herbivore(Animal):
         super().__init__(tile)
         self._tokens = 'җҖӜ'
 
+
     def hunger_game(self, env):
         """
         lets this animal try to eat a plant of the same level. this must not
