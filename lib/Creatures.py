@@ -1,39 +1,6 @@
 from random import randint, choice
+from BaseEntities import *
 import globals as global_vars
-
-
-class Entity(object):
-    def __init__(self, tile):
-        self._movable = False
-        self._blocks_step = False
-        if tile:
-            self._associate_tile(tile)
-
-
-    def __str__(self):
-        return self._token
-
-    @property
-    def pos_y(self):
-        return self._tile.pos_y
-
-    @property
-    def pos_x(self):
-        return self._tile.pos_x
-
-    def is_limit(self):
-        return self._is_limit
-
-    def blocks_step(self):
-        return self._blocks_step
-
-    def _associate_tile(self, new_tile):
-        self._tile = new_tile
-        new_tile.push_entity(self)
-
-    def _die(self):
-        self._tile.pop_entity(self)
-        return self
 
 
 
@@ -103,11 +70,11 @@ class Animal(Entity):
         self._rdy_to_copulate = False
 
     def move(self, env):
-        self._tile.pop_entity(self)
         walkable_tiles = [
             tile for row in env for tile in row if tile.walkable()
         ]
         if walkable_tiles:
+            self._tile.pop_entity(self)
             self._associate_tile(choice(walkable_tiles))
         if self._food:
             self._food -= 1
@@ -138,7 +105,7 @@ class Herbivore(Animal):
         elif not self._energy:
             return self._die()
 
-    def try_reproduce(self, env):
+    def try_reproduction(self, env):
         mating_partners = [
             tile.entity(Herbivore, self._lvl) for row in env for tile in row
             if tile.holds_entity(Herbivore, self._lvl)
@@ -151,50 +118,10 @@ class Herbivore(Animal):
         if mating_partners:
             partner = choice(mating_partners)
             self._rdy_to_copulate = False
+            self._food -= 1
             partner.have_sex()
             birthplaces = [
                 tile for row in env for tile in row if tile.walkable()
             ]
             tile = choice(birthplaces) if birthplaces else self._tile
             return Herbivore(tile)
-
-
-class Beach(Entity):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._token = ":"
-        self._blocks_step = True
-
-
-class Water(Entity):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._tokens = "~∽"
-        self._blocks_step = True
-
-    def __str__(self):
-        return self._tokens[global_vars.anim_toggler]
-
-
-class Limit(Entity): #shall only be directly initialised as placeholder!
-    def __init__(self, tile=None):
-        super().__init__(tile)
-        self._blocks_step = True
-
-
-class HorizLimitTop(Limit):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._token = "_"
-
-
-class HorizLimitBottom(Limit):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._token = "‾"
-
-
-class VertLimit(Limit):
-    def __init__(self,tile):
-        super().__init__(tile)
-        self._token = "|"
