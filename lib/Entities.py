@@ -5,7 +5,6 @@ import globals as global_vars
 class Entity(object):
     def __init__(self, tile):
         self._movable = False
-        self._is_limit = False
         self._blocks_step = False
         if tile:
             self._associate_tile(tile)
@@ -32,13 +31,17 @@ class Entity(object):
         self._tile = new_tile
         new_tile.push_entity(self)
 
+    def _die(self):
+        self._tile.pop_entity(self)
+        return self
+
 
 
 class Vegetation(Entity):
     def __init__(self, lvl, tile):
         super().__init__(tile)
 
-        self._tokens = (("ʷ", "ʬ", "Y"), ("ʷ", "ʬ", "ϒ"))
+        self._tokens = ("ʷʬY", "ʷʬϒ")
         self._lvl = lvl
         self._steps_to_reproduce = randint(3, 7)
         self._chance_to_evolve = 1
@@ -70,8 +73,8 @@ class Vegetation(Entity):
             self._chance_to_evolve += 1
             return
         if all(
-            isinstance(tile.entity, Vegetation) and tile.entity.lvl >= self._lvl or
-            tile.entity.is_limit() for row in env for tile in row):
+            isinstance(tile.entity(), Vegetation) and tile.entity().lvl >= self._lvl or
+            isinstance(tile.entity(), Limit) for row in env for tile in row):
 
             self._lvl = min(self._lvl + 1, 2)
 
@@ -80,13 +83,13 @@ class Vegetation(Entity):
 class Animal(Entity):
     def __init__(self, tile):
         super().__init__(tile)
-        self._token = "#"
         self._food = 5
+        self._energy = 5
         self._lvl = 0
         self._blocks_step = True
 
-    def act(self):
-        pass
+    def is_hungry(self):
+        return not self._food
 
     def move(self, env):
         self._tile.pop_entity(self)
@@ -95,6 +98,32 @@ class Animal(Entity):
         ]
         if walkable_tiles:
             self._associate_tile(choice(walkable_tiles))
+        if self._food:
+            self._food -= 1
+        else:
+            self._energy -= 1
+
+    def __str__(self):
+        return self._tokens[self._lvl]
+
+
+
+class Herbivore(Animal):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._tokens = 'җҖӜ'
+
+    def hunger_game(self, env):
+        eatable_plants = [
+            tile.entity(Vegetation, self._lvl) for row in env for tile in row
+            if tile.holds_entity(Vegetation, self._lvl)
+        ]
+        if eatable_plants:
+            self._food = 5
+            self._energy = 5
+            return choice(eatable_plants)._die()
+        elif not self._energy:
+            return self._die()
 
 
 
@@ -102,15 +131,13 @@ class Beach(Entity):
     def __init__(self, tile):
         super().__init__(tile)
         self._token = ":"
-        self._is_limit = True
         self._blocks_step = True
 
 
 class Water(Entity):
     def __init__(self, tile):
         super().__init__(tile)
-        self._tokens = ("~", "∽")
-        self._is_limit = True
+        self._tokens = "~∽"
         self._blocks_step = True
 
     def __str__(self):
@@ -120,7 +147,6 @@ class Water(Entity):
 class Limit(Entity): #shall only be directly initialised as placeholder!
     def __init__(self, tile=None):
         super().__init__(tile)
-        self._is_limit = True
         self._blocks_step = True
 
 

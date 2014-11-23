@@ -8,7 +8,7 @@ _entity_dict = {
     "ʷ": Vegetation,
     "ʬ": Vegetation,
     "Y": Vegetation,
-    "#": Animal,
+    "җ": Herbivore,
     "~": Water,
     "∽": Water,
     ":": Beach,
@@ -81,19 +81,37 @@ def update():
     """
     global_vars.anim_toggler = not global_vars.anim_toggler
     new_entities = []
+    dead_entities = []
 
     for entity in _entities:
+        env = _get_env(entity.pos_y, entity.pos_x, 1)
+
         if isinstance(entity, Animal):
-            entity.act()
-            entity.move(_get_env(entity.pos_y, entity.pos_x, 1))
+            if entity.is_hungry():
+                dead_entity = entity.hunger_game(env)
+                if dead_entity: #can be eaten plant or starved animal
+                    dead_entities.append(dead_entity)
+                else:   #animal moves if it can't find food
+                    entity.move(env)
+            else:
+                entity.move(env) #delete me
+            """
+            else:   #animal tries to reproduce only if it is not hungry
+                new_animal = entity.try_reproduce(env)
+                if new_animal:
+                    new_entities.append(new_animal)
+                else:   #animal moves if it can't find partner
+                    entity.move(env)
+            """
+
         elif isinstance(entity, Vegetation):
             if entity.wants_to_grow():
-                new_plant = entity.grow(
-                    _get_env(entity.pos_y, entity.pos_x, 1)
-                )
+                new_plant = entity.grow(env)
                 if new_plant:   #might not have grown into new plant
                     new_entities.append(new_plant)
 
+    for deceased in dead_entities:
+        _entities.remove(deceased)
     _entities.extend(new_entities)
 
 
