@@ -1,5 +1,6 @@
 from Tile import Tile
-from Entities import *
+from BaseEntities import *
+from Creatures import *
 import globals as global_vars
 
 
@@ -85,30 +86,50 @@ def update():
 
     for entity in _entities:
         env = _get_env(entity.pos_y, entity.pos_x, 1)
-
         if isinstance(entity, Animal):
-            if entity.is_hungry():
-                dead_entity = entity.hunger_game(env)
-                if dead_entity: #can be eaten plant or starved animal
-                    dead_entities.append(dead_entity)
-                else:   #animal moves if it can't find food
-                    entity.move(env)
-            else:   #animal tries to reproduce only if it is not hungry
-                new_animal = entity.try_reproduce(env)
-                if new_animal:
-                    new_entities.append(new_animal)
-                else:   #animal moves if it can't find partner
-                    entity.move(env)
-
+            _animal_action(entity, new_entities, dead_entities, env)
         elif isinstance(entity, Vegetation):
-            if entity.wants_to_grow():
-                new_plant = entity.grow(env)
-                if new_plant:   #might not have grown into new plant
-                    new_entities.append(new_plant)
+            _veggie_action(entity, new_entities, env)
 
     _entities.extend(new_entities)
     for deceased in dead_entities:
         _entities.remove(deceased)
+
+
+def _animal_action(animal, new_entities, dead_entities, env):
+    """
+    lets an animal (herbivore or carnivore) act. pushes new (reproduction)
+    and dead (eaten or starved) entities on the corresponding list
+    :param animal: the animal to act
+    :param new_entities: newly produced entities of the current iteration
+    :param dead_entities: deceased entitities of the current iteration
+    :param env: the surrounding tiles of animal
+    """
+    if animal.is_hungry():
+        dead_entity = animal.hunger_game(env)
+        if dead_entity: #can be eaten plant or starved animal
+            dead_entities.append(dead_entity)
+        else:   #animal moves if it can't find food
+            animal.move(env)
+    else:   #animal tries to reproduce only if it is not hungry
+        new_animal = animal.try_reproduction(env)
+        if new_animal:
+            new_entities.append(new_animal)
+        else:   #animal moves if it can't find partner
+            animal.move(env)
+
+
+def _veggie_action(plant, new_entities, env):
+    """
+    lets a plant act. pushes new (reproduction) plants on new_entities
+    :param animal: the plant to act
+    :param new_entities: newly produced entities of the current iteration
+    :param env: the surrounding tiles of plant
+    """
+    if plant.wants_to_grow():
+        new_plant = plant.grow(env)
+        if new_plant:   #might not have grown into new plant
+            new_entities.append(new_plant)
 
 
 def _get_env(pos_y, pos_x, scope):
