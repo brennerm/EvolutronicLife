@@ -102,20 +102,23 @@ def _animal_action(animal, new_entities, env):
     :param dead_entities: deceased entitities of the current iteration
     :param env: the surrounding tiles of animal
     """
-    if animal.has_to_die():
-        _entities.remove(animal.die())
-    elif animal.is_hungry():
-        dead_entity = animal.hunger_game(env)
-        if dead_entity: #can be eaten plant or starved animal
-            _entities.remove(dead_entity)
-        else:   #animal moves if it can't find food
-            animal.move(env)
-    else:   #animal tries to reproduce only if it is not hungry
-        new_animal = animal.try_reproduction(env)
-        if new_animal:
-            new_entities.append(new_animal)
-        else:   #animal moves if it can't find partner
-            animal.move(env)
+    try:
+        if animal.has_to_die():
+            _entities.remove(animal.die())
+        elif animal.is_hungry():
+            dead_entity = animal.hunger_game(env)
+            if dead_entity: #can be eaten plant or starved animal
+                _entities.remove(dead_entity)
+            else:   #animal moves if it can't find food
+                animal.move(env)
+        else:   #animal tries to reproduce only if it is not hungry
+            new_animal = animal.try_reproduction(env)
+            if new_animal:
+                new_entities.append(new_animal)
+            else:   #animal moves if it can't find partner
+                animal.move(env)
+    except ValueError:
+        pass
 
 
 def _veggie_action(plant, new_entities, env):
