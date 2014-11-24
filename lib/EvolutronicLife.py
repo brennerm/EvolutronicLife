@@ -16,7 +16,7 @@ def run(map_filename, starting_step):
     key_listener.start()
     MapMan.init_map(map_filename)
 
-    print('Generating...')
+    #print('Generating...')
 
     visual_run = False
     while not global_vars.quit:
@@ -25,9 +25,12 @@ def run(map_filename, starting_step):
 
         MapMan.update()
 
-        if not visual_run and global_vars.step >= starting_step:
-            WinMan.init()
-            visual_run = True
+        if not visual_run:
+            if global_vars.step >= starting_step:
+                WinMan.init()
+                visual_run = True
+            else:
+                WinMan.progress_info(starting_step)
 
         if visual_run:
             WinMan.update(MapMan.token_map())

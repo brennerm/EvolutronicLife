@@ -1,5 +1,7 @@
 import curses
 from Window import InfoWindow, MapWindow, OptionPane
+from distutils.ccompiler import gen_lib_options
+import globals as global_vars
 
 
 #start and configure curses as needed
@@ -57,3 +59,7 @@ def terminate():
     _main_win.keypad(0)
     curses.echo()
     curses.endwin()
+
+def progress_info(end):
+    _main_win.addstr(0, 0, "Generating step: %d/%d" % (global_vars.step, end))
+    _main_win.refresh()
