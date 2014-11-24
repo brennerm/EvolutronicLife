@@ -4,7 +4,9 @@ from Creatures import *
 import globals as global_vars
 
 
-_entities = []
+_plants = []
+_herbivores = []
+_carnivores = []
 _entity_dict = {
     "ʷ": Vegetation,
     "ʬ": Vegetation,
@@ -53,19 +55,25 @@ def _parse_map(map_path):
 
 def _init_entity(token, tile):
     """
-    initialises actual entity from the token and adds it to the entities list.
-    the entity will associate itself with the given tile
+    initialises actual entity from the token and adds it to one of the entity
+    lists, if it is a creature. the entity will associate itself with the
+    given tile
     :param token: textual token representing the entity
     :param tile: the tile to be associated with the entity
     """
     try:
         entity_class = _entity_dict[token]
-        arg_list = [tile]
-        if token in "ʷʬY":     #needs lvl if it is vegetation
-            arg_list.insert(0, "ʷʬY".index(token))
-        _entities.append(entity_class(*arg_list))
     except KeyError:
         raise KeyError("your map contains this unexpected token: " + token)
+
+    if entity_class == Carnivore:
+        _carnivores.append(entity_class(tile))
+    elif entity_class == Herbivore:
+        _herbivores.append(entity_class(tile))
+    elif entity_class == Vegetation:
+        _plants.append(entity_class("ʷʬY".index(token), tile))
+    else:   #basic entities don't need to be held in an extra list
+        entity_class(tile)
 
 
 def token_map():
@@ -78,61 +86,72 @@ def token_map():
 
 def update():
     """
-    updates all entities. adds potential new entities to entities list and
-    removes potential dead/eaten entities from the entities list
+    updates all entities. this is done in three steps. first to act are
+    carnivores, second are herbivores and third are plants.
     """
     global_vars.anim_toggler = not global_vars.anim_toggler
-    new_entities = []
-
-    for entity in _entities:
-        env = _get_env(entity.pos_y, entity.pos_x, 1)
-        if isinstance(entity, Animal):
-            _animal_action(entity, new_entities, env)
-        elif isinstance(entity, Vegetation):
-            _veggie_action(entity, new_entities, env)
-
-    _entities.extend(new_entities)
+    _handle_animal_type(hunter_class=Carnivore, prey_class=Herbivore)
+    _handle_animal_type(hunter_class=Herbivore, prey_class=Vegetation)
+    _veggie_action()
 
 
-def _animal_action(animal, new_entities, env):
+def _handle_animal_type(hunter_class, prey_class):
     """
-    lets an animal (herbivore or carnivore) act. pushes new (reproduction)
-    and dead (eaten or starved) entities on the corresponding list
-    :param animal: the animal to act
-    :param new_entities: newly produced entities of the current iteration
-    :param dead_entities: deceased entitities of the current iteration
-    :param env: the surrounding tiles of animal
+    lets all animals of the hunter class act. eaten prey will be removed from
+    the corresponding prey list. newborn/starved hunters will be added/removed
+    from the corresponding hunter lists.
+    :param hunter_class: the hunter class
+    :param prey_class: the prey class
     """
-    try:
-        if animal.has_to_die():
-            _entities.remove(animal.die())
-        elif animal.is_hungry():
-            dead_entity = animal.hunger_game(env)
-            if dead_entity: #can be eaten plant or starved animal
-                _entities.remove(dead_entity)
-            else:   #animal moves if it can't find food
-                animal.move(env)
-        else:   #animal tries to reproduce only if it is not hungry
-            new_animal = animal.try_reproduction(env)
-            if new_animal:
-                new_entities.append(new_animal)
-            else:   #animal moves if it can't find partner
-                animal.move(env)
-    except ValueError:
-        pass
+
+    if hunter_class == Carnivore:
+        hunter_list, prey_list = _carnivores, _herbivores
+    else:
+        hunter_list, prey_list = _herbivores, _plants
+
+    born_hunters = []
+
+    for hunter in hunter_list:
+        env = _get_env(hunter.pos_y, hunter.pos_x, 1)
+
+        if hunter.life_over():
+            hunter_list.remove(hunter.die())
+
+        elif hunter.is_hungry():
+            dead_animal = hunter.hunger_game(env)
+            if isinstance(dead_animal, prey_class):      #found food
+                prey_list.remove(dead_animal)
+            elif isinstance(dead_animal, hunter_class):  #starved
+                hunter_list.remove(dead_animal)
+            else:  #hunter moves if it couldn't find food / didn't starve
+                hunter.move(env)
+
+        else:   #hunter tries to reproduce only if it is not hungry
+            newborn_hunter = hunter.try_reproduction(env)
+            if newborn_hunter:
+                born_hunters.append(newborn_hunter)
+            else:   #hunter moves if it couldn't find partner
+                hunter.move(env)
+
+    hunter_list.extend(born_hunters)
 
 
-def _veggie_action(plant, new_entities, env):
+def _veggie_action():
     """
-    lets a plant act. pushes new (reproduction) plants on new_entities
-    :param animal: the plant to act
-    :param new_entities: newly produced entities of the current iteration
-    :param env: the surrounding tiles of plant
+    lets all plants act. new plants (reproduction) will be added to
+    the plants list.
     """
-    if plant.wants_to_grow():
-        new_plant = plant.try_growth(env)
-        if new_plant:   #might not have grown into new plant
-            new_entities.append(new_plant)
+    new_plants = []
+
+    for plant in _plants:
+        if plant.wants_to_grow():
+            grown_plant = plant.try_growth(
+                _get_env(plant.pos_y, plant.pos_x, 1)
+            )
+            if grown_plant:
+                new_plants.append(grown_plant)
+
+    _plants.extend(new_plants)
 
 
 def _get_env(pos_y, pos_x, scope):

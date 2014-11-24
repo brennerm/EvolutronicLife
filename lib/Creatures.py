@@ -83,7 +83,7 @@ class Animal(Entity):
         return self._lvl
 
 
-    def has_to_die(self):
+    def life_over(self):
         self._time_to_live -= 1
         return not self._time_to_live
 
@@ -184,6 +184,7 @@ class Herbivore(Animal):
             self._rdy_to_copulate = False
             self._food -= 1
             return Herbivore(choice(birthplaces))
+
 
 
 class Carnivore(Animal):
