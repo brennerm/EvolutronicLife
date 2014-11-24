@@ -129,7 +129,7 @@ def _veggie_action(plant, new_entities, env):
     :param env: the surrounding tiles of plant
     """
     if plant.wants_to_grow():
-        new_plant = plant.grow(env)
+        new_plant = plant.try_growth(env)
         if new_plant:   #might not have grown into new plant
             new_entities.append(new_plant)
 

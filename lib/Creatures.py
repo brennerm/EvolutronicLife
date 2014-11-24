@@ -35,7 +35,7 @@ class Vegetation(Entity):
         return False
 
 
-    def grow(self, env):
+    def try_growth(self, env):
         """
         lets this plant try to grow. growing could be either producing
         a new offspring or rising in level. in the former case, the
@@ -70,7 +70,7 @@ class Vegetation(Entity):
 class Animal(Entity):
     def __init__(self, tile):
         super().__init__(tile)
-        self._time_to_live = 30
+        self._time_to_live = 50
         self._food = 10
         self._energy = 10
         self._lvl = 0
@@ -175,12 +175,12 @@ class Herbivore(Animal):
         ]
 
         if mating_partners:
-            partner = choice(mating_partners)
-            self._rdy_to_copulate = False
-            self._food -= 1
-            partner.have_sex()
             birthplaces = [
                 tile for row in env for tile in row if tile.walkable()
             ]
-            tile = choice(birthplaces) if birthplaces else self._tile
-            return Herbivore(tile)
+            if not birthplaces: return
+            partner = choice(mating_partners)
+            partner.have_sex()
+            self._rdy_to_copulate = False
+            self._food -= 1
+            return Herbivore(choice(birthplaces))
