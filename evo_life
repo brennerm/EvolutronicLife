@@ -4,7 +4,6 @@ from sys import path
 path.append('lib')  #add lib folder to module search path
 from os import listdir
 from argparse import ArgumentParser
-import EvolutronicLife as EvoLife
 
 
 if __name__ == "__main__":
@@ -14,6 +13,12 @@ if __name__ == "__main__":
         '-m', '--map', default='map1', choices=maps,
         help='The map with which to start the simulation'
     )
+    parser.add_argument(
+        '-k', '--kickstart', default=1, type=int,
+        help='Specify the starting step. The preceding steps are executed hidden'
+    )
     args = parser.parse_args()
-    
-    EvoLife.run(args.map)
+
+    import EvolutronicLife as EvoLife
+
+    EvoLife.run(args.map, args.kickstart)

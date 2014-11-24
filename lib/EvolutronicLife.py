@@ -6,7 +6,7 @@ import MapManager as MapMan
 import globals as global_vars
 
 
-def run(map_filename):
+def run(map_filename, starting_step):
     """
     the main game loop. runs until user hits quit button (F4)
     """
@@ -21,12 +21,13 @@ def run(map_filename):
         step_start = time()
 
         MapMan.update()
-        WinMan.update(MapMan.token_map())
+        if global_vars.step >= starting_step:
+            WinMan.update(MapMan.token_map())
 
-        if (time() - step_start) < global_vars.step_duration:
-            sleep(global_vars.step_duration - (time() - step_start))
+            if (time() - step_start) < global_vars.step_duration:
+                sleep(global_vars.step_duration - (time() - step_start))
 
-        while global_vars.pause and not global_vars.quit:
-            sleep(0.01)
+            while global_vars.pause and not global_vars.quit:
+                sleep(0.01)
 
     key_listener.join()
