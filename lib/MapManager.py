@@ -4,7 +4,7 @@ from Creatures import *
 import globals as global_vars
 
 
-_entities = []
+_entities = set()
 _entity_dict = {
     "ʷ": Vegetation,
     "ʬ": Vegetation,
@@ -62,7 +62,7 @@ def _init_entity(token, tile):
         arg_list = [tile]
         if token in "ʷʬY":     #needs lvl if it is vegetation
             arg_list.insert(0, "ʷʬY".index(token))
-        _entities.append(entity_class(*arg_list))
+        _entities.add(entity_class(*arg_list))
     except KeyError:
         raise KeyError("your map contains this unexpected token: " + token)
 
@@ -81,8 +81,8 @@ def update():
     removes potential dead/eaten entities from the entities list
     """
     global_vars.anim_toggler = not global_vars.anim_toggler
-    new_entities = []
-    dead_entities = []
+    new_entities = set()
+    dead_entities = set()
 
     for entity in _entities:
         env = _get_env(entity.pos_y, entity.pos_x, 1)
@@ -91,9 +91,8 @@ def update():
         elif isinstance(entity, Vegetation):
             _veggie_action(entity, new_entities, env)
 
-    _entities.extend(new_entities)
-    for deceased in dead_entities:
-        _entities.remove(deceased)
+    _entities.update(new_entities)
+    _entities.difference_update(dead_entities)
 
 
 def _animal_action(animal, new_entities, dead_entities, env):
@@ -106,17 +105,17 @@ def _animal_action(animal, new_entities, dead_entities, env):
     :param env: the surrounding tiles of animal
     """
     if animal.has_to_die():
-        dead_entities.append(animal.die())
+        dead_entities.add(animal.die())
     elif animal.is_hungry():
         dead_entity = animal.hunger_game(env)
         if dead_entity: #can be eaten plant or starved animal
-            dead_entities.append(dead_entity)
+            dead_entities.add(dead_entity)
         else:   #animal moves if it can't find food
             animal.move(env)
     else:   #animal tries to reproduce only if it is not hungry
         new_animal = animal.try_reproduction(env)
         if new_animal:
-            new_entities.append(new_animal)
+            new_entities.add(new_animal)
         else:   #animal moves if it can't find partner
             animal.move(env)
 
@@ -131,7 +130,7 @@ def _veggie_action(plant, new_entities, env):
     if plant.wants_to_grow():
         new_plant = plant.try_growth(env)
         if new_plant:   #might not have grown into new plant
-            new_entities.append(new_plant)
+            new_entities.add(new_plant)
 
 
 def _get_env(pos_y, pos_x, scope):
