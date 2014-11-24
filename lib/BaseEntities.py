@@ -36,7 +36,7 @@ class Entity(object):
         new_tile.push_entity(self)
 
 
-    def _die(self):
+    def die(self):
         """
         kills this entity by popping it from the corresponding tiles' entity
         stack and returning it for destruction

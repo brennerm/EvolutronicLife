@@ -70,6 +70,7 @@ class Vegetation(Entity):
 class Animal(Entity):
     def __init__(self, tile):
         super().__init__(tile)
+        self._time_to_live = 30
         self._food = 10
         self._energy = 10
         self._lvl = 0
@@ -80,6 +81,11 @@ class Animal(Entity):
     @property
     def lvl(self):
         return self._lvl
+
+
+    def has_to_die(self):
+        self._time_to_live -= 1
+        return not self._time_to_live
 
 
     def is_hungry(self):
@@ -144,9 +150,9 @@ class Herbivore(Animal):
             self._food = 10
             self._energy = 10
             self._rdy_to_copulate = True
-            return choice(eatable_plants)._die()
+            return choice(eatable_plants).die()
         elif not self._energy:
-            return self._die()
+            return self.die()
 
 
     def try_reproduction(self, env):

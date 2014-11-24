@@ -105,7 +105,9 @@ def _animal_action(animal, new_entities, dead_entities, env):
     :param dead_entities: deceased entitities of the current iteration
     :param env: the surrounding tiles of animal
     """
-    if animal.is_hungry():
+    if animal.has_to_die():
+        dead_entities.append(animal.die())
+    elif animal.is_hungry():
         dead_entity = animal.hunger_game(env)
         if dead_entity: #can be eaten plant or starved animal
             dead_entities.append(dead_entity)
