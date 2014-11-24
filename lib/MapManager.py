@@ -118,7 +118,7 @@ def _animal_action(animal, new_entities, env):
             else:   #animal moves if it can't find partner
                 animal.move(env)
     except ValueError:
-        pass
+        new_entities.remove(dead_entity)
 
 
 def _veggie_action(plant, new_entities, env):
