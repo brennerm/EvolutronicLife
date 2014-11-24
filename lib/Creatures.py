@@ -184,3 +184,65 @@ class Herbivore(Animal):
             self._rdy_to_copulate = False
             self._food -= 1
             return Herbivore(choice(birthplaces))
+
+
+class Carnivore(Animal):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._tokens = 'ԅԇԆ'
+
+
+    def hunger_game(self, env):
+        """
+        lets this animal try to eat a herbivore animal of the same or
+        lower level. this must not succeed. if it succeeds, food, energy
+        and libido levels will be filled up and the eaten animal will be
+        returned for destruction. The searching animal may also die
+        at this point if it has run out of energy and couldn't find any prey.
+        In this case, the animal itself will be returned for
+        destruction.
+        :param env: the surrounding tiles of this animal
+        :return: a deceased instance of Animal or None
+        """
+        eatable_prey = [
+            tile.entity(Herbivore) for row in env for tile in row
+            if tile.holds_entity(Herbivore)
+        ]
+        if eatable_prey:
+            self._food = 10
+            self._energy = 10
+            self._rdy_to_copulate = True
+            return choice(eatable_prey).die()
+        elif not self._energy:
+            return self.die()
+
+
+    def try_reproduction(self, env):
+        """
+        lets this animal try to reproduce with a partner. if a partner can be
+        found on the surrounding tiles, a new level 0 animal will be created
+        and 1 food consumed. this new animal will be placed on any walkable
+        surrounding tile, or on the parent's tile, if there is none. the new
+        animal will be returned.
+        :param env: the surrounding tiles of this animal
+        :return: new instance of a level 0 Carnivore
+        """
+        mating_partners = [
+            tile.entity(Carnivore, self._lvl) for row in env for tile in row
+            if tile.holds_entity(Carnivore, self._lvl)
+        ]
+        mating_partners = [
+            mate for mate in mating_partners
+            if mate.is_horny() and mate != self
+        ]
+
+        if mating_partners:
+            birthplaces = [
+                tile for row in env for tile in row if tile.walkable()
+            ]
+            if not birthplaces: return
+            partner = choice(mating_partners)
+            partner.have_sex()
+            self._rdy_to_copulate = False
+            self._food -= 1
+            return Carnivore(choice(birthplaces))

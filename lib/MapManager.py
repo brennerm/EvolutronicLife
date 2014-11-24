@@ -10,6 +10,7 @@ _entity_dict = {
     "ʬ": Vegetation,
     "Y": Vegetation,
     "җ": Herbivore,
+    "ԅ": Carnivore,
     "~": Water,
     "∽": Water,
     ":": Beach,
