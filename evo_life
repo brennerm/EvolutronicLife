@@ -4,6 +4,7 @@ from sys import path
 path.append('lib')  #add lib folder to module search path
 from os import listdir
 from argparse import ArgumentParser
+import EvolutronicLife as EvoLife
 
 
 if __name__ == "__main__":
@@ -19,6 +20,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    import EvolutronicLife as EvoLife
 
     EvoLife.run(args.map, args.kickstart)

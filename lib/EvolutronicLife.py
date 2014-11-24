@@ -16,12 +16,20 @@ def run(map_filename, starting_step):
     key_listener.start()
     MapMan.init_map(map_filename)
 
+    print('Generating...')
+
+    visual_run = False
     while not global_vars.quit:
         global_vars.step += 1
         step_start = time()
 
         MapMan.update()
-        if global_vars.step >= starting_step:
+
+        if not visual_run and global_vars.step >= starting_step:
+            WinMan.init()
+            visual_run = True
+
+        if visual_run:
             WinMan.update(MapMan.token_map())
 
             if (time() - step_start) < global_vars.step_duration:
