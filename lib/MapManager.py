@@ -167,7 +167,19 @@ def _veggie_action():
 
 def _protozoan_action():
     for proto in _protozoans:
-        pass
+        env = _get_env(proto.pos_y, proto.pos_x, 1)
+
+        if proto.beach_reachable(env):
+            old_proto, new_animal = proto.jump_on_beach()
+            _protozoans.remove(old_proto)
+            if isinstance(new_animal, Herbivore):
+                _herbivores.append(new_animal)
+            else:
+                _carnivores.append(new_animal)
+        else:
+            dead_proto = proto.move(env)
+            if dead_proto:  #protos can die of age
+                _protozoans.remove(dead_proto)
 
 
 def _spawner_action():

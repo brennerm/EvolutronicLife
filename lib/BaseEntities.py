@@ -1,5 +1,4 @@
 import globals as global_vars
-from random import random
 
 
 class Entity(object):
@@ -51,23 +50,7 @@ class Beach(Entity):
     def __init__(self, tile):
         super().__init__(tile)
         self._token = ":"
-        self._blocks_step = True
 
-
-class Water(Entity):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._tokens = "~∽"
-        self._blocks_step = True
-
-
-    def try_spawning(self, env):
-        if random() < 0.01 and not self._tile.holds_entity(Protozoan):
-            return Protozoan(self._tile)
-
-
-    def __str__(self):
-        return self._tokens[global_vars.anim_toggler]
 
 
 class Limit(Entity): #shall only be directly initialised as placeholder!
@@ -76,10 +59,12 @@ class Limit(Entity): #shall only be directly initialised as placeholder!
         self._blocks_step = True
 
 
+
 class HorizLimitTop(Limit):
     def __init__(self, tile):
         super().__init__(tile)
         self._token = "_"
+
 
 
 class HorizLimitBottom(Limit):
@@ -88,15 +73,8 @@ class HorizLimitBottom(Limit):
         self._token = "‾"
 
 
+
 class VertLimit(Limit):
     def __init__(self,tile):
         super().__init__(tile)
         self._token = "|"
-
-
-class Protozoan(Entity):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._time_to_live = 50
-        self._blocks_step = True
-        self._token = '§'

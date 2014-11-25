@@ -4,6 +4,23 @@ import globals as global_vars
 
 
 
+class Water(Entity):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._tokens = "~∽"
+        self._blocks_step = True
+
+
+    def try_spawning(self, env):
+        if random() < 0.01 and not self._tile.holds_entity(Protozoan):
+            return Protozoan(self._tile)
+
+
+    def __str__(self):
+        return self._tokens[global_vars.anim_toggler]
+
+
+
 class Vegetation(Entity):
     def __init__(self, lvl, tile):
         super().__init__(tile)
@@ -64,6 +81,46 @@ class Vegetation(Entity):
             tile.holds_entity(Limit) for row in env for tile in row):
 
             self._lvl = min(self._lvl + 1, 2)
+
+
+
+class Protozoan(Entity):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._time_to_live = 20
+        self._blocks_step = True
+        self._token = '§'
+
+
+    def beach_reachable(self, env):
+        self._beach_tiles = [
+            tile for row in env for tile in row if tile.walkable()
+        ]
+        return True if self._beach_tiles else False
+
+
+    def jump_on_beach(self):
+        self._tile.pop_entity(self)
+        if random() <= 0.8:
+            new_animal = SmallHerbivore(choice(self._beach_tiles))
+        else:
+            new_animal = Carnivore(choice(self._beach_tiles))
+        return self, new_animal
+
+
+    def move(self, env):
+        self._tile.pop_entity(self)
+
+        self._time_to_live -= 1
+        if not self._time_to_live:
+            return self
+
+        swimmable_tiles = [
+            tile for row in env for tile in row
+            if isinstance(tile.entity(), Water)
+        ]
+        if swimmable_tiles:
+            self._associate_tile(choice(swimmable_tiles))
 
 
 
