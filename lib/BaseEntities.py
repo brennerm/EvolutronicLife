@@ -1,9 +1,9 @@
 import globals as global_vars
+from random import random
 
 
 class Entity(object):
     def __init__(self, tile):
-        self._movable = False
         self._blocks_step = False
         if tile:
             self._associate_tile(tile)
@@ -60,6 +60,12 @@ class Water(Entity):
         self._tokens = "~∽"
         self._blocks_step = True
 
+
+    def try_spawning(self, env):
+        if random() < 0.01 and not self._tile.holds_entity(Protozoan):
+            return Protozoan(self._tile)
+
+
     def __str__(self):
         return self._tokens[global_vars.anim_toggler]
 
@@ -86,3 +92,11 @@ class VertLimit(Limit):
     def __init__(self,tile):
         super().__init__(tile)
         self._token = "|"
+
+
+class Protozoan(Entity):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._time_to_live = 50
+        self._blocks_step = True
+        self._token = '§'

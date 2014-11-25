@@ -67,11 +67,6 @@ class Vegetation(Entity):
 
 
 
-class Protozoan(Entity):
-    pass
-
-
-
 class Animal(Entity):
     def __init__(self, tile):
         super().__init__(tile)

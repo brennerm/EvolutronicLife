@@ -166,11 +166,16 @@ def _veggie_action():
 
 
 def _protozoan_action():
-    pass
+    for proto in _protozoans:
+        pass
 
 
 def _spawner_action():
-    pass
+    for spawner in _spawners:
+        env = _get_env(spawner.pos_y, spawner.pos_x, 1)
+        new_proto = spawner.try_spawning(env)
+        if new_proto:
+            _protozoans.append(new_proto)
 
 
 def _get_env(pos_y, pos_x, scope):
