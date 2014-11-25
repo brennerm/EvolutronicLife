@@ -11,7 +11,9 @@ _entity_dict = {
     "ʷ": Vegetation,
     "ʬ": Vegetation,
     "Y": Vegetation,
-    "җ": Herbivore,
+    "җ": SmallHerbivore,
+    "Җ": BigHerbivore,
+    "Ӝ": SmartHerbivore,
     "ԅ": Carnivore,
     "~": Water,
     "∽": Water,
@@ -68,7 +70,7 @@ def _init_entity(token, tile):
 
     if entity_class == Carnivore:
         _carnivores.append(entity_class(tile))
-    elif entity_class == Herbivore:
+    elif Herbivore.__subclasscheck__(entity_class):
         _herbivores.append(entity_class(tile))
     elif entity_class == Vegetation:
         _plants.append(entity_class("ʷʬY".index(token), tile))

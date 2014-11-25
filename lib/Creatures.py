@@ -1,4 +1,4 @@
-from random import randint, choice
+from random import random, randint, choice
 from BaseEntities import *
 import globals as global_vars
 
@@ -10,7 +10,7 @@ class Vegetation(Entity):
 
         self._tokens = ("ʷʬY", "ʷʬϒ")
         self._lvl = lvl
-        self._steps_to_reproduce = randint(3, 7)
+        self._steps_to_reproduce = randint(10, 15)
         self._chance_to_evolve = 1
 
 
@@ -30,7 +30,7 @@ class Vegetation(Entity):
         """
         self._steps_to_reproduce -= 1
         if self._steps_to_reproduce == 0:
-            self._steps_to_reproduce = randint(3, 7)
+            self._steps_to_reproduce = randint(10, 15)
             return True
         return False
 
@@ -60,8 +60,8 @@ class Vegetation(Entity):
             self._chance_to_evolve += 1
             return
         if all(
-            isinstance(tile.entity(), Vegetation) and tile.entity().lvl >= self._lvl or
-            isinstance(tile.entity(), Limit) for row in env for tile in row):
+            tile.holds_entity(Vegetation) and tile.entity().lvl >= self._lvl or
+            tile.holds_entity(Limit) for row in env for tile in row):
 
             self._lvl = min(self._lvl + 1, 2)
 
@@ -129,6 +129,17 @@ class Herbivore(Animal):
     def __init__(self, tile):
         super().__init__(tile)
         self._tokens = 'җҖӜ'
+        self._food = 10
+
+
+
+class SmallHerbivore(Herbivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 0
+        self._time_to_live = 50
+        self._energy = 10
+        self._evolved = BigHerbivore
 
 
     def hunger_game(self, env):
@@ -167,11 +178,10 @@ class Herbivore(Animal):
         """
         mating_partners = [
             tile.entity(Herbivore, self._lvl) for row in env for tile in row
-            if tile.holds_entity(Herbivore, self._lvl)
+            if tile.holds_entity(Herbivore, self._lvl) and tile != self._tile
         ]
         mating_partners = [
-            mate for mate in mating_partners
-            if mate.is_horny() and mate != self
+            mate for mate in mating_partners if mate.is_horny()
         ]
 
         if mating_partners:
@@ -183,7 +193,61 @@ class Herbivore(Animal):
             partner.have_sex()
             self._rdy_to_copulate = False
             self._food -= 1
-            return Herbivore(choice(birthplaces))
+            child_class = self._evolved if random() < 0.5 else self.__class__
+            return child_class(choice(birthplaces))
+
+
+
+class BigHerbivore(SmallHerbivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 1
+        self._time_to_live = 100
+        self._energy = 20
+        self._evolved = SmartHerbivore
+
+
+    def move(self, env):
+        """
+        lets this animal move in a random direction, if there are free tiles.
+        moving consumes 1 food, or 1 energy if this animal has run out of
+        food. running out of food also triggers non-readyness for reproduction
+        :param env: the surrounding tiles of this animal
+        """
+        walkable_tiles = [
+            tile for row in env for tile in row if tile.walkable()
+        ]
+        plant_tiles = [
+            tile for tile in walkable_tiles if tile.holds_entity(Vegetation)
+        ]
+        food_tiles = [
+            tile for tile in plant_tiles if tile.entity().lvl == self._lvl
+        ]
+        if food_tiles:
+            new_tile = choice(food_tiles)
+        elif plant_tiles:
+            new_tile = choice(plant_tiles)
+        elif walkable_tiles:
+            new_tile = choice(walkable_tiles)
+        else: return
+
+        self._tile.pop_entity(self)
+        self._associate_tile(new_tile)
+        if self._food:
+            self._food -= 1
+        else:
+            self._energy -= 1
+            self._rdy_to_copulate = False
+
+
+
+class SmartHerbivore(BigHerbivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 2
+        self._time_to_live = 150
+        self._energy = 30
+        self._evolved = SmartHerbivore
 
 
 
