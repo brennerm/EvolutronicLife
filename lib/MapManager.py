@@ -7,6 +7,8 @@ import globals as global_vars
 _plants = []
 _herbivores = []
 _carnivores = []
+_spawners = []
+_protozoans = []
 _entity_dict = {
     "ʷ": Vegetation,
     "ʬ": Vegetation,
@@ -15,6 +17,7 @@ _entity_dict = {
     "Җ": BigHerbivore,
     "Ӝ": SmartHerbivore,
     "ԅ": Carnivore,
+    "§": Protozoan,
     "~": Water,
     "∽": Water,
     ":": Beach,
@@ -74,6 +77,10 @@ def _init_entity(token, tile):
         _herbivores.append(entity_class(tile))
     elif entity_class == Vegetation:
         _plants.append(entity_class("ʷʬY".index(token), tile))
+    elif entity_class == Protozoan:
+        _protozoans.append(entity_class(tile))
+    elif entity_class == Water:
+        _spawners.append(entity_class(tile))
     else:   #basic entities don't need to be held in an extra list
         entity_class(tile)
 
@@ -95,6 +102,8 @@ def update():
     _handle_animal_type(hunter_class=Carnivore, prey_class=Herbivore)
     _handle_animal_type(hunter_class=Herbivore, prey_class=Vegetation)
     _veggie_action()
+    _protozoan_action()
+    _spawner_action()
 
 
 def _handle_animal_type(hunter_class, prey_class):
@@ -154,6 +163,14 @@ def _veggie_action():
                 new_plants.append(grown_plant)
 
     _plants.extend(new_plants)
+
+
+def _protozoan_action():
+    pass
+
+
+def _spawner_action():
+    pass
 
 
 def _get_env(pos_y, pos_x, scope):

@@ -16,8 +16,6 @@ def run(map_filename, starting_step):
     key_listener.start()
     MapMan.init_map(map_filename)
 
-    #print('Generating...')
-
     visual_run = False
     while not global_vars.quit:
         global_vars.step += 1
