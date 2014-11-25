@@ -61,7 +61,7 @@ def _parse_map(map_path):
 def _init_entity(token, tile):
     """
     initialises actual entity from the token and adds it to one of the entity
-    lists, if it is a creature. the entity will associate itself with the
+    lists, if it belongs there. the entity will associate itself with the
     given tile
     :param token: textual token representing the entity
     :param tile: the tile to be associated with the entity
@@ -95,8 +95,8 @@ def token_map():
 
 def update():
     """
-    updates all entities. this is done in three steps. first to act are
-    carnivores, second are herbivores and third are plants.
+    updates all entities. this is done in multiple steps, updating each
+    entity type separately, one after another.
     """
     global_vars.anim_toggler = not global_vars.anim_toggler
     _handle_animal_type(hunter_class=Carnivore, prey_class=Herbivore)
@@ -166,6 +166,11 @@ def _veggie_action():
 
 
 def _protozoan_action():
+    """
+    lets all proto animals act. if it makes the jump onto the beach, the old
+    protozoan entity will be removed from and the new animal added to the
+    corresponding list. protozoans can also die of age when trying to move.
+    """
     for proto in _protozoans:
         env = _get_env(proto.pos_y, proto.pos_x, 1)
 
@@ -183,6 +188,10 @@ def _protozoan_action():
 
 
 def _spawner_action():
+    """
+    each spawning entity tries to spawn a new protozoan. the protozoan will
+    be added to the corresponding list.
+    """
     for spawner in _spawners:
         env = _get_env(spawner.pos_y, spawner.pos_x, 1)
         new_proto = spawner.try_spawning(env)

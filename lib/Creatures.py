@@ -12,6 +12,12 @@ class Water(Entity):
 
 
     def try_spawning(self, env):
+        """
+        tries to spawn a new Protozoan. has a certain percentage of a chance
+        to succeed. also, its tile should be free.
+        :param env: the surrounding tiles of this water entity
+        :return: a new instance of Protozoan or None
+        """
         if random() < 0.01 and not self._tile.holds_entity(Protozoan):
             return Protozoan(self._tile)
 
@@ -93,6 +99,12 @@ class Protozoan(Entity):
 
 
     def beach_reachable(self, env):
+        """
+        returns whether an adjacent beach entity can be seen.
+        :param env: the surrounding tiles of this protozoan
+        :return: True if an adjacent tile holds a free beach entity,
+        False otherwise
+        """
         self._beach_tiles = [
             tile for row in env for tile in row if tile.walkable()
         ]
@@ -100,6 +112,11 @@ class Protozoan(Entity):
 
 
     def jump_on_beach(self):
+        """
+        lets this protozoan move onto the beach and transform itself into
+        a land animal, which can be either Herbivore or Carnivore.
+        :return: tuple containing old Protozoan entity and new Animal entity
+        """
         self._tile.pop_entity(self)
         if random() <= 0.8:
             new_animal = SmallHerbivore(choice(self._beach_tiles))
@@ -109,6 +126,12 @@ class Protozoan(Entity):
 
 
     def move(self, env):
+        """
+        lets this protozoan move on a random tile holding only Water. death
+        is possible if this protozoan ran out of lifetime.
+        :param env: the surrounding tiles of this protozoan
+        :return: this Protozoan if it has died, None otherwise
+        """
         self._tile.pop_entity(self)
 
         self._time_to_live -= 1
