@@ -372,10 +372,16 @@ class LandAnimal(Animal):
         :return: a deceased instance of LandAnimal or None
         """
         eatable_prey = [
-            tile.entity(self._prey_class, self._lvl)
+            tile.entity(self._prey_class)
             for row in env for tile in row
-            if tile.holds_entity(self._prey_class, self._lvl)
+            if tile.holds_entity(self._prey_class)
         ]
+
+        eatable_prey = [
+            entity for entity in eatable_prey
+            if entity.lvl <= self.lvl
+        ]
+
         if eatable_prey:
             self._food = 10
             self._energy = 10
