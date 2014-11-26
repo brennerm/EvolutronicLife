@@ -15,7 +15,9 @@ _entity_dict = {
     "җ": SmallHerbivore,
     "Җ": BigHerbivore,
     "Ӝ": SmartHerbivore,
-    "ԅ": Carnivore,
+    "ԅ": SmallCarnivore,
+    "ԇ": BigCarnivore,
+    "Ԇ": SmartCarnivore,
     "§": Protozoan,
     "~": Water,
     "∽": Water,
@@ -70,7 +72,7 @@ def _init_entity(token, tile):
     except KeyError:
         raise KeyError("your map contains this unexpected token: " + token)
 
-    if entity_class == Carnivore:
+    if Carnivore.__subclasscheck__(entity_class):
         _carnivores.append(entity_class(tile))
     elif Herbivore.__subclasscheck__(entity_class):
         _herbivores.append(entity_class(tile))

@@ -227,7 +227,7 @@ class Protozoan(Animal):
         if random() <= 0.8:
             new_animal = SmallHerbivore(choice(self._beach_tiles))
         else:
-            new_animal = Carnivore(choice(self._beach_tiles))
+            new_animal = SmallCarnivore(choice(self._beach_tiles))
         return self.die(), new_animal
 
 
@@ -256,9 +256,6 @@ class Protozoan(Animal):
 class LandAnimal(Animal):
     def __init__(self, tile):
         super().__init__(tile)
-        self._time_to_live = 50
-        self._food = 10
-        self._energy = 10
         self._lvl = 0
         self._rdy_to_copulate = False
 
@@ -331,7 +328,7 @@ class LandAnimal(Animal):
 
         if self.is_hungry():
             target_tile = self.search_for_target(
-                looking_env, target_entity=self._prey
+                looking_env, target_entity=self._prey_class
             )
         elif self.is_horny():
             target_tile = self.search_for_target(
@@ -356,116 +353,6 @@ class LandAnimal(Animal):
             self._rdy_to_copulate = False
 
 
-    def __str__(self):
-        return self._tokens[self._lvl]
-
-
-
-class Herbivore(LandAnimal):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._tokens = 'җҖӜ'
-        self._food = 10
-        self._prey = Vegetation
-
-
-
-class SmallHerbivore(Herbivore):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._lvl = 0
-        self._time_to_live = 50
-        self._energy = 10
-        self._evolved = BigHerbivore
-        self._view_range = 4
-
-
-    def hunger_game(self, env):
-        """
-        lets this animal try to eat a plant of the same level. this must not
-        succeed. if it succeeds, food, energy and libido levels will be filled
-        up and the eaten plant will be returned for destruction. this animal
-        may also die at this point if it has run out of energy and couldn't
-        find any food. in this case, the animal itself will be returned for
-        destruction.
-        :param env: the surrounding tiles of this animal
-        :return: a deceased instance of Animal/Vegetation or None
-        """
-        eatable_plants = [
-            tile.entity(Vegetation, self._lvl) for row in env for tile in row
-            if tile.holds_entity(Vegetation, self._lvl)
-        ]
-        if eatable_plants:
-            self._food = 10
-            self._energy = 10
-            self._rdy_to_copulate = True
-            return choice(eatable_plants).die()
-        elif not self._energy:
-            return self.die()
-
-
-    def try_reproduction(self, env):
-        """
-        lets this animal try to reproduce with a partner. if a partner can be
-        found on the surrounding tiles, a new level 0 animal will be created
-        and 1 food consumed. this new animal will be placed on any walkable
-        surrounding tile, or on the parent's tile, if there is none. the new
-        animal will be returned.
-        :param env: the surrounding tiles of this animal
-        :return: new instance of a level 0 herbivore
-        """
-        mating_partners = [
-            tile.entity(Herbivore, self._lvl) for row in env for tile in row
-            if tile.holds_entity(Herbivore, self._lvl) and tile != self._tile
-        ]
-        mating_partners = [
-            mate for mate in mating_partners if mate.is_horny()
-        ]
-
-        if mating_partners:
-            birthplaces = [
-                tile for row in env for tile in row if tile.walkable()
-            ]
-            if not birthplaces: return
-            partner = choice(mating_partners)
-            partner.have_sex()
-            self._rdy_to_copulate = False
-            self._food -= 1
-            child_class = self._evolved if random() < 0.5 else self.__class__
-            return child_class(choice(birthplaces))
-
-
-
-class BigHerbivore(SmallHerbivore):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._lvl = 1
-        self._time_to_live = 100
-        self._energy = 20
-        self._evolved = SmartHerbivore
-        self._view_range = 6
-
-
-
-class SmartHerbivore(BigHerbivore):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._lvl = 2
-        self._time_to_live = 150
-        self._energy = 30
-        self._evolved = SmartHerbivore
-        self._view_range = 8
-
-
-
-class Carnivore(LandAnimal):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._tokens = 'ԅԇԆ'
-        self._prey = Herbivore
-        self._view_range = 4
-
-
     def hunger_game(self, env):
         """
         lets this animal try to eat a herbivore animal of the same or
@@ -479,8 +366,9 @@ class Carnivore(LandAnimal):
         :return: a deceased instance of Animal or None
         """
         eatable_prey = [
-            tile.entity(Herbivore) for row in env for tile in row
-            if tile.holds_entity(Herbivore)
+            tile.entity(self._prey_class, self._lvl)
+            for row in env for tile in row
+            if tile.holds_entity(self._prey_class, self._lvl)
         ]
         if eatable_prey:
             self._food = 10
@@ -494,16 +382,16 @@ class Carnivore(LandAnimal):
     def try_reproduction(self, env):
         """
         lets this animal try to reproduce with a partner. if a partner can be
-        found on the surrounding tiles, a new level 0 animal will be created
+        found on the surrounding tiles, a new level LandAnimal will be created
         and 1 food consumed. this new animal will be placed on any walkable
-        surrounding tile, or on the parent's tile, if there is none. the new
-        animal will be returned.
+        surrounding tile. the new animal will be returned.
         :param env: the surrounding tiles of this animal
-        :return: new instance of a level 0 Carnivore
+        :return: new instance of a LandAnimal
         """
         mating_partners = [
-            tile.entity(Carnivore, self._lvl) for row in env for tile in row
-            if tile.holds_entity(Carnivore, self._lvl)
+            tile.entity(self.__class__, self._lvl)
+            for row in env for tile in row
+            if tile.holds_entity(self.__class__, self._lvl)
         ]
         mating_partners = [
             mate for mate in mating_partners
@@ -519,4 +407,99 @@ class Carnivore(LandAnimal):
             partner.have_sex()
             self._rdy_to_copulate = False
             self._food -= 1
-            return Carnivore(choice(birthplaces))
+            if random() < 0.5:
+                return self._evolved_class(choice(birthplaces))
+            else:
+                return self.__class__(choice(birthplaces))
+
+
+    def __str__(self):
+        return self._tokens[self._lvl]
+
+
+
+class Herbivore(LandAnimal):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._tokens = 'җҖӜ'
+        self._prey_class = Vegetation
+
+
+
+class SmallHerbivore(Herbivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 0
+        self._time_to_live = 50
+        self._food = 10
+        self._energy = 10
+        self._evolved_class = BigHerbivore
+        self._view_range = 4
+
+
+
+class BigHerbivore(SmallHerbivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 1
+        self._time_to_live = 100
+        self._food = 10
+        self._energy = 20
+        self._evolved_class = SmartHerbivore
+        self._view_range = 6
+
+
+
+class SmartHerbivore(BigHerbivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 2
+        self._time_to_live = 150
+        self._food = 10
+        self._energy = 30
+        self._evolved_class = SmartHerbivore
+        self._view_range = 8
+
+
+
+class Carnivore(LandAnimal):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._tokens = 'ԅԇԆ'
+        self._prey_class = Herbivore
+
+
+
+class SmallCarnivore(Carnivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 0
+        self._time_to_live = 50
+        self._food = 10
+        self._energy = 10
+        self._evolved_class = BigCarnivore
+        self._view_range = 4
+
+
+
+class BigCarnivore(SmallCarnivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 1
+        self._time_to_live = 100
+        self._food = 10
+        self._energy = 20
+        self._evolved_class = SmartCarnivore
+        self._view_range = 6
+
+
+
+class SmartCarnivore(BigCarnivore):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._lvl = 2
+        self._time_to_live = 150
+        self._food = 10
+        self._energy = 30
+        self._evolved_class = SmartCarnivore
+        self._view_range = 8
