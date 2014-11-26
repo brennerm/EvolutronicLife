@@ -123,7 +123,7 @@ def _handle_animal_type(hunter_class, prey_class):
 
     for hunter in hunter_list:
         immediate_env = _get_env(hunter.pos_y, hunter.pos_x, 1)
-        looking_env = _get_env(hunter.pos_y, hunter.pos_x, (hunter.lvl + 2)**2)
+        looking_env = _get_env(hunter.pos_y, hunter.pos_x, hunter.view_range)
 
         if hunter.life_over():
             hunter_list.remove(hunter.die())

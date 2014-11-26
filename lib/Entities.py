@@ -268,6 +268,11 @@ class LandAnimal(Animal):
         return self._lvl
 
 
+    @property
+    def view_range(self):
+        return self._view_range
+
+
     def life_over(self):
         self._time_to_live -= 1
         return not self._time_to_live
@@ -294,26 +299,25 @@ class LandAnimal(Animal):
         :param target_entity: class of searched entity
         :return: best tile for proceeding if no blocked
         """
-        possible_target = [
+        possible_targets = [
             tile.entity(target_entity, self._lvl) for row in env for tile in row
             if tile.holds_entity(target_entity, self._lvl) and
             tile.entity(target_entity, self._lvl) != self
         ]
 
-        pos = floor(len(env) / 2)
-
-        if possible_target:
-            possible_target = sorted(  # select tile with shortest distance
-                possible_target,
+        if possible_targets:
+            wanted_target = min(  #select tile with shortest distance
+                possible_targets,
                 key=lambda t: sqrt((t.pos_x - self.pos_x)**2 + (t.pos_y - self.pos_y)**2)
             )
 
-            x = (possible_target[0].pos_x > self.pos_x) - (possible_target[0].pos_x < self.pos_x) # signum
-            y = (possible_target[0].pos_y > self.pos_y) - (possible_target[0].pos_y < self.pos_y)
+            x_dir = (wanted_target.pos_x > self.pos_x) - (wanted_target.pos_x < self.pos_x) # signum
+            y_dir = (wanted_target.pos_y > self.pos_y) - (wanted_target.pos_y < self.pos_y)
+            scope_center = floor(len(env) / 2)
 
-            possible_target = env[pos + y][pos + x]
-            if possible_target.walkable():
-                return possible_target
+            move_target = env[scope_center + y_dir][scope_center + x_dir]
+            if move_target.walkable():
+                return move_target
 
 
     def move(self, immediate_env, looking_env):
@@ -373,6 +377,7 @@ class SmallHerbivore(Herbivore):
         self._time_to_live = 50
         self._energy = 10
         self._evolved = BigHerbivore
+        self._view_range = 4
 
 
     def hunger_game(self, env):
@@ -438,40 +443,7 @@ class BigHerbivore(SmallHerbivore):
         self._time_to_live = 100
         self._energy = 20
         self._evolved = SmartHerbivore
-
-    """
-    def move(self, env):
-
-        lets this animal move in a random direction, if there are free tiles.
-        moving consumes 1 food, or 1 energy if this animal has run out of
-        food. running out of food also triggers non-readyness for reproduction
-        :param env: the surrounding tiles of this animal
-        
-        walkable_tiles = [
-            tile for row in env for tile in row if tile.walkable()
-        ]
-        plant_tiles = [
-            tile for tile in walkable_tiles if tile.holds_entity(Vegetation)
-        ]
-        food_tiles = [
-            tile for tile in plant_tiles if tile.entity().lvl == self._lvl
-        ]
-        if food_tiles:
-            new_tile = choice(food_tiles)
-        elif plant_tiles:
-            new_tile = choice(plant_tiles)
-        elif walkable_tiles:
-            new_tile = choice(walkable_tiles)
-        else: return
-
-        self._tile.pop_entity(self)
-        self._associate_tile(new_tile)
-        if self._food:
-            self._food -= 1
-        else:
-            self._energy -= 1
-            self._rdy_to_copulate = False
-    """
+        self._view_range = 6
 
 
 
@@ -482,6 +454,7 @@ class SmartHerbivore(BigHerbivore):
         self._time_to_live = 150
         self._energy = 30
         self._evolved = SmartHerbivore
+        self._view_range = 8
 
 
 
@@ -490,6 +463,7 @@ class Carnivore(LandAnimal):
         super().__init__(tile)
         self._tokens = 'ԅԇԆ'
         self._prey = Herbivore
+        self._view_range = 4
 
 
     def hunger_game(self, env):
