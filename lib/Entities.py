@@ -1,6 +1,90 @@
 from random import random, randint, choice
-from BaseEntities import *
 import globals as global_vars
+
+
+class Entity(object):
+    def __init__(self, tile):
+        if tile: self._associate_tile(tile)
+
+
+    def __str__(self):
+        return self._token
+
+
+    @property
+    def pos_y(self):
+        """
+        return this entitie's y position by returning the y position of
+        the associated tile.
+        :return: the associated tile's y position
+        """
+        return self._tile.pos_y
+
+
+    @property
+    def pos_x(self):
+        """
+        return this entitie's x position by returning the x position of
+        the associated tile.
+        :return: the associated tile's x position
+        """
+        return self._tile.pos_x
+
+
+    @property
+    def blocks_step(self):
+        """
+        returns whether this entity blocks land animals from stepping onto
+        the associated tile.
+        :return: True if the associated tile can be stepped upon^by land
+        animals, False otherwise
+        """
+        return self._blocks_step
+
+
+    def _associate_tile(self, new_tile):
+        """
+        pushes this entity on the given tile and sets reference to the tile
+        :param new_tile: the tile to associate the entity with
+        """
+        self._tile = new_tile
+        new_tile.push_entity(self)
+
+
+
+class Limit(Entity): #shall only be directly initialised as placeholder!
+    def __init__(self, tile=None):
+        super().__init__(tile)
+        self._blocks_step = True
+
+
+
+class HorizLimitTop(Limit):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._token = "_"
+
+
+
+class HorizLimitBottom(Limit):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._token = "‾"
+
+
+
+class VertLimit(Limit):
+    def __init__(self,tile):
+        super().__init__(tile)
+        self._token = "|"
+
+
+
+class Beach(Entity):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._token = ":"
+        self._blocks_step = False
 
 
 
@@ -27,11 +111,28 @@ class Water(Entity):
 
 
 
-class Vegetation(Entity):
+class Creature(Entity):
+    def __init__(self, tile):
+        super().__init__(tile)
+
+
+    def die(self):
+        """
+        kills this creature by popping it from the corresponding tile's
+        creature stack and returning it for destruction
+        :return: this creature
+        """
+        self._tile.pop_entity(self)
+        return self
+
+
+
+class Vegetation(Creature):
     def __init__(self, lvl, tile):
         super().__init__(tile)
 
         self._tokens = ("ʷʬY", "ʷʬϒ")
+        self._blocks_step = False
         self._lvl = lvl
         self._steps_to_reproduce = randint(10, 15)
         self._chance_to_evolve = 1
@@ -90,11 +191,17 @@ class Vegetation(Entity):
 
 
 
-class Protozoan(Entity):
+class Animal(Creature):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._blocks_step = True
+
+
+
+class Protozoan(Animal):
     def __init__(self, tile):
         super().__init__(tile)
         self._time_to_live = 20
-        self._blocks_step = True
         self._token = '§'
 
 
@@ -117,12 +224,11 @@ class Protozoan(Entity):
         a land animal, which can be either Herbivore or Carnivore.
         :return: tuple containing old Protozoan entity and new Animal entity
         """
-        self._tile.pop_entity(self)
         if random() <= 0.8:
             new_animal = SmallHerbivore(choice(self._beach_tiles))
         else:
             new_animal = Carnivore(choice(self._beach_tiles))
-        return self, new_animal
+        return self.die(), new_animal
 
 
     def move(self, env):
@@ -147,7 +253,7 @@ class Protozoan(Entity):
 
 
 
-class Animal(Entity):
+class LandAnimal(Animal):
     def __init__(self, tile):
         super().__init__(tile)
         self._time_to_live = 50
@@ -155,7 +261,6 @@ class Animal(Entity):
         self._energy = 10
         self._lvl = 0
         self._rdy_to_copulate = False
-        self._blocks_step = True
 
 
     @property
@@ -205,7 +310,7 @@ class Animal(Entity):
 
 
 
-class Herbivore(Animal):
+class Herbivore(LandAnimal):
     def __init__(self, tile):
         super().__init__(tile)
         self._tokens = 'җҖӜ'
@@ -331,7 +436,7 @@ class SmartHerbivore(BigHerbivore):
 
 
 
-class Carnivore(Animal):
+class Carnivore(LandAnimal):
     def __init__(self, tile):
         super().__init__(tile)
         self._tokens = 'ԅԇԆ'
