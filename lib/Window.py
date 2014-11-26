@@ -31,7 +31,7 @@ class InfoWindow(Window):
             + "\t{:4s} {:4d}".format(' step:', global_vars.step)
         )
 
-        self._curses_window.refresh()
+        self._curses_window.noutrefresh()
 
 
 
@@ -45,13 +45,13 @@ class MapWindow(Window):
         self._curses_window.clear()
 
         for i, row in enumerate(the_map):
-            line = "".join(str(cell) for cell in row)
-            try:
-                self._curses_window.addstr(i, 0, line)
-            except curses.error:
-                pass    #curses throws error @ adding last element of last row
+            for j, cell in enumerate(row):
+                try:
+                    self._curses_window.addstr(i, j, cell, curses.color_pair(global_vars.color.get(cell, 0)))
+                except curses.error:
+                    pass    #curses throws error @ adding last element of last row
 
-        self._curses_window.refresh()
+        self._curses_window.noutrefresh()
 
 
 
@@ -81,7 +81,7 @@ class OptionPane(Window):
             except:
                 raise Exception("given width is not sufficient for displaying all options")
 
-        self._curses_window.refresh()
+        self._curses_window.noutrefresh()
 
     def replace_option(self, option_to_replace, new_option):
         """
