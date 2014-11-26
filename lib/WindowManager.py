@@ -73,4 +73,4 @@ def terminate():
 
 def progress_info(end):
     _main_win.addstr(0, 0, "Generating step: %d/%d" % (global_vars.step, end))
-    _main_win.noutrefresh()
+    _main_win.refresh()
