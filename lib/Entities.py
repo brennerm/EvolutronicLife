@@ -80,6 +80,20 @@ class VertLimit(Limit):
 
 
 
+class HorizLimitBottom(Limit):
+    def __init__(self, tile):
+        super().__init__(tile)
+        self._token = "‾"
+
+
+
+class VertLimit(Limit):
+    def __init__(self,tile):
+        super().__init__(tile)
+        self._token = "|"
+
+
+
 class Water(Limit): #inherits from limit so land animals won't step onto water
     def __init__(self, tile):
         super().__init__(tile)
