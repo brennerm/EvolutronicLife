@@ -323,33 +323,28 @@ class LandAnimal(Animal):
         food. running out of food also triggers non-readyness for reproduction
         :param env: the surrounding tiles of this animal
         """
-        walkable_tiles = []
+        target_tile = None
 
         if self.is_hungry():
-            if isinstance(self, Carnivore):
-                walkable_tiles = self.search_for_target(
-                    looking_env, target_entity=Herbivore
-                )
-            elif isinstance(self, Herbivore):
-                walkable_tiles = self.search_for_target(
-                    looking_env, target_entity=Vegetation
-                )
+            target_tile = self.search_for_target(
+                looking_env, target_entity=self._prey
+            )
         elif self.is_horny():
-            walkable_tiles = self.search_for_target(
+            target_tile = self.search_for_target(
                 looking_env, target_entity=self.__class__
             )
 
-
-        if not walkable_tiles:
-            walkable_tiles = [
+        if not target_tile:     #no target entity found:
+            walkable_tiles = [  #choose any free surrounding tile
                 tile for row in immediate_env for tile in row if tile.walkable()
             ]
             if walkable_tiles:
-                walkable_tiles = choice(walkable_tiles)
+                target_tile = choice(walkable_tiles)
+            else:               #no free surrounding tile: abort
+                return
 
-        if walkable_tiles:
-            self._tile.pop_entity(self)
-            self._associate_tile(walkable_tiles)
+        self._tile.pop_entity(self)
+        self._associate_tile(target_tile)
         if self._food:
             self._food -= 1
         else:
@@ -367,6 +362,7 @@ class Herbivore(LandAnimal):
         super().__init__(tile)
         self._tokens = 'җҖӜ'
         self._food = 10
+        self._prey = Vegetation
 
 
 
@@ -493,6 +489,7 @@ class Carnivore(LandAnimal):
     def __init__(self, tile):
         super().__init__(tile)
         self._tokens = 'ԅԇԆ'
+        self._prey = Herbivore
 
 
     def hunger_game(self, env):
