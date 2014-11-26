@@ -1,6 +1,5 @@
 from Tile import Tile
-from BaseEntities import *
-from Creatures import *
+from Entities import *
 import globals as global_vars
 
 
