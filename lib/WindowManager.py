@@ -1,6 +1,5 @@
 import curses
 from Window import InfoWindow, MapWindow, OptionPane
-from distutils.ccompiler import gen_lib_options
 import globals as global_vars
 
 
