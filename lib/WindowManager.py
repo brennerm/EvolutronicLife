@@ -6,13 +6,24 @@ import globals as global_vars
 #start and configure curses as needed
 _main_win = curses.initscr()
 curses.start_color()
+if curses.can_change_color():
+    curses.init_color(0, 0, 0, 0)
 curses.noecho()
 curses.cbreak()
 curses.curs_set(0)
 _main_win.nodelay(1)
 _main_win.keypad(1)
 _main_win.refresh()
-curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)
+
+#declare colors
+curses.init_pair(global_vars.WHITE_ON_BLUE, curses.COLOR_WHITE, curses.COLOR_BLUE)
+curses.init_pair(global_vars.BLUE_ON_BLACK, curses.COLOR_BLUE, curses.COLOR_BLACK)
+curses.init_pair(global_vars.RED_ON_BLACK, curses.COLOR_RED, curses.COLOR_BLACK)
+curses.init_pair(global_vars.GREEN_ON_BLACK, curses.COLOR_GREEN, curses.COLOR_BLACK)
+curses.init_pair(global_vars.YELLOW_ON_BLACK, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+curses.init_pair(global_vars.CYAN_ON_BLACK, curses.COLOR_CYAN, curses.COLOR_BLACK)
+curses.init_pair(global_vars.MAGENTA_ON_BLACK, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+curses.init_pair(global_vars.WHITE_ON_CYAN, curses.COLOR_WHITE, curses.COLOR_CYAN)
 
 def init():
     """
@@ -32,6 +43,8 @@ def update(the_map=None):
     _info_win.update()
     if(the_map):
         _map_win.update(the_map)
+
+    curses.doupdate()
 
 
 def replace_option(option_to_replace, new_option):
