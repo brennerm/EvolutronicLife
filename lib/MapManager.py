@@ -137,14 +137,16 @@ def _handle_animal_type(hunter_class, prey_class):
             elif isinstance(dead_animal, hunter_class):  #starved
                 hunter_list.remove(dead_animal)
             else:  #hunter moves if it couldn't find food / didn't starve
-                hunter.move(immediate_env, looking_env)
+                if not hunter.move(immediate_env, looking_env):
+                    hunter_list.remove(hunter.die())
 
         else:   #hunter tries to reproduce only if it is not hungry
             newborn_hunter = hunter.try_reproduction(immediate_env)
             if newborn_hunter:
                 born_hunters.append(newborn_hunter)
             else:   #hunter moves if it couldn't find partner
-                hunter.move(immediate_env, looking_env)
+                if not hunter.move(immediate_env, looking_env):
+                    hunter_list.remove(hunter.die())
 
     hunter_list.extend(born_hunters)
 

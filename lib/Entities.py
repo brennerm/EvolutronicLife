@@ -349,7 +349,7 @@ class LandAnimal(Animal):
             if walkable_tiles:
                 target_tile = choice(walkable_tiles)
             else:               #no free surrounding tile: abort
-                return
+                return False
 
         self._tile.pop_entity(self)
         self._associate_tile(target_tile)
@@ -359,6 +359,7 @@ class LandAnimal(Animal):
             self._energy -= 1
             self._rdy_to_copulate = False
 
+        return True
 
     def hunger_game(self, env):
         """
