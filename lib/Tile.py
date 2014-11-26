@@ -28,7 +28,7 @@ class Tile(object):
         if entity_class:
             for entity in self._entity_stack:
                 if isinstance(entity, entity_class):
-                    if lvl == None or entity.lvl == lvl:
+                    if lvl is None or entity.lvl == lvl:
                         return entity
         else:
             return self._entity_stack[-1]

@@ -6,6 +6,7 @@ import globals as global_vars
 class Entity(object):
     def __init__(self, tile):
         if tile: self._associate_tile(tile)
+        self._color = global_vars.WHITE_ON_BLACK
 
 
     def __str__(self):
@@ -41,6 +42,13 @@ class Entity(object):
         animals, False otherwise
         """
         return self._blocks_step
+
+    @property
+    def color(self):
+        """
+        :return: the entity's color
+        """
+        return self._color
 
 
     def _associate_tile(self, new_tile):
