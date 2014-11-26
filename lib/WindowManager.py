@@ -6,6 +6,8 @@ import globals as global_vars
 #start and configure curses as needed
 _main_win = curses.initscr()
 curses.start_color()
+if curses.can_change_color():
+    curses.init_color(0, 0, 0, 0)
 curses.noecho()
 curses.cbreak()
 curses.curs_set(0)
