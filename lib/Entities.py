@@ -81,20 +81,6 @@ class VertLimit(Limit):
 
 
 
-class HorizLimitBottom(Limit):
-    def __init__(self, tile):
-        super().__init__(tile)
-        self._token = "‾"
-
-
-
-class VertLimit(Limit):
-    def __init__(self,tile):
-        super().__init__(tile)
-        self._token = "|"
-
-
-
 class Water(Limit): #inherits from limit so land animals won't step onto water
     def __init__(self, tile):
         super().__init__(tile)
@@ -308,12 +294,11 @@ class LandAnimal(Animal):
         :param target_entity: class of searched entity
         :return: best tile for proceeding if no blocked
         """
-        possible_target = []
-        for row in env:
-            for tile in row:
-                if tile.holds_entity(target_entity, self._lvl) \
-                        and tile.entity(target_entity, self._lvl) != self:
-                    possible_target.append(tile.entity(target_entity, self._lvl))
+        possible_target = [
+            tile.entity(target_entity, self._lvl) for row in env for tile in row
+            if tile.holds_entity(target_entity, self._lvl) and
+            tile.entity(target_entity, self._lvl) != self
+        ]
 
         pos = floor(len(env) / 2)
 
