@@ -1,4 +1,5 @@
 from random import random, randint, choice
+from math import sqrt, floor
 import globals as global_vars
 
 
@@ -298,19 +299,72 @@ class LandAnimal(Animal):
         self._rdy_to_copulate = False
 
 
-    def move(self, env):
+    def search_for_target(self, env, target_entity):
+        """
+        Let the animal search for other entities. This can be
+        used for the search for food or a mating partner. Returns a tile
+        if a entity is in looking range and the best way isn't blocked.
+        :param env: field of view of the animal
+        :param target_entity: class of searched entity
+        :return: best tile for proceeding if no blocked
+        """
+        possible_target = []
+        for row in env:
+            for tile in row:
+                if tile.holds_entity(target_entity, self._lvl) \
+                        and tile.entity(target_entity, self._lvl) != self:
+                    possible_target.append(tile.entity(target_entity, self._lvl))
+
+        pos = floor(len(env) / 2)
+
+        if possible_target:
+            possible_target = sorted(  # select tile with shortest distance
+                possible_target,
+                key=lambda t: sqrt((t.pos_x - self.pos_x)**2 + (t.pos_y - self.pos_y)**2)
+            )
+
+            x = (possible_target[0].pos_x > self.pos_x) - (possible_target[0].pos_x < self.pos_x) # signum
+            y = (possible_target[0].pos_y > self.pos_y) - (possible_target[0].pos_y < self.pos_y)
+
+            possible_target = env[pos + y][pos + x]
+            if possible_target.walkable():
+                return possible_target
+
+
+    def move(self, immediate_env, looking_env):
         """
         lets this animal move in a random direction, if there are free tiles.
         moving consumes 1 food, or 1 energy if this animal has run out of
         food. running out of food also triggers non-readyness for reproduction
         :param env: the surrounding tiles of this animal
         """
-        walkable_tiles = [
-            tile for row in env for tile in row if tile.walkable()
-        ]
+        walkable_tiles = []
+
+        if self.is_hungry():
+            if isinstance(self, Carnivore):
+                walkable_tiles = self.search_for_target(
+                    looking_env, target_entity=Herbivore
+                )
+            elif isinstance(self, Herbivore):
+                walkable_tiles = self.search_for_target(
+                    looking_env, target_entity=Vegetation
+                )
+        elif self.is_horny():
+            walkable_tiles = self.search_for_target(
+                looking_env, target_entity=self.__class__
+            )
+
+
+        if not walkable_tiles:
+            walkable_tiles = [
+                tile for row in immediate_env for tile in row if tile.walkable()
+            ]
+            if walkable_tiles:
+                walkable_tiles = choice(walkable_tiles)
+
         if walkable_tiles:
             self._tile.pop_entity(self)
-            self._associate_tile(choice(walkable_tiles))
+            self._associate_tile(walkable_tiles)
         if self._food:
             self._food -= 1
         else:
@@ -404,14 +458,14 @@ class BigHerbivore(SmallHerbivore):
         self._energy = 20
         self._evolved = SmartHerbivore
 
-
+    """
     def move(self, env):
-        """
+
         lets this animal move in a random direction, if there are free tiles.
         moving consumes 1 food, or 1 energy if this animal has run out of
         food. running out of food also triggers non-readyness for reproduction
         :param env: the surrounding tiles of this animal
-        """
+        
         walkable_tiles = [
             tile for row in env for tile in row if tile.walkable()
         ]
@@ -436,6 +490,7 @@ class BigHerbivore(SmallHerbivore):
         else:
             self._energy -= 1
             self._rdy_to_copulate = False
+    """
 
 
 

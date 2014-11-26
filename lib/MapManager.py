@@ -122,26 +122,27 @@ def _handle_animal_type(hunter_class, prey_class):
     born_hunters = []
 
     for hunter in hunter_list:
-        env = _get_env(hunter.pos_y, hunter.pos_x, 1)
+        immediate_env = _get_env(hunter.pos_y, hunter.pos_x, 1)
+        looking_env = _get_env(hunter.pos_y, hunter.pos_x, (hunter.lvl + 2)**2)
 
         if hunter.life_over():
             hunter_list.remove(hunter.die())
 
         elif hunter.is_hungry():
-            dead_animal = hunter.hunger_game(env)
+            dead_animal = hunter.hunger_game(immediate_env)
             if isinstance(dead_animal, prey_class):      #found food
                 prey_list.remove(dead_animal)
             elif isinstance(dead_animal, hunter_class):  #starved
                 hunter_list.remove(dead_animal)
             else:  #hunter moves if it couldn't find food / didn't starve
-                hunter.move(env)
+                hunter.move(immediate_env, looking_env)
 
         else:   #hunter tries to reproduce only if it is not hungry
-            newborn_hunter = hunter.try_reproduction(env)
+            newborn_hunter = hunter.try_reproduction(immediate_env)
             if newborn_hunter:
                 born_hunters.append(newborn_hunter)
             else:   #hunter moves if it couldn't find partner
-                hunter.move(env)
+                hunter.move(immediate_env, looking_env)
 
     hunter_list.extend(born_hunters)
 
