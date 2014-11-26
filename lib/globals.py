@@ -24,7 +24,7 @@ color = {
     'Y': GREEN_ON_BLACK,
     'ԅ': RED_ON_BLACK,
     'ԇ': RED_ON_BLACK,
-    'Ԇ': RED_ON_BLACK,
+    'ʡ': RED_ON_BLACK,
     'җ': YELLOW_ON_BLACK,
     'Җ': YELLOW_ON_BLACK,
     'Ӝ': YELLOW_ON_BLACK

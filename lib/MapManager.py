@@ -17,7 +17,7 @@ _entity_dict = {
     "Ӝ": SmartHerbivore,
     "ԅ": SmallCarnivore,
     "ԇ": BigCarnivore,
-    "Ԇ": SmartCarnivore,
+    "ʡ": SmartCarnivore,
     "§": Protozoan,
     "~": Water,
     "∽": Water,

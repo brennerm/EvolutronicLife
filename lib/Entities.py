@@ -472,7 +472,7 @@ class SmartHerbivore(BigHerbivore):
 class Carnivore(LandAnimal):
     def __init__(self, tile):
         super().__init__(tile)
-        self._tokens = 'ԅԇԆ'
+        self._tokens = 'ԅԇʡ'
         self._prey_class = Herbivore
 
 
