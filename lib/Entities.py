@@ -132,7 +132,7 @@ class RainForest(Creature):
         super().__init__(tile)
         self._tokens = 'Ϋϔ'
         self._blocks_step = False
-        self._steps_to_reproduce = randint(10, 15)
+        self._steps_to_reproduce = randint(15, 20)
 
 
     @property
@@ -147,7 +147,7 @@ class RainForest(Creature):
         """
         self._steps_to_reproduce -= 1
         if self._steps_to_reproduce == 0:
-            self._steps_to_reproduce = randint(10, 15)
+            self._steps_to_reproduce = randint(15, 20)
             return True
         return False
 
