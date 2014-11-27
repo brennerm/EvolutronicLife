@@ -56,7 +56,7 @@ class Entity(object):
 class Limit(Entity): #shall only be directly initialised as placeholder!
     def __init__(self, tile=None):
         super().__init__(tile)
-        self._blocks_step = True
+        self._blocks_step = 0
 
 
 
@@ -107,7 +107,7 @@ class Beach(Entity):
     def __init__(self, tile):
         super().__init__(tile)
         self._token = ":"
-        self._blocks_step = False
+        self._blocks_step = 3
 
 
 
@@ -131,7 +131,7 @@ class RainForest(Creature):
     def __init__(self, tile):
         super().__init__(tile)
         self._tokens = 'Ϋϔ'
-        self._blocks_step = False
+        self._blocks_step = 0
         self._steps_to_reproduce = randint(15, 20)
 
 
@@ -176,6 +176,8 @@ class Vegetation(RainForest):
         self._lvl = lvl
         self._chance_to_evolve = 1
         self._nutrition = 5
+        self._blocks_step = 3
+        self._health = 5
 
 
     @property
@@ -218,6 +220,8 @@ class Vegetation(RainForest):
 
             self._lvl = min(self._lvl + 1, 2)
             self._nutrition = min(self.nutrition + 5, 15)
+            self._blocks_step = max(self._blocks_step - 1, 1)
+            self._health = min(self._health * 2, 20)
 
 
     def __str__(self):
@@ -228,7 +232,7 @@ class Vegetation(RainForest):
 class Animal(Creature):
     def __init__(self, tile):
         super().__init__(tile)
-        self._blocks_step = True
+        self._blocks_step = 0
 
 
 
@@ -348,7 +352,7 @@ class LandAnimal(Animal):
             scope_center = floor(len(env) / 2)
 
             move_target = env[scope_center + y_dir][scope_center + x_dir]
-            if move_target.walkable():
+            if move_target.walkable(self.lvl):
                 return move_target
 
 
@@ -378,7 +382,7 @@ class LandAnimal(Animal):
 
         if not target_tile:     #no target entity found:
             walkable_tiles = [  #choose any free surrounding tile
-                tile for row in immediate_env for tile in row if tile.walkable()
+                tile for row in immediate_env for tile in row if tile.walkable(self.lvl)
             ]
             if walkable_tiles:
                 target_tile = choice(walkable_tiles)
@@ -412,17 +416,21 @@ class LandAnimal(Animal):
             if tile.holds_entity(self._prey_class)
         ]
 
-        eatable_prey = [
-            entity for entity in eatable_prey
-            if entity.lvl <= self.lvl
-        ]
+        # eatable_prey = [
+        #     entity for entity in eatable_prey
+        #     if entity.lvl <= self.lvl
+        # ]
 
         if eatable_prey:
             prey = choice(eatable_prey)
             self._food += prey.nutrition
             self._energy = 10
             self._rdy_to_copulate = True
-            return prey.die()
+            prey._health -= self._attack
+            if prey._health <= 0:
+                return prey.die()
+            else:
+                return True
         elif not self._energy:
             return self.die()
 
@@ -449,7 +457,7 @@ class LandAnimal(Animal):
 
         if mating_partners:
             birthplaces = [
-                tile for row in env for tile in row if tile.walkable()
+                tile for row in env for tile in row if tile.walkable(self._lvl)
             ]
             if not birthplaces: return
             partner = choice(mating_partners)
@@ -491,6 +499,8 @@ class SmallHerbivore(Herbivore):
         self._evolved_class = BigHerbivore
         self._view_range = 4
         self._nutrition = 5
+        self._health = 5
+        self._attack = 5
 
 
 
@@ -504,6 +514,8 @@ class BigHerbivore(SmallHerbivore):
         self._evolved_class = SmartHerbivore
         self._view_range = 6
         self._nutrition = 6
+        self._health = 10
+        self._attack = 10
 
 
 class SmartHerbivore(BigHerbivore):
@@ -516,7 +528,8 @@ class SmartHerbivore(BigHerbivore):
         self._evolved_class = SmartHerbivore
         self._view_range = 8
         self._nutrition = 8
-
+        self._health = 15
+        self._attack = 20
 
 
 class Carnivore(LandAnimal):
@@ -536,7 +549,7 @@ class SmallCarnivore(Carnivore):
         self._energy = 10
         self._evolved_class = BigCarnivore
         self._view_range = 4
-
+        self._attack = 5
 
 
 class BigCarnivore(SmallCarnivore):
@@ -548,7 +561,7 @@ class BigCarnivore(SmallCarnivore):
         self._energy = 20
         self._evolved_class = SmartCarnivore
         self._view_range = 6
-
+        self._attack = 10
 
 
 class SmartCarnivore(BigCarnivore):
@@ -560,3 +573,4 @@ class SmartCarnivore(BigCarnivore):
         self._energy = 30
         self._evolved_class = SmartCarnivore
         self._view_range = 8
+        self._attack = 15

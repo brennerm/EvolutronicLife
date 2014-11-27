@@ -3,6 +3,7 @@ from time import sleep, time
 from KeyListener import KeyListener
 import WindowManager as WinMan
 import MapManager as MapMan
+from threading import Thread
 import globals as global_vars
 
 
