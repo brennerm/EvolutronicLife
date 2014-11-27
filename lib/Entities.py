@@ -87,7 +87,7 @@ class Water(Limit): #inherits from limit so land animals won't step onto water
         self._tokens = "~∽"
 
 
-    def try_spawning(self, env):
+    def try_spawning(self):
         """
         tries to spawn a new Protozoan. has a certain percentage of a chance
         to succeed. also, its tile shall not already hold a Protozoan.
@@ -159,7 +159,7 @@ class RainForest(Creature):
         :param env: the surrounding tiles of this Vegetation
         :return: a new level 0 Vegetation instance or None
         """
-        free_tiles = [tile for row in env for tile in row if tile.empty()]
+        free_tiles = [tile for tile in env if tile.empty()]
         if free_tiles:       #reproduce if plant has space
             return Vegetation(0, choice(free_tiles))
 
@@ -214,7 +214,7 @@ class Vegetation(RainForest):
             return
         if all(
             tile.holds_entity(RainForest) and tile.entity().lvl >= self._lvl or
-            tile.holds_entity(Limit) for row in env for tile in row):
+            tile.holds_entity(Limit) for tile in env):
 
             self._lvl = min(self._lvl + 1, 2)
             self._nutrition = min(self.nutrition + 5, 15)
@@ -246,9 +246,7 @@ class Protozoan(Animal):
         :return: True if an adjacent tile holds a free Beach entity,
         False otherwise
         """
-        self._beach_tiles = [
-            tile for row in env for tile in row if tile.walkable()
-        ]
+        self._beach_tiles = [tile for tile in env if tile.walkable()]
         return True if self._beach_tiles else False
 
 
@@ -280,8 +278,7 @@ class Protozoan(Animal):
             return self
 
         swimmable_tiles = [
-            tile for row in env for tile in row
-            if isinstance(tile.entity(), Water)
+            tile for tile in env if isinstance(tile.entity(), Water)
         ]
         if swimmable_tiles:
             self._associate_tile(choice(swimmable_tiles))
@@ -332,7 +329,7 @@ class LandAnimal(Animal):
         :return: best tile for proceeding if no blocked
         """
         possible_targets = [
-            tile.entity(target_entity, self._lvl) for row in env for tile in row
+            tile.entity(target_entity, self._lvl) for tile in env
             if tile.holds_entity(target_entity, self._lvl) and
             tile.entity(target_entity, self._lvl) != self
         ]
@@ -347,7 +344,7 @@ class LandAnimal(Animal):
             y_dir = (wanted_target.pos_y > self.pos_y) - (wanted_target.pos_y < self.pos_y)
             scope_center = floor(len(env) / 2)
 
-            move_target = env[scope_center + y_dir][scope_center + x_dir]
+            move_target = env[scope_center + int(sqrt(len(env)))*y_dir + x_dir]
             if move_target.walkable():
                 return move_target
 
@@ -378,7 +375,7 @@ class LandAnimal(Animal):
 
         if not target_tile:     #no target entity found:
             walkable_tiles = [  #choose any free surrounding tile
-                tile for row in immediate_env for tile in row if tile.walkable()
+                tile for tile in immediate_env if tile.walkable()
             ]
             if walkable_tiles:
                 target_tile = choice(walkable_tiles)
@@ -407,8 +404,7 @@ class LandAnimal(Animal):
         :return: a deceased instance of LandAnimal or None
         """
         eatable_prey = [
-            tile.entity(self._prey_class)
-            for row in env for tile in row
+            tile.entity(self._prey_class) for tile in env
             if tile.holds_entity(self._prey_class)
         ]
 
@@ -438,8 +434,7 @@ class LandAnimal(Animal):
         :return: new instance of a LandAnimal
         """
         mating_partners = [
-            tile.entity(self.__class__, self._lvl)
-            for row in env for tile in row
+            tile.entity(self.__class__, self._lvl) for tile in env
             if tile.holds_entity(self.__class__, self._lvl)
         ]
         mating_partners = [
@@ -448,9 +443,7 @@ class LandAnimal(Animal):
         ]
 
         if mating_partners:
-            birthplaces = [
-                tile for row in env for tile in row if tile.walkable()
-            ]
+            birthplaces = [tile for tile in env if tile.walkable()]
             if not birthplaces: return
             partner = choice(mating_partners)
             partner.have_sex()

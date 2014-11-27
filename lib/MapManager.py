@@ -3,11 +3,6 @@ from Entities import *
 import globals as global_vars
 
 
-_plants = []
-_herbivores = []
-_carnivores = []
-_spawners = []
-_protozoans = []
 _entity_dict = {
     "ʷ": Vegetation,
     "ʬ": Vegetation,
@@ -28,6 +23,11 @@ _entity_dict = {
     "‾": HorizLimitBottom,
     "|": VertLimit
 }
+_plants = []
+_herbivores = []
+_carnivores = []
+_spawners = []
+_protozoans = []
 
 
 def init_map(map_filename):
@@ -201,8 +201,7 @@ def _spawner_action():
     be added to the corresponding list.
     """
     for spawner in _spawners:
-        env = _get_env(spawner.pos_y, spawner.pos_x, 1)
-        new_proto = spawner.try_spawning(env)
+        new_proto = spawner.try_spawning()
         if new_proto:
             _protozoans.append(new_proto)
 
@@ -225,13 +224,12 @@ def _get_env(pos_y, pos_x, scope):
     env = []
 
     for offset_y in range(-scope, scope + 1):
-        env.append([])
         y_on_map = pos_y + offset_y
         for offset_x in range(-scope, scope + 1):
             x_on_map = pos_x + offset_x
             try:
-                env[-1].append(_tile_map[y_on_map][x_on_map])
+                env.append(_tile_map[y_on_map][x_on_map])
             except IndexError:
-                env[-1].append(Tile(entity=Limit()))
+                env.append(Tile(entity=Limit()))
 
     return env
