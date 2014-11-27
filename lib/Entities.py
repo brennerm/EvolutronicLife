@@ -127,30 +127,23 @@ class Creature(Entity):
 
 
 
-class Vegetation(Creature):
-    def __init__(self, lvl, tile):
+class RainForest(Creature):
+    def __init__(self, tile):
         super().__init__(tile)
-
-        self._tokens = ("ʷʬY", "ʷʬϒ")
+        self._tokens = 'Ϋϔ'
         self._blocks_step = False
-        self._lvl = lvl
         self._steps_to_reproduce = randint(10, 15)
-        self._chance_to_evolve = 1
-
-
-    def __str__(self):
-        return self._tokens[global_vars.anim_toggler][self._lvl]
 
 
     @property
     def lvl(self):
-        return self._lvl
+        return 2
 
 
     def wants_to_grow(self):
         """
-        reports whether this Vegetation is ready to grow
-        :return: True if Vegetation wants to grow, False otherwise
+        reports whether this RainForest is ready to grow
+        :return: True if RainForest wants to grow, False otherwise
         """
         self._steps_to_reproduce -= 1
         if self._steps_to_reproduce == 0:
@@ -161,8 +154,7 @@ class Vegetation(Creature):
 
     def try_growth(self, env):
         """
-        lets this Vegetation try to grow. growing could be either producing
-        a new offspring or rising in level. in the former case, the
+        lets this Vegetation try to grow. if it grows, the
         new offspring will be returned by this method.
         :param env: the surrounding tiles of this Vegetation
         :return: a new level 0 Vegetation instance or None
@@ -170,6 +162,37 @@ class Vegetation(Creature):
         free_tiles = [tile for row in env for tile in row if tile.empty()]
         if free_tiles:       #reproduce if plant has space
             return Vegetation(0, choice(free_tiles))
+
+
+    def __str__(self):
+        return self._tokens[global_vars.anim_toggler]
+
+
+
+class Vegetation(RainForest):
+    def __init__(self, lvl, tile):
+        super().__init__(tile)
+        self._tokens = ("ʷʬY", "ʷʬϒ")
+        self._lvl = lvl
+        self._chance_to_evolve = 1
+
+
+    @property
+    def lvl(self):
+        return self._lvl
+
+
+    def try_growth(self, env):
+        """
+        lets this Vegetation try to grow. growing could be either producing
+        a new offspring or rising in level. in the former case, the
+        new offspring will be returned by this method.
+        :param env: the surrounding tiles of this Vegetation
+        :return: a new level 0 Vegetation instance or None
+        """
+        offspring = super().try_growth(env)
+        if offspring:
+            return offspring
         self._evolve(env)    #try to rise in lvl when not reproducing
 
 
@@ -184,10 +207,14 @@ class Vegetation(Creature):
             self._chance_to_evolve += 1
             return
         if all(
-            tile.holds_entity(Vegetation) and tile.entity().lvl >= self._lvl or
+            tile.holds_entity(RainForest) and tile.entity().lvl >= self._lvl or
             tile.holds_entity(Limit) for row in env for tile in row):
 
             self._lvl = min(self._lvl + 1, 2)
+
+
+    def __str__(self):
+        return self._tokens[global_vars.anim_toggler][self._lvl]
 
 
 

@@ -12,6 +12,8 @@ _entity_dict = {
     "ʷ": Vegetation,
     "ʬ": Vegetation,
     "Y": Vegetation,
+    'Ϋ': RainForest,
+    'ϔ': RainForest,
     "җ": SmallHerbivore,
     "Җ": BigHerbivore,
     "Ӝ": SmartHerbivore,
@@ -76,6 +78,8 @@ def _init_entity(token, tile):
         _carnivores.append(entity_class(tile))
     elif Herbivore.__subclasscheck__(entity_class):
         _herbivores.append(entity_class(tile))
+    elif entity_class == RainForest:
+        _plants.append(entity_class(tile))
     elif entity_class == Vegetation:
         _plants.append(entity_class("ʷʬY".index(token), tile))
     elif entity_class == Protozoan:
