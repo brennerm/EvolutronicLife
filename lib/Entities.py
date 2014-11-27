@@ -175,11 +175,17 @@ class Vegetation(RainForest):
         self._tokens = ("ʷʬY", "ʷʬϒ")
         self._lvl = lvl
         self._chance_to_evolve = 1
+        self._nutrition = 5
 
 
     @property
     def lvl(self):
         return self._lvl
+
+
+    @property
+    def nutrition(self):
+        return self._nutrition
 
 
     def try_growth(self, env):
@@ -211,6 +217,7 @@ class Vegetation(RainForest):
             tile.holds_entity(Limit) for row in env for tile in row):
 
             self._lvl = min(self._lvl + 1, 2)
+            self._nutrition = min(self.nutrition + 5, 15)
 
 
     def __str__(self):
@@ -411,10 +418,11 @@ class LandAnimal(Animal):
         ]
 
         if eatable_prey:
-            self._food = 10
+            prey = choice(eatable_prey)
+            self._food += prey.nutrition
             self._energy = 10
             self._rdy_to_copulate = True
-            return choice(eatable_prey).die()
+            return prey.die()
         elif not self._energy:
             return self.die()
 
@@ -464,6 +472,12 @@ class Herbivore(LandAnimal):
         super().__init__(tile)
         self._tokens = 'җҖӜ'
         self._prey_class = Vegetation
+        self._nutrition = None
+
+
+    @property
+    def nutrition(self):
+        return self._nutrition
 
 
 
@@ -476,6 +490,7 @@ class SmallHerbivore(Herbivore):
         self._energy = 10
         self._evolved_class = BigHerbivore
         self._view_range = 4
+        self._nutrition = 5
 
 
 
@@ -488,7 +503,7 @@ class BigHerbivore(SmallHerbivore):
         self._energy = 20
         self._evolved_class = SmartHerbivore
         self._view_range = 6
-
+        self._nutrition = 6
 
 
 class SmartHerbivore(BigHerbivore):
@@ -500,6 +515,7 @@ class SmartHerbivore(BigHerbivore):
         self._energy = 30
         self._evolved_class = SmartHerbivore
         self._view_range = 8
+        self._nutrition = 8
 
 
 
