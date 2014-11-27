@@ -14,6 +14,13 @@ class Tile(object):
     def pos_x(self):
         return self._pos_x
 
+    @property
+    def env_rings(self):
+        return self._env
+
+    def set_env_rings(self, env_rings):
+        self._env_rings = env_rings
+
 
     def entity(self, entity_class=None, lvl=None):
         """

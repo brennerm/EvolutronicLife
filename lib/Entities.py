@@ -53,7 +53,7 @@ class Entity(object):
 
 
 
-class Limit(Entity): #shall only be directly initialised as placeholder!
+class Limit(Entity):
     def __init__(self, tile=None):
         super().__init__(tile)
         self._blocks_step = True
@@ -361,6 +361,7 @@ class LandAnimal(Animal):
         distance 1
         :param looking_env: the surrounding tiles of this LandAnimal of a
         distance >= 1
+        :return: True if this LandAnimal was able to move, False otherwise
         """
         target_tile = None
 
@@ -391,6 +392,7 @@ class LandAnimal(Animal):
             self._rdy_to_copulate = False
 
         return True
+
 
     def hunger_game(self, env):
         """

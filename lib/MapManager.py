@@ -58,6 +58,8 @@ def _parse_map(map_path):
                 _init_entity(token, tile)
             tile_map[-1].append(tile)
 
+    _init_env_rings(tile_map)
+
     return tile_map
 
 
@@ -206,30 +208,61 @@ def _spawner_action():
             _protozoans.append(new_proto)
 
 
-def _get_env(pos_y, pos_x, scope):
+def _init_env_rings(tile_map, num_rings=8):
     """
-    calculates part of map around a specific object with a given range.
-    parts that are outside of the map will be filled with tiles holding
-    limit placeholder entities.
-    :param pos_y: y-coordinate of object in map
-    :param pos_x: x-coordinate of object in map
-    :param scope: range around object to be returned
+    initialises the environment rings for each tile of the map.
+    :param tile_map: 2D list containing all tiles of the map
+    :param num_rings: the number of environment rings to set up for each tile
+    """
+
+    for y, row in enumerate(tile_map):
+        for x, tile in enumerate(row):
+            env_rings = []
+            for scope in range(1, num_rings+1):
+                env_rings.append(_calculate_env_ring(tile_map, y, x, scope))
+            tile.set_env_rings(env_rings)
+
+
+def _calculate_env_ring(tile_map, center_y, center_x, scope):
+    """
+    calculates the tile ring of the given scope around the tile at position
+    center_y/center_x. tile coordinates that are outside of the map will be
+    ignored.
+    :param tile_map: 2D list containing all tiles of the map
+    :param pos_y: y-coordinate of the tile
+    :param pos_x: x-coordinate of the tile
+    :param scope: expanse of the tile ring list to be calculated
     scope = 1 [x][x][x] scope = 2 [x][x][x][x][x]
-              [x][o][x]           [x][x][x][x][x]
-              [x][x][x]           [x][x][o][x][x]
+              [x][o][x]           [x]         [x]
+              [x][x][x]           [x]   [o]   [x]
+                                  [x]         [x]
                                   [x][x][x][x][x]
-                                  [x][x][x][x][x]
-    :return: part of map as two dimensional list
+    :return: tile ring list
     """
-    env = []
+    env_ring = []
 
-    for offset_y in range(-scope, scope + 1):
-        y_on_map = pos_y + offset_y
-        for offset_x in range(-scope, scope + 1):
-            x_on_map = pos_x + offset_x
-            try:
-                env.append(_tile_map[y_on_map][x_on_map])
-            except IndexError:
-                env.append(Tile(entity=Limit()))
+    try:
+        y_on_map = center_y - scope     #top ring row
+        for relative_x in range(-scope, scope+1):
+            x_on_map = center_x + relative_x
+            env_ring.append(tile_map[y_on_map][x_on_map])
 
-    return env
+        x_on_map = center_x - scope     #left ring column
+        for relative_y in range(-scope+1, scope):
+            y_on_map = center_y + relative_y
+            env_ring.append(tile_map[y_on_map][x_on_map])
+
+        x_on_map = center_x + scope     #right ring column
+        for relative_y in range(-scope+1, scope):
+            y_on_map = center_y + relative_y
+            env_ring.append(tile_map[y_on_map][x_on_map])
+
+        y_on_map = center_y + scope     #bottom ring row
+        for relative_x in range(-scope, scope+1):
+            x_on_map = center_x + relative_x
+            env_ring.append(tile_map[y_on_map][x_on_map])
+
+    except IndexError:
+        pass
+
+    return env_ring
