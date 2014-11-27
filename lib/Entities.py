@@ -356,11 +356,31 @@ class LandAnimal(Animal):
 
             x_dir = (wanted_target.pos_x > self.pos_x) - (wanted_target.pos_x < self.pos_x) # signum
             y_dir = (wanted_target.pos_y > self.pos_y) - (wanted_target.pos_y < self.pos_y)
-            scope_center = floor(len(env) / 2)
+            if y_dir == -1:
+                if x_dir == -1:
+                    pos=0
+                if x_dir == 0:
+                    pos=1
+                if x_dir == 1:
+                    pos=2
+            elif y_dir == 0:
+                if x_dir == -1:
+                    pos=3
+                if x_dir == 1:
+                    pos=4
+            elif y_dir == 1:
+                if x_dir == -1:
+                    pos=5
+                if x_dir == 0:
+                    pos=6
+                if x_dir == 1:
+                    pos=7
 
-            move_target = env[scope_center + int(sqrt(len(env)))*y_dir + x_dir]
+            env = self.tile.env_rings[0]
+            move_target = env[pos]
             if move_target.walkable():
                 return move_target
+
 
 
     def move(self):
@@ -378,7 +398,7 @@ class LandAnimal(Animal):
         :return: True if this LandAnimal was able to move, False otherwise
         """
         target_tile = None
-        immediate_env = self._tile.env_rings[0]
+        immediate_env = self.tile.env_rings[0]
 
         if self.is_hungry():
             target_tile = self.search_for_target(
