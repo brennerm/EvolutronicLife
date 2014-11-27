@@ -130,28 +130,25 @@ def _handle_animal_type(hunter_class, prey_class):
     born_hunters = []
 
     for hunter in hunter_list:
-        immediate_env = _get_env(hunter.pos_y, hunter.pos_x, 1)
-        looking_env = _get_env(hunter.pos_y, hunter.pos_x, hunter.view_range)
-
         if hunter.life_over():
             hunter_list.remove(hunter.die())
 
         elif hunter.is_hungry():
-            dead_animal = hunter.hunger_game(immediate_env)
+            dead_animal = hunter.hunger_game()
             if isinstance(dead_animal, prey_class):      #found food
                 prey_list.remove(dead_animal)
             elif isinstance(dead_animal, hunter_class):  #starved
                 hunter_list.remove(dead_animal)
             else:  #hunter moves if it couldn't find food / didn't starve
-                if not hunter.move(immediate_env, looking_env):
+                if not hunter.move():
                     hunter_list.remove(hunter.die())
 
         else:   #hunter tries to reproduce only if it is not hungry
-            newborn_hunter = hunter.try_reproduction(immediate_env)
+            newborn_hunter = hunter.try_reproduction()
             if newborn_hunter:
                 born_hunters.append(newborn_hunter)
             else:   #hunter moves if it couldn't find partner
-                if not hunter.move(immediate_env, looking_env):
+                if not hunter.move():
                     hunter_list.remove(hunter.die())
 
     hunter_list.extend(born_hunters)
@@ -166,9 +163,7 @@ def _veggie_action():
 
     for plant in _plants:
         if plant.wants_to_grow():
-            grown_plant = plant.try_growth(
-                _get_env(plant.pos_y, plant.pos_x, 1)
-            )
+            grown_plant = plant.try_growth()
             if grown_plant:
                 new_plants.append(grown_plant)
 
@@ -182,9 +177,7 @@ def _protozoan_action():
     corresponding list. protozoans can also die of age when trying to move.
     """
     for proto in _protozoans:
-        env = _get_env(proto.pos_y, proto.pos_x, 1)
-
-        if proto.beach_reachable(env):
+        if proto.beach_reachable():
             old_proto, new_animal = proto.jump_on_beach()
             _protozoans.remove(old_proto)
             if isinstance(new_animal, Herbivore):
@@ -192,7 +185,7 @@ def _protozoan_action():
             else:
                 _carnivores.append(new_animal)
         else:
-            dead_proto = proto.move(env)
+            dead_proto = proto.move()
             if dead_proto:  #protos can die of age
                 _protozoans.remove(dead_proto)
 
