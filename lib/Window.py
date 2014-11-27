@@ -91,3 +91,21 @@ class OptionPane(Window):
         """
         self._options[self._options.index(option_to_replace)] = new_option
         self.update()
+
+
+class TileWindow(Window):
+    def __init__(self, height, width,  pos_y, pos_x):
+        super(TileWindow, self).__init__(height, width, pos_y, pos_x)
+        self.update()
+
+    def update(self, tile_info=None):
+        self._curses_window.clear()
+
+        if not tile_info is None:
+            for x, entity_info in enumerate(tile_info):
+                for y, line in enumerate(entity_info):
+                    self._curses_window.addstr(y, x * 20, line + "\n")
+
+        self._curses_window.noutrefresh()
+
+

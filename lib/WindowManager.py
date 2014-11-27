@@ -1,5 +1,5 @@
 import curses
-from Window import InfoWindow, MapWindow, OptionPane
+from Window import InfoWindow, MapWindow, OptionPane, TileWindow
 import globals as global_vars
 
 
@@ -11,6 +11,7 @@ if curses.can_change_color():
 curses.noecho()
 curses.cbreak()
 curses.curs_set(0)
+curses.mousemask(1)
 _main_win.nodelay(1)
 _main_win.keypad(1)
 _main_win.refresh()
@@ -29,13 +30,14 @@ def init():
     """
     init subwindows
     """
-    global _info_win, _map_win, _option_pane
+    global _info_win, _map_win, _option_pane, _tile_win
     _info_win = InfoWindow(1, 140, 0, 0)
     _map_win = MapWindow(35, 140, 1, 0)
     _option_pane = OptionPane(1, 140, 36, 0, "Pause", "Faster", "Slower", "Exit")
+    _tile_win = TileWindow(10, 140, 37, 0)
 
 
-def update(the_map=None):
+def update(the_map=None, tile_info=None):
     """
     updates content of info window and also the map window, if a map is given
     :param the_map: the game map in the current state
@@ -43,6 +45,8 @@ def update(the_map=None):
     _info_win.update()
     if(the_map):
         _map_win.update(the_map)
+
+    _tile_win.update(tile_info)
 
     curses.doupdate()
 

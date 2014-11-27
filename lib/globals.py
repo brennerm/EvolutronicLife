@@ -3,6 +3,7 @@ step = 0
 pause = False
 quit = False
 anim_toggler = False
+watched_entity = None
 
 WHITE_ON_BLACK = 0
 WHITE_ON_BLUE = 1

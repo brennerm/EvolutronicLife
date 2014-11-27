@@ -42,6 +42,17 @@ class Entity(object):
         """
         return self._blocks_step
 
+    def pos(self):
+        return self.pos_y, self.pos_x
+
+    @property
+    def info(self):
+        info = (
+            "name: " + self.__class__.__name__,
+            "token: " + str(self)
+        )
+        return info
+
 
     def _associate_tile(self, new_tile):
         """
@@ -96,7 +107,6 @@ class Water(Limit): #inherits from limit so land animals won't step onto water
         """
         if random() < 0.01 and not self._tile.holds_entity(Protozoan):
             return Protozoan(self._tile)
-
 
     def __str__(self):
         return self._tokens[global_vars.anim_toggler]
@@ -286,6 +296,16 @@ class Protozoan(Animal):
         if swimmable_tiles:
             self._associate_tile(choice(swimmable_tiles))
 
+    @property
+    def info(self):
+        info = (
+            "name: " + self.__class__.__name__,
+            "token: " + str(self),
+            "ttl: " + str(self._time_to_live)
+        )
+        return info
+
+
 
 
 class LandAnimal(Animal):
@@ -293,7 +313,6 @@ class LandAnimal(Animal):
         super().__init__(tile)
         self._lvl = 0
         self._rdy_to_copulate = False
-
 
     @property
     def lvl(self):
@@ -304,6 +323,17 @@ class LandAnimal(Animal):
     def view_range(self):
         return self._view_range
 
+    @property
+    def info(self):
+        info = (
+            "name: " + self.__class__.__name__,
+            "token: " + str(self),
+            "ttl: " + str(self._time_to_live),
+            "food: " + str(self._food),
+            "energy: " + str(self._energy),
+
+        )
+        return info
 
     def life_over(self):
         self._time_to_live -= 1
@@ -461,10 +491,8 @@ class LandAnimal(Animal):
             else:
                 return self.__class__(choice(birthplaces))
 
-
     def __str__(self):
         return self._tokens[self._lvl]
-
 
 
 class Herbivore(LandAnimal):
@@ -474,11 +502,9 @@ class Herbivore(LandAnimal):
         self._prey_class = Vegetation
         self._nutrition = None
 
-
     @property
     def nutrition(self):
         return self._nutrition
-
 
 
 class SmallHerbivore(Herbivore):
@@ -491,7 +517,6 @@ class SmallHerbivore(Herbivore):
         self._evolved_class = BigHerbivore
         self._view_range = 4
         self._nutrition = 5
-
 
 
 class BigHerbivore(SmallHerbivore):
@@ -518,13 +543,11 @@ class SmartHerbivore(BigHerbivore):
         self._nutrition = 8
 
 
-
 class Carnivore(LandAnimal):
     def __init__(self, tile):
         super().__init__(tile)
         self._tokens = 'ԅԇʡ'
         self._prey_class = Herbivore
-
 
 
 class SmallCarnivore(Carnivore):
@@ -538,7 +561,6 @@ class SmallCarnivore(Carnivore):
         self._view_range = 4
 
 
-
 class BigCarnivore(SmallCarnivore):
     def __init__(self, tile):
         super().__init__(tile)
@@ -548,7 +570,6 @@ class BigCarnivore(SmallCarnivore):
         self._energy = 20
         self._evolved_class = SmartCarnivore
         self._view_range = 6
-
 
 
 class SmartCarnivore(BigCarnivore):

@@ -1,8 +1,10 @@
 from threading import Thread
 from time import sleep
 import WindowManager as WinMan
+import MapManager as MapMan
 import globals as global_vars
 import curses
+
 
 class KeyListener(Thread):
 
@@ -31,6 +33,9 @@ class KeyListener(Thread):
                     elif key == 268:    #F4 / Quit
                         global_vars.quit = True
                         break
+                    elif key == curses.KEY_MOUSE:
+                        id, x, y, z, bstate = curses.getmouse()
+                        MapMan.set_watched_entity(y - 1, x)
                     sleep(0.01)
 
             elif key == 266:        #F2 / Faster
@@ -54,8 +59,6 @@ class KeyListener(Thread):
 
             elif key == curses.KEY_MOUSE:
                 id, x, y, z, bstate = curses.getmouse()
-
-                with open("log", "a") as f:
-                    f.write("x: " + str(x) + " y: " + str(y) + "bstate" + str(bstate))
+                MapMan.set_watched_entity(y - 1, x)
 
             sleep(0.01)

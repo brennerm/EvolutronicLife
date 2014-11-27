@@ -98,6 +98,19 @@ def token_map():
     return [map(str, row) for row in _tile_map]
 
 
+def watch_info():
+    if global_vars.watched_entity is None:
+        return None
+    return _tile_map[global_vars.watched_entity.pos_y][global_vars.watched_entity.pos_x].tile_info
+
+
+def set_watched_entity(pos_y, pos_x):
+    try:
+        global_vars.watched_entity = _tile_map[pos_y][pos_x].entity()
+    except IndexError:
+        return
+
+
 def update():
     """
     updates all entities. this is done in multiple steps, updating each

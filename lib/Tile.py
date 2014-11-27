@@ -14,6 +14,15 @@ class Tile(object):
     def pos_x(self):
         return self._pos_x
 
+    @property
+    def tile_info(self):
+        tile_info = []
+        for entity in self._entity_stack:
+            tile_info.append(entity.info)
+
+
+        return tile_info
+
 
     def entity(self, entity_class=None, lvl=None):
         """
@@ -45,7 +54,7 @@ class Tile(object):
         """
         return any(
             isinstance(entity, entity_class) and
-            (lvl == None or entity.lvl == lvl)
+            (lvl is None or entity.lvl == lvl)
             for entity in self._entity_stack
         )
 
