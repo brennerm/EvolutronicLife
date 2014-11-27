@@ -5,7 +5,7 @@ path.append('lib')  #add lib folder to module search path
 from os import listdir
 from argparse import ArgumentParser
 import EvolutronicLife as EvoLife
-import curses
+
 
 if __name__ == "__main__":
     maps = [file[:-4] for file in listdir('./maps') if file.endswith('.map')]
@@ -20,9 +20,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    try:
-        EvoLife.run(args.map, args.kickstart)
-    except:
-        curses.nocbreak()
-        curses.echo()
-        curses.endwin()
+    EvoLife.run(args.map, args.kickstart)
