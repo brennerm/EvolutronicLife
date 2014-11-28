@@ -337,7 +337,7 @@ class LandAnimal(Animal):
         :return: best tile for proceeding if no blocked
         """
         possible_targets = None
-        for env in self.tile.env_rings:
+        for env in self.tile.env_rings[1:self.view_range]:
             possible_targets = [
                 tile.entity(target_entity, self._lvl) for tile in env
                 if tile.holds_entity(target_entity, self._lvl) and
@@ -347,11 +347,6 @@ class LandAnimal(Animal):
                 break
 
         if possible_targets:
-            # wanted_target = min(  #select tile with shortest distance
-            #     possible_targets,
-            #     key=lambda t: sqrt((t.pos_x - self.pos_x)**2 + (t.pos_y - self.pos_y)**2)
-            # )
-
             wanted_target = choice(possible_targets)
 
             x_dir = (wanted_target.pos_x > self.pos_x) - (wanted_target.pos_x < self.pos_x) # signum
@@ -380,7 +375,6 @@ class LandAnimal(Animal):
             move_target = env[pos]
             if move_target.walkable():
                 return move_target
-
 
 
     def move(self):

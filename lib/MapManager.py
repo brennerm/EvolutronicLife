@@ -225,9 +225,9 @@ def _calculate_env_ring(tile_map, center_y, center_x, scope):
     :param pos_y: y-coordinate of the tile
     :param pos_x: x-coordinate of the tile
     :param scope: expanse of the tile ring list to be calculated
-    scope = 1 [x][x][x] scope = 2 [x][x][x][x][x]
-              [x][o][x]           [x]         [x]
-              [x][x][x]           [x]   [o]   [x]
+    scope = 1 [0][1][2] scope = 2 [x][x][x][x][x]
+              [3][o][4]           [x]         [x]
+              [5][6][7]           [x]   [o]   [x]
                                   [x]         [x]
                                   [x][x][x][x][x]
     :return: tile ring list
