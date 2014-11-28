@@ -148,11 +148,11 @@ def _handle_animal_type(hunter_class, prey_class):
 
         elif hunter.is_hungry():
             dead_animal = hunter.hunger_game()
-            if isinstance(dead_animal, prey_class):      #found food
+            if isinstance(dead_animal, prey_class):      #ate whole food
                 prey_list.remove(dead_animal)
             elif isinstance(dead_animal, hunter_class):  #starved
                 hunter_list.remove(dead_animal)
-            elif dead_animal == True:
+            elif dead_animal is True:                  #ate part of food
                 continue
             else:   #hunter moves if it couldn't find food / didn't starve
                 if not hunter.move():
@@ -228,7 +228,7 @@ def _init_env_rings(tile_map, num_rings=8):
             env_rings = []
             for scope in range(1, num_rings+1):
                 env_rings.append(_calculate_env_ring(tile_map, y, x, scope))
-            tile.set_env_rings(env_rings)
+            tile.env_rings = env_rings
 
 
 def _calculate_env_ring(tile_map, center_y, center_x, scope):

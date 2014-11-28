@@ -107,7 +107,6 @@ class Water(Limit): #inherits from limit so land animals won't step onto water
         """
         tries to spawn a new Protozoan. has a certain percentage of a chance
         to succeed. also, its tile shall not already hold a Protozoan.
-        :param env: the surrounding tiles of this Water entity
         :return: a new instance of Protozoan or None
         """
         if random() < 0.01 and not self._tile.holds_entity(Protozoan):
@@ -173,7 +172,6 @@ class RainForest(Creature):
         """
         lets this Vegetation try to grow. if it grows, the
         new offspring will be returned by this method.
-        :param env: the surrounding tiles of this Vegetation
         :return: a new level 0 Vegetation instance or None
         """
         env = self.tile.env_rings[0]
@@ -232,7 +230,6 @@ class Vegetation(RainForest):
         lets this Vegetation try to grow. growing could be either producing
         a new offspring or rising in level. in the former case, the
         new offspring will be returned by this method.
-        :param env: the surrounding tiles of this Vegetation
         :return: a new level 0 Vegetation instance or None
         """
         env = self.tile.env_rings[0]
@@ -245,7 +242,6 @@ class Vegetation(RainForest):
     def _evolve(self):
         """
         lets this Vegetation try to evolve. must not succeed.
-        :param env: the surrounding tiles of this Vegetation
         """
         env = self.tile.env_rings[0]
         if self._lvl == 2:
@@ -290,9 +286,7 @@ class Protozoan(Animal):
     def beach_reachable(self):
         """
         returns whether an adjacent Beach entity can be seen.
-        :param env: the surrounding tiles of this Protozoan
-        :return: True if an adjacent tile holds a free Beach entity,
-        False otherwise
+        :return: True if an adjacent tile can be walked upon, False otherwise
         """
         env = self.tile.env_rings[0]
         self._beach_tiles = [tile for tile in env if tile.walkable()]
@@ -317,7 +311,6 @@ class Protozoan(Animal):
         """
         lets this Protozoan move on a random tile holding only Water. death
         is possible if this protozoan runs out of lifetime.
-        :param env: the surrounding tiles of this Protozoan
         :return: this Protozoan if it has died, None otherwise
         """
         env = self.tile.env_rings[0]
@@ -390,12 +383,11 @@ class LandAnimal(Animal):
 
     def search_for_target(self, target_entity):
         """
-        Lets this LandAnimal search for other entities. This can be
-        used for the search for food or a mating partner. Returns a tile
-        if a entity is in looking range and the best way isn't blocked.
-        :param env: field of view of the animal
+        Lets this LandAnimal search for entities of class target_entity. This
+        can be used for the search for food or a mating partner. Returns a tile
+        if an entity was found and the best way isn't blocked.
         :param target_entity: class of searched entity
-        :return: best tile for proceeding if no blocked
+        :return: best Tile for proceeding, or None if this Tile is not walkable
         """
         possible_targets = None
         for env in self.tile.env_rings[1:self.view_range]:
@@ -446,10 +438,6 @@ class LandAnimal(Animal):
         immediate environment. moving consumes 1 food, or 1 energy if this
         LandAnimal has run out of food. running out of food also triggers
         non-readyness for reproduction.
-        :param immediate_env: the surrounding tiles of this LandAnimal of
-        distance 1
-        :param looking_env: the surrounding tiles of this LandAnimal of a
-        distance >= 1
         :return: True if this LandAnimal was able to move, False otherwise
         """
         target_tile = None
@@ -485,14 +473,16 @@ class LandAnimal(Animal):
 
     def hunger_game(self):
         """
-        lets this LandAnimal try to eat a prey Creature of the same
-        level. this must not succeed. if it succeeds, food, energy
-        and libido levels will be filled up and the eaten Creature will be
-        returned for destruction. The searching LandAnimal may also die
-        at this point if it has run out of energy and couldn't find any prey.
-        In this case, the LandAnimal itself will be returned for destruction.
-        :param env: the surrounding tiles of this LandAnimal
-        :return: a deceased instance of LandAnimal or None
+        lets this LandAnimal try to eat a prey Creature. this must not succeed.
+        if it succeeds, food, energy and libido levels will be filled up and
+        the eaten Creature will be returned for destruction. this LandAnimal
+        could just eat a part of a prey Creature, in which case True is
+        returned. The searching LandAnimal may also die at this point if it has
+        run out of energy and couldn't find any prey. In this case, the
+        LandAnimal itself will be returned for destruction.
+        :return: a deceased instance of a Creature if a whole Creature was
+        eaten or the hunter died, True if part of a Creature was eaten, or
+        None if none of the above occured
         """
         env =  self._tile.env_rings[0]
         eatable_prey = [
@@ -521,7 +511,6 @@ class LandAnimal(Animal):
         created and 1 food consumed. this new LandAnimal will be placed on any
         walkable surrounding tile. reproduction fails if no walkable tile can
         be found. on success, the new LandAnimal will be returned.
-        :param env: the surrounding tiles of this LandAnimal
         :return: new instance of a LandAnimal
         """
         env = self._tile.env_rings[0]

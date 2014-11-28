@@ -26,7 +26,8 @@ class Tile(object):
     def env_rings(self):
         return self._env_rings
 
-    def set_env_rings(self, env_rings):
+    @env_rings.setter
+    def env_rings(self, env_rings):
         self._env_rings = env_rings
 
 

@@ -25,7 +25,7 @@ class InputListener(Thread):
                 global_vars.pause = True
                 WinMan.replace_option("Pause", "Resume")
                 WinMan.replace_option("Faster", "Single Step")
-                WinMan.replace_option("Slower", "    ")
+                WinMan.replace_option("Slower", "")
                 WinMan.update()
                 global_vars.swap_step_duration = global_vars.step_duration
                 global_vars.step_duration = 0.1
@@ -37,7 +37,7 @@ class InputListener(Thread):
                         global_vars.step_duration = global_vars.swap_step_duration
                         WinMan.replace_option("Resume", "Pause")
                         WinMan.replace_option("Single Step", "Faster")
-                        WinMan.replace_option("    ", "Slower")
+                        WinMan.replace_option("", "Slower")
                         break
                     elif key == 266:
                         global_vars.single_step = True

@@ -26,6 +26,9 @@ curses.init_pair(global_vars.CYAN_ON_BLACK, curses.COLOR_CYAN, curses.COLOR_BLAC
 curses.init_pair(global_vars.MAGENTA_ON_BLACK, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
 curses.init_pair(global_vars.WHITE_ON_CYAN, curses.COLOR_WHITE, curses.COLOR_CYAN)
 
+options_padding = 14
+
+
 def init():
     """
     init subwindows
@@ -33,7 +36,13 @@ def init():
     global _info_win, _map_win, _option_pane, _tile_win
     _info_win = InfoWindow(1, 140, 0, 0)
     _map_win = MapWindow(35, 140, 1, 0)
-    _option_pane = OptionPane(1, 140, 36, 0, "Pause", "Faster", "Slower", "Exit")
+    _option_pane = OptionPane(
+        1, 140, 36, 0,
+        "Pause".center(options_padding),
+        "Faster".center(options_padding),
+        "Slower".center(options_padding),
+        "Exit".center(options_padding)
+    )
     _tile_win = TileWindow(10, 140, 37, 0)
 
 
@@ -58,7 +67,10 @@ def replace_option(option_to_replace, new_option):
     :param option_to_replace: the option to replace
     :param new_option: the new option to take its place
     """
-    _option_pane.replace_option(option_to_replace, new_option)
+    _option_pane.replace_option(
+        option_to_replace.center(options_padding),
+        new_option.center(options_padding)
+    )
 
 
 def key_pressed():
