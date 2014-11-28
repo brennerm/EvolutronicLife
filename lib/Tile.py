@@ -20,9 +20,9 @@ class Tile(object):
         for entity in reversed(self._entity_stack):
             tile_info.append(entity.info)
 
-
         return tile_info
 
+    @property
     def env_rings(self):
         return self._env_rings
 
