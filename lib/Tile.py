@@ -67,12 +67,12 @@ class Tile(object):
         return not self._entity_stack
 
 
-    def walkable(self):
+    def walkable(self, lvl=0):
         """
         returns whether this tile can be walked upon by an entity
         :return: boolean indicating whether an entity can step on this tile
         """
-        return self.empty() or not self.entity().blocks_step
+        return self.empty() or lvl < self.entity().blocks_step
 
 
     def push_entity(self, entity):

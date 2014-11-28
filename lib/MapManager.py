@@ -139,7 +139,9 @@ def _handle_animal_type(hunter_class, prey_class):
                 prey_list.remove(dead_animal)
             elif isinstance(dead_animal, hunter_class):  #starved
                 hunter_list.remove(dead_animal)
-            else:  #hunter moves if it couldn't find food / didn't starve
+            elif dead_animal == True:
+                break
+            else:   #hunter moves if it couldn't find food / didn't starve
                 if not hunter.move():
                     hunter_list.remove(hunter.die())
 
