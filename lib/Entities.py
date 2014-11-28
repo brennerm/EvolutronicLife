@@ -208,6 +208,16 @@ class Vegetation(RainForest):
         return self._nutrition
 
 
+    @property
+    def health(self):
+        return self._health
+
+
+    @health.setter
+    def health(self, new_health):
+        self._health = new_health
+
+
     def try_growth(self):
         """
         lets this Vegetation try to grow. growing could be either producing
@@ -463,6 +473,7 @@ class LandAnimal(Animal):
 
         return True
 
+
     def hunger_game(self):
         """
         lets this LandAnimal try to eat a prey Creature of the same
@@ -480,18 +491,13 @@ class LandAnimal(Animal):
             if tile.holds_entity(self._prey_class)
         ]
 
-        # eatable_prey = [
-        #     entity for entity in eatable_prey
-        #     if entity.lvl <= self.lvl
-        # ]
-
         if eatable_prey:
             prey = choice(eatable_prey)
             self._food += prey.nutrition
             self._energy = 10
             self._rdy_to_copulate = True
-            prey._health -= self._attack
-            if prey._health <= 0:
+            prey.health -= self._attack
+            if prey.health <= 0:
                 return prey.die()
             else:
                 return True
@@ -545,6 +551,16 @@ class Herbivore(LandAnimal):
     @property
     def nutrition(self):
         return self._nutrition
+
+
+    @property
+    def health(self):
+        return self._health
+
+
+    @health.setter
+    def health(self, new_health):
+        self._health = new_health
 
 
 class SmallHerbivore(Herbivore):
