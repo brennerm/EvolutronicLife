@@ -167,8 +167,8 @@ def _handle_animal_type(hunter_class, prey_class):
             newborn_hunter = hunter.try_reproduction()
             if newborn_hunter:
                 born_hunters.append(newborn_hunter)
-            else:   #hunter moves if it couldn't find partner
-                if not hunter.move():
+            else:   #hunter tries to move if it couldn't find partner
+                if not hunter.move():   #hunter dies if it can't move
                     hunter_list.remove(hunter.die())
                     global_vars.trampled += 1
 
@@ -228,7 +228,6 @@ def _init_env_rings(tile_map, num_rings=8):
     :param tile_map: 2D list containing all tiles of the map
     :param num_rings: the number of environment rings to set up for each tile
     """
-
     for y, row in enumerate(tile_map):
         for x, tile in enumerate(row):
             env_rings = []

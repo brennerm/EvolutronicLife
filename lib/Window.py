@@ -116,5 +116,3 @@ class TileWindow(Window):
                     self._curses_window.addstr(y, x * 30, line + "\n")
 
         self._curses_window.noutrefresh()
-
-

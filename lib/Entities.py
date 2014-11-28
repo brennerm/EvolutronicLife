@@ -8,9 +8,9 @@ class Entity(object):
         if tile: self._associate_tile(tile)
 
 
-    def __str__(self):
-        return self._token
-
+    @property
+    def tile(self):
+        return self._tile
 
     @property
     def pos_y(self):
@@ -21,7 +21,6 @@ class Entity(object):
         """
         return self._tile.pos_y
 
-
     @property
     def pos_x(self):
         """
@@ -30,7 +29,6 @@ class Entity(object):
         :return: the associated tile's x position
         """
         return self._tile.pos_x
-
 
     @property
     def blocks_step(self):
@@ -64,9 +62,9 @@ class Entity(object):
         new_tile.push_entity(self)
 
 
-    @property
-    def tile(self):
-        return self._tile
+    def __str__(self):
+        return self._token
+
 
 
 class Limit(Entity):
@@ -214,11 +212,9 @@ class Vegetation(RainForest):
         ]
         return info
 
-
     @property
     def health(self):
         return self._health
-
 
     @health.setter
     def health(self, new_health):
@@ -283,6 +279,16 @@ class Protozoan(Animal):
         self._token = '§'
 
 
+    @property
+    def info(self):
+        info = [
+            "name: " + self.__class__.__name__,
+            "token: " + str(self),
+            "ttl: " + str(self._time_to_live)
+        ]
+        return info
+
+
     def beach_reachable(self):
         """
         returns whether an adjacent Beach entity can be seen.
@@ -325,16 +331,6 @@ class Protozoan(Animal):
         if swimmable_tiles:
             self._step_on_tile(choice(swimmable_tiles))
 
-    @property
-    def info(self):
-        info = [
-            "name: " + self.__class__.__name__,
-            "token: " + str(self),
-            "ttl: " + str(self._time_to_live)
-        ]
-        return info
-
-
 
 
 class LandAnimal(Animal):
@@ -343,10 +339,10 @@ class LandAnimal(Animal):
         self._lvl = 0
         self._rdy_to_copulate = False
 
+
     @property
     def lvl(self):
         return self._lvl
-
 
     @property
     def view_range(self):
@@ -363,6 +359,7 @@ class LandAnimal(Animal):
             "rdy_to_copulate: " + str(self._rdy_to_copulate)
         ]
         return info
+
 
     def life_over(self):
         self._time_to_live -= 1
@@ -535,8 +532,10 @@ class LandAnimal(Animal):
             else:
                 return self.__class__(choice(birthplaces))
 
+
     def __str__(self):
         return self._tokens[self._lvl]
+
 
 
 class Herbivore(LandAnimal):
@@ -563,15 +562,14 @@ class Herbivore(LandAnimal):
         ]
         return info
 
-
     @property
     def health(self):
         return self._health
 
-
     @health.setter
     def health(self, new_health):
         self._health = new_health
+
 
 
 class SmallHerbivore(Herbivore):
