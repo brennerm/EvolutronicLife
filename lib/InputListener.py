@@ -24,12 +24,23 @@ class InputListener(Thread):
             if key == 265:          #F1 / Pause
                 global_vars.pause = True
                 WinMan.replace_option("Pause", "Resume")
+                WinMan.replace_option("Faster", "Single Step")
+                WinMan.replace_option("Slower", "    ")
+                WinMan.update()
+                global_vars.swap_step_duration = global_vars.step_duration
+                global_vars.step_duration = 0.1
+
                 while True:
                     key = WinMan.key_pressed()
                     if key == 265:      #F1 / Resume (changed at this point)
                         global_vars.pause = False
+                        global_vars.step_duration = global_vars.swap_step_duration
                         WinMan.replace_option("Resume", "Pause")
+                        WinMan.replace_option("Single Step", "Faster")
+                        WinMan.replace_option("    ", "Slower")
                         break
+                    elif key == 266:
+                        global_vars.single_step = True
                     elif key == 268:    #F4 / Quit
                         global_vars.quit = True
                         break
