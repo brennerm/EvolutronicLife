@@ -47,6 +47,7 @@ class InputListener(Thread):
                     elif key == curses.KEY_MOUSE:
                         id, x, y, z, bstate = curses.getmouse()
                         MapMan.set_watched_entity(y - 1, x)
+                        WinMan.update(tile_info=MapMan.watch_info())
                     sleep(0.01)
 
             elif key == 266:        #F2 / Faster
