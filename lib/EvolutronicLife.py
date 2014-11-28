@@ -31,7 +31,7 @@ def run(map_filename, starting_step):
                 WinMan.progress_info(starting_step)
 
         else:
-            WinMan.update(MapMan.token_map, MapMan.watch_info())
+            WinMan.update(MapMan.token_map(), MapMan.watch_info())
 
             current_time = time()
             if (current_time - step_start) < global_vars.step_duration:
