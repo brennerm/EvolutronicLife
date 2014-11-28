@@ -1,9 +1,8 @@
 import atexit
 from time import sleep, time
-from KeyListener import KeyListener
+from InputListener import InputListener
 import WindowManager as WinMan
 import MapManager as MapMan
-from threading import Thread
 import globals as global_vars
 
 
@@ -13,7 +12,7 @@ def run(map_filename, starting_step):
     """
     atexit.register(WinMan.terminate)
 
-    input_listener = KeyListener()
+    input_listener = InputListener()
     input_listener.start()
     MapMan.init_map(map_filename)
 
