@@ -4,7 +4,7 @@ import globals as global_vars
 
 
 class Entity(object):
-    def __init__(self, tile):
+    def __init__(self, tile=None):
         if tile: self._associate_tile(tile)
 
 
@@ -89,7 +89,7 @@ class HorizLimitBottom(Limit):
 
 
 class VertLimit(Limit):
-    def __init__(self,tile):
+    def __init__(self, tile):
         super().__init__(tile)
         self._token = "|"
 
@@ -172,7 +172,7 @@ class RainForest(Creature):
         new offspring will be returned by this method.
         :return: a new level 0 Vegetation instance or None
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
         free_tiles = [tile for tile in env if tile.empty()]
         if free_tiles:       #reproduce if plant has space
             return Vegetation(0, choice(free_tiles))
@@ -184,7 +184,7 @@ class RainForest(Creature):
 
 
 class Vegetation(RainForest):
-    def __init__(self, lvl, tile):
+    def __init__(self, lvl, tile=None):
         super().__init__(tile)
         self._tokens = ("ʷʬY", "ʷʬϒ")
         self._lvl = lvl
@@ -228,7 +228,7 @@ class Vegetation(RainForest):
         new offspring will be returned by this method.
         :return: a new level 0 Vegetation instance or None
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
         offspring = super().try_growth()
         if offspring:
             return offspring
@@ -239,7 +239,7 @@ class Vegetation(RainForest):
         """
         lets this Vegetation try to evolve. must not succeed.
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
         if self._lvl == 2:
             return
         if self._chance_to_evolve < randint(0, 100):
@@ -252,7 +252,14 @@ class Vegetation(RainForest):
             self._lvl = min(self._lvl + 1, 2)
             self._nutrition = min(self.nutrition + 5, 15)
             self._blocks_step = max(self._blocks_step - 1, 1)
-            self._health = min(self._health * 2, 20)
+            self._health = min(self._health + 5, 15)
+
+
+    def devolve(self):
+        if 0 < self._health <= 5:
+            self.__init__(0)
+        elif 5 < self._health <= 10:
+            self.__init__(1)
 
 
     def __str__(self):
@@ -294,7 +301,7 @@ class Protozoan(Animal):
         returns whether an adjacent Beach entity can be seen.
         :return: True if an adjacent tile can be walked upon, False otherwise
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
         self._beach_tiles = [tile for tile in env if tile.walkable()]
         return True if self._beach_tiles else False
 
@@ -319,7 +326,7 @@ class Protozoan(Animal):
         is possible if this protozoan runs out of lifetime.
         :return: this Protozoan if it has died, None otherwise
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
 
         self._time_to_live -= 1
         if not self._time_to_live:
@@ -387,11 +394,10 @@ class LandAnimal(Animal):
         :return: best Tile for proceeding, or None if this Tile is not walkable
         """
         possible_targets = None
-        for env in self.tile.env_rings[1:self.view_range]:
+        for env in self._tile.env_rings[1:self.view_range]:
             possible_targets = [
                 tile.entity(target_entity, self._lvl) for tile in env
-                if tile.holds_entity(target_entity, self._lvl) and
-                tile.entity(target_entity, self._lvl) != self
+                if tile.holds_entity(target_entity, self._lvl)
             ]
             if possible_targets:
                 break
@@ -421,7 +427,7 @@ class LandAnimal(Animal):
                 if x_dir == 1:
                     pos=7
 
-            env = self.tile.env_rings[0]
+            env = self._tile.env_rings[0]
             move_target = env[pos]
             if move_target.walkable(self.lvl):
                 return move_target
@@ -438,7 +444,7 @@ class LandAnimal(Animal):
         :return: True if this LandAnimal was able to move, False otherwise
         """
         target_tile = None
-        immediate_env = self.tile.env_rings[0]
+        immediate_env = self._tile.env_rings[0]
 
         if self.is_hungry():
             target_tile = self.search_for_target(
@@ -496,6 +502,8 @@ class LandAnimal(Animal):
             if prey.health <= 0:
                 return prey.die()
             else:
+                if isinstance(prey, Vegetation) and prey.lvl > 0:
+                    prey.devolve()  #plants can shrink
                 return True
         elif not self._energy:
             return self.die()
@@ -611,7 +619,7 @@ class SmartHerbivore(BigHerbivore):
         self._view_range = 8
         self._nutrition = 8
         self._health = 15
-        self._attack = 20
+        self._attack = 15
 
 
 class Carnivore(LandAnimal):
