@@ -86,6 +86,7 @@ class OptionPane(Window):
 
         self._curses_window.noutrefresh()
 
+
     def replace_option(self, option_to_replace, new_option):
         """
         replaces option_to_replace with new_option
@@ -94,6 +95,7 @@ class OptionPane(Window):
         """
         self._options[self._options.index(option_to_replace)] = new_option
         self.update()
+
 
 
 class TileWindow(Window):
