@@ -56,7 +56,7 @@ class Entity(object):
 class Limit(Entity): #shall only be directly initialised as placeholder!
     def __init__(self, tile=None):
         super().__init__(tile)
-        self._blocks_step = 0
+        self._blocks_step = -1
 
 
 
@@ -131,7 +131,7 @@ class RainForest(Creature):
     def __init__(self, tile):
         super().__init__(tile)
         self._tokens = 'Ϋϔ'
-        self._blocks_step = 0
+        self._blocks_step = -1
         self._steps_to_reproduce = randint(15, 20)
 
 
@@ -212,7 +212,7 @@ class Vegetation(RainForest):
         if self._lvl == 2:
             return
         if self._chance_to_evolve < randint(0, 100):
-            self._chance_to_evolve += 1
+            self._chance_to_evolve += 0.65
             return
         if all(
             tile.holds_entity(RainForest) and tile.entity().lvl >= self._lvl or
@@ -232,7 +232,7 @@ class Vegetation(RainForest):
 class Animal(Creature):
     def __init__(self, tile):
         super().__init__(tile)
-        self._blocks_step = 0
+        self._blocks_step = -1
 
 
 
