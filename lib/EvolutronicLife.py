@@ -13,8 +13,8 @@ def run(map_filename, starting_step):
     """
     atexit.register(WinMan.terminate)
 
-    key_listener = KeyListener()
-    key_listener.start()
+    input_listener = KeyListener()
+    input_listener.start()
     MapMan.init_map(map_filename)
 
     visual_run = False
@@ -40,4 +40,4 @@ def run(map_filename, starting_step):
             while global_vars.pause and not global_vars.quit:
                 sleep(0.01)
 
-    key_listener.join()
+    input_listener.join()

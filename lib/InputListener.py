@@ -6,7 +6,7 @@ import globals as global_vars
 import curses
 
 
-class KeyListener(Thread):
+class InputListener(Thread):
 
     def __init__(self):
         Thread.__init__(self)
@@ -15,7 +15,7 @@ class KeyListener(Thread):
     def run(self):
         """
         periodically querys the keyboard keypress and acts accordingly in its
-        own thread. responds to the following keypresses: F1, F2, F3, F4
+        own thread. responds to the following keypresses: F1, F2, F3, F4 and mouse clicks
         """
         while not global_vars.quit:
 
