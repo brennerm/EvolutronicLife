@@ -63,6 +63,7 @@ class Entity(object):
         self._tile = new_tile
         new_tile.push_entity(self)
 
+
     @property
     def tile(self):
         return self._tile
@@ -254,6 +255,11 @@ class Animal(Creature):
         self._blocks_step = -1
 
 
+    def _step_on_tile(self, new_tile):
+        self._tile.pop_entity(self)
+        self._associate_tile(new_tile)
+
+
 
 class Protozoan(Animal):
     def __init__(self, tile):
@@ -296,17 +302,16 @@ class Protozoan(Animal):
         :return: this Protozoan if it has died, None otherwise
         """
         env = self.tile.env_rings[0]
-        self._tile.pop_entity(self)
 
         self._time_to_live -= 1
         if not self._time_to_live:
-            return self
+            return self.die()
 
         swimmable_tiles = [
             tile for tile in env if isinstance(tile.entity(), Water)
         ]
         if swimmable_tiles:
-            self._associate_tile(choice(swimmable_tiles))
+            self._step_on_tile(choice(swimmable_tiles))
 
     @property
     def info(self):
@@ -449,8 +454,7 @@ class LandAnimal(Animal):
             else:               #no free surrounding tile: abort
                 return False
 
-        self._tile.pop_entity(self)
-        self._associate_tile(target_tile)
+        self._step_on_tile(target_tile)
         if self._food:
             self._food -= 1
         else:
