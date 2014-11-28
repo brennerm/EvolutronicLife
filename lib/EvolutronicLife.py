@@ -33,10 +33,14 @@ def run(map_filename, starting_step):
         if visual_run:
             WinMan.update(MapMan.token_map(), MapMan.watch_info())
 
-            if (time() - step_start) < global_vars.step_duration:
-                sleep(global_vars.step_duration - (time() - step_start))
+            current_time = time()
+            if (current_time - step_start) < global_vars.step_duration:
+                sleep(global_vars.step_duration - (current_time - step_start))
 
             while global_vars.pause and not global_vars.quit:
+                if global_vars.single_step:
+                    global_vars.single_step = False
+                    break
                 sleep(0.01)
 
     input_listener.join()

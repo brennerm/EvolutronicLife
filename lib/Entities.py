@@ -48,10 +48,10 @@ class Entity(object):
 
     @property
     def info(self):
-        info = (
+        info = [
             "name: " + self.__class__.__name__,
             "token: " + str(self)
-        )
+        ]
         return info
 
 
@@ -205,6 +205,15 @@ class Vegetation(RainForest):
     def nutrition(self):
         return self._nutrition
 
+    @property
+    def info(self):
+        info = [
+            "name: " + self.__class__.__name__,
+            "token: " + str(self),
+            "health: " + str(self._health)
+        ]
+        return info
+
 
     @property
     def health(self):
@@ -318,11 +327,11 @@ class Protozoan(Animal):
 
     @property
     def info(self):
-        info = (
+        info = [
             "name: " + self.__class__.__name__,
             "token: " + str(self),
             "ttl: " + str(self._time_to_live)
-        )
+        ]
         return info
 
 
@@ -345,14 +354,14 @@ class LandAnimal(Animal):
 
     @property
     def info(self):
-        info = (
+        info = [
             "name: " + self.__class__.__name__,
             "token: " + str(self),
             "ttl: " + str(self._time_to_live),
             "food: " + str(self._food),
             "energy: " + str(self._energy),
-
-        )
+            "rdy_to_copulate: " + str(self._rdy_to_copulate)
+        ]
         return info
 
     def life_over(self):
@@ -540,6 +549,19 @@ class Herbivore(LandAnimal):
     @property
     def nutrition(self):
         return self._nutrition
+
+    @property
+    def info(self):
+        info = [
+            "name: " + self.__class__.__name__,
+            "token: " + str(self),
+            "ttl: " + str(self._time_to_live),
+            "food: " + str(self._food),
+            "energy: " + str(self._energy),
+            "health: " + str(self._health),
+            "rdy_to_copulate: " + str(self._rdy_to_copulate)
+        ]
+        return info
 
 
     @property
