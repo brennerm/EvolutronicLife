@@ -366,7 +366,8 @@ class LandAnimal(Animal):
             "token: " + str(self),
             "ttl: " + str(self._time_to_live),
             "food: " + str(self._food),
-            "energy: " + str(self._energy)
+            "energy: " + str(self._energy),
+            "rdy_to_copulate: " + str(self._rdy_to_copulate)
         ]
         return info
 
@@ -568,7 +569,8 @@ class Herbivore(LandAnimal):
             "ttl: " + str(self._time_to_live),
             "food: " + str(self._food),
             "energy: " + str(self._energy),
-            "health: " + str(self._health)
+            "health: " + str(self._health),
+            "rdy_to_copulate: " + str(self._rdy_to_copulate)
         ]
         return info
 
