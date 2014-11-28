@@ -23,6 +23,12 @@ class Tile(object):
 
         return tile_info
 
+    def env_rings(self):
+        return self._env_rings
+
+    def set_env_rings(self, env_rings):
+        self._env_rings = env_rings
+
 
     def entity(self, entity_class=None, lvl=None):
         """
@@ -69,12 +75,12 @@ class Tile(object):
         return not self._entity_stack
 
 
-    def walkable(self):
+    def walkable(self, lvl=0):
         """
         returns whether this tile can be walked upon by an entity
         :return: boolean indicating whether an entity can step on this tile
         """
-        return self.empty() or not self.entity().blocks_step
+        return self.empty() or lvl < self.entity().blocks_step
 
 
     def push_entity(self, entity):

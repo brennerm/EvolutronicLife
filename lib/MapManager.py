@@ -3,11 +3,6 @@ from Entities import *
 import globals as global_vars
 
 
-_plants = []
-_herbivores = []
-_carnivores = []
-_spawners = []
-_protozoans = []
 _entity_dict = {
     "ʷ": Vegetation,
     "ʬ": Vegetation,
@@ -28,6 +23,11 @@ _entity_dict = {
     "‾": HorizLimitBottom,
     "|": VertLimit
 }
+_plants = []
+_herbivores = []
+_carnivores = []
+_spawners = []
+_protozoans = []
 
 
 def init_map(map_filename):
@@ -57,6 +57,8 @@ def _parse_map(map_path):
             if token != " ":    #empty space is not an entity
                 _init_entity(token, tile)
             tile_map[-1].append(tile)
+
+    _init_env_rings(tile_map)
 
     return tile_map
 
@@ -141,28 +143,27 @@ def _handle_animal_type(hunter_class, prey_class):
     born_hunters = []
 
     for hunter in hunter_list:
-        immediate_env = _get_env(hunter.pos_y, hunter.pos_x, 1)
-        looking_env = _get_env(hunter.pos_y, hunter.pos_x, hunter.view_range)
-
         if hunter.life_over():
             hunter_list.remove(hunter.die())
 
         elif hunter.is_hungry():
-            dead_animal = hunter.hunger_game(immediate_env)
+            dead_animal = hunter.hunger_game()
             if isinstance(dead_animal, prey_class):      #found food
                 prey_list.remove(dead_animal)
             elif isinstance(dead_animal, hunter_class):  #starved
                 hunter_list.remove(dead_animal)
-            else:  #hunter moves if it couldn't find food / didn't starve
-                if not hunter.move(immediate_env, looking_env):
+            elif dead_animal == True:
+                break
+            else:   #hunter moves if it couldn't find food / didn't starve
+                if not hunter.move():
                     hunter_list.remove(hunter.die())
 
         else:   #hunter tries to reproduce only if it is not hungry
-            newborn_hunter = hunter.try_reproduction(immediate_env)
+            newborn_hunter = hunter.try_reproduction()
             if newborn_hunter:
                 born_hunters.append(newborn_hunter)
             else:   #hunter moves if it couldn't find partner
-                if not hunter.move(immediate_env, looking_env):
+                if not hunter.move():
                     hunter_list.remove(hunter.die())
 
     hunter_list.extend(born_hunters)
@@ -177,9 +178,7 @@ def _veggie_action():
 
     for plant in _plants:
         if plant.wants_to_grow():
-            grown_plant = plant.try_growth(
-                _get_env(plant.pos_y, plant.pos_x, 1)
-            )
+            grown_plant = plant.try_growth()
             if grown_plant:
                 new_plants.append(grown_plant)
 
@@ -193,9 +192,7 @@ def _protozoan_action():
     corresponding list. protozoans can also die of age when trying to move.
     """
     for proto in _protozoans:
-        env = _get_env(proto.pos_y, proto.pos_x, 1)
-
-        if proto.beach_reachable(env):
+        if proto.beach_reachable():
             old_proto, new_animal = proto.jump_on_beach()
             _protozoans.remove(old_proto)
             if isinstance(new_animal, Herbivore):
@@ -203,7 +200,7 @@ def _protozoan_action():
             else:
                 _carnivores.append(new_animal)
         else:
-            dead_proto = proto.move(env)
+            dead_proto = proto.move()
             if dead_proto:  #protos can die of age
                 _protozoans.remove(dead_proto)
 
@@ -214,37 +211,66 @@ def _spawner_action():
     be added to the corresponding list.
     """
     for spawner in _spawners:
-        env = _get_env(spawner.pos_y, spawner.pos_x, 1)
-        new_proto = spawner.try_spawning(env)
+        new_proto = spawner.try_spawning()
         if new_proto:
             _protozoans.append(new_proto)
 
 
-def _get_env(pos_y, pos_x, scope):
+def _init_env_rings(tile_map, num_rings=8):
     """
-    calculates part of map around a specific object with a given range.
-    parts that are outside of the map will be filled with tiles holding
-    limit placeholder entities.
-    :param pos_y: y-coordinate of object in map
-    :param pos_x: x-coordinate of object in map
-    :param scope: range around object to be returned
-    scope = 1 [x][x][x] scope = 2 [x][x][x][x][x]
-              [x][o][x]           [x][x][x][x][x]
-              [x][x][x]           [x][x][o][x][x]
-                                  [x][x][x][x][x]
-                                  [x][x][x][x][x]
-    :return: part of map as two dimensional list
+    initialises the environment rings for each tile of the map.
+    :param tile_map: 2D list containing all tiles of the map
+    :param num_rings: the number of environment rings to set up for each tile
     """
-    env = []
 
-    for offset_y in range(-scope, scope + 1):
-        env.append([])
-        y_on_map = pos_y + offset_y
-        for offset_x in range(-scope, scope + 1):
-            x_on_map = pos_x + offset_x
-            try:
-                env[-1].append(_tile_map[y_on_map][x_on_map])
-            except IndexError:
-                env[-1].append(Tile(entity=Limit()))
+    for y, row in enumerate(tile_map):
+        for x, tile in enumerate(row):
+            env_rings = []
+            for scope in range(1, num_rings+1):
+                env_rings.append(_calculate_env_ring(tile_map, y, x, scope))
+            tile.set_env_rings(env_rings)
 
-    return env
+
+def _calculate_env_ring(tile_map, center_y, center_x, scope):
+    """
+    calculates the tile ring of the given scope around the tile at position
+    center_y/center_x. tile coordinates that are outside of the map will be
+    ignored.
+    :param tile_map: 2D list containing all tiles of the map
+    :param pos_y: y-coordinate of the tile
+    :param pos_x: x-coordinate of the tile
+    :param scope: expanse of the tile ring list to be calculated
+    scope = 1 [0][1][2] scope = 2 [x][x][x][x][x]
+              [3][o][4]           [x]         [x]
+              [5][6][7]           [x]   [o]   [x]
+                                  [x]         [x]
+                                  [x][x][x][x][x]
+    :return: tile ring list
+    """
+    env_ring = []
+
+    try:
+        y_on_map = center_y - scope     #top ring row
+        for relative_x in range(-scope, scope+1):
+            x_on_map = center_x + relative_x
+            env_ring.append(tile_map[y_on_map][x_on_map])
+
+        x_on_map = center_x - scope     #left ring column
+        for relative_y in range(-scope+1, scope):
+            y_on_map = center_y + relative_y
+            env_ring.append(tile_map[y_on_map][x_on_map])
+
+        x_on_map = center_x + scope     #right ring column
+        for relative_y in range(-scope+1, scope):
+            y_on_map = center_y + relative_y
+            env_ring.append(tile_map[y_on_map][x_on_map])
+
+        y_on_map = center_y + scope     #bottom ring row
+        for relative_x in range(-scope, scope+1):
+            x_on_map = center_x + relative_x
+            env_ring.append(tile_map[y_on_map][x_on_map])
+
+    except IndexError:
+        pass
+
+    return env_ring
