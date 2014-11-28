@@ -17,7 +17,7 @@ class Tile(object):
     @property
     def tile_info(self):
         tile_info = []
-        for entity in self._entity_stack:
+        for entity in reversed(self._entity_stack):
             tile_info.append(entity.info)
 
 

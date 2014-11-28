@@ -31,10 +31,6 @@ def run(map_filename, starting_step):
                 WinMan.progress_info(starting_step)
 
         if visual_run:
-            try:
-                pos = global_vars.watched_entity.pos
-            except:
-                pos = None
             WinMan.update(MapMan.token_map(), MapMan.watch_info())
 
             if (time() - step_start) < global_vars.step_duration:

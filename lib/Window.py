@@ -37,7 +37,7 @@ class InfoWindow(Window):
 
 class MapWindow(Window):
 
-    def update(self, the_map):
+    def update(self, the_map, highlight_pos):
         """
         draws map onto map window
         :param the_map: the current game map
@@ -50,6 +50,9 @@ class MapWindow(Window):
                     self._curses_window.addstr(i, j, cell, curses.color_pair(global_vars.color.get(cell, 0)))
                 except curses.error:
                     pass    #curses throws error @ adding last element of last row
+
+        if not highlight_pos is None:
+            self._curses_window.chgat(highlight_pos[0], highlight_pos[1], 1, curses.A_STANDOUT)
 
         self._curses_window.noutrefresh()
 
@@ -104,7 +107,7 @@ class TileWindow(Window):
         if not tile_info is None:
             for x, entity_info in enumerate(tile_info):
                 for y, line in enumerate(entity_info):
-                    self._curses_window.addstr(y, x * 20, line + "\n")
+                    self._curses_window.addstr(y, x * 30, line + "\n")
 
         self._curses_window.noutrefresh()
 

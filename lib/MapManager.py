@@ -108,7 +108,7 @@ def set_watched_entity(pos_y, pos_x):
     try:
         global_vars.watched_entity = _tile_map[pos_y][pos_x].entity()
     except IndexError:
-        return
+        global_vars.watched_entity = None
 
 
 def update():

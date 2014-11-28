@@ -43,8 +43,9 @@ def update(the_map=None, tile_info=None):
     :param the_map: the game map in the current state
     """
     _info_win.update()
+
     if(the_map):
-        _map_win.update(the_map)
+        _map_win.update(the_map, global_vars.watched_entity.pos if global_vars.watched_entity else None)
 
     _tile_win.update(tile_info)
 

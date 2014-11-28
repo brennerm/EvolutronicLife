@@ -42,6 +42,7 @@ class Entity(object):
         """
         return self._blocks_step
 
+    @property
     def pos(self):
         return self.pos_y, self.pos_x
 
@@ -133,6 +134,8 @@ class Creature(Entity):
         :return: this Creature
         """
         self._tile.pop_entity(self)
+        if global_vars.watched_entity == self:
+            global_vars.watched_entity = None
         return self
 
 
