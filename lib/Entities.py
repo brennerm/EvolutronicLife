@@ -393,44 +393,38 @@ class LandAnimal(Animal):
         :param target_entity: class of searched entity
         :return: best Tile for proceeding, or None if this Tile is not walkable
         """
-        possible_targets = None
         for env in self._tile.env_rings[1:self.view_range]:
             possible_targets = [
-                tile.entity(target_entity, self._lvl) for tile in env
-                if tile.holds_entity(target_entity, self._lvl)
+                tile.entity(target_entity) for tile in env
+                if tile.holds_entity(target_entity)
             ]
             if possible_targets:
                 break
+        else: return    #stop when no target could be found
 
-        if possible_targets:
-            wanted_target = choice(possible_targets)
+        highest_target_lvl = max(possible_targets, key=lambda t: t.lvl).lvl
+        wanted_target = choice(tuple(
+            filter(lambda t: t.lvl == highest_target_lvl, possible_targets)
+        ))   #pick one of the highest level target entities you can find
 
-            x_dir = (wanted_target.pos_x > self.pos_x) - (wanted_target.pos_x < self.pos_x) # signum
-            y_dir = (wanted_target.pos_y > self.pos_y) - (wanted_target.pos_y < self.pos_y)
-            if y_dir == -1:
-                if x_dir == -1:
-                    pos=0
-                if x_dir == 0:
-                    pos=1
-                if x_dir == 1:
-                    pos=2
-            elif y_dir == 0:
-                if x_dir == -1:
-                    pos=3
-                if x_dir == 1:
-                    pos=4
-            elif y_dir == 1:
-                if x_dir == -1:
-                    pos=5
-                if x_dir == 0:
-                    pos=6
-                if x_dir == 1:
-                    pos=7
+        x_dir = (wanted_target.pos_x > self.pos_x) - (wanted_target.pos_x < self.pos_x) #signum
+        y_dir = (wanted_target.pos_y > self.pos_y) - (wanted_target.pos_y < self.pos_y)
+        if y_dir == -1:
+            if x_dir == -1: pos=0
+            if x_dir == 0:  pos=1
+            if x_dir == 1:  pos=2
+        elif y_dir == 0:
+            if x_dir == -1: pos=3
+            if x_dir == 1:  pos=4
+        elif y_dir == 1:
+            if x_dir == -1: pos=5
+            if x_dir == 0:  pos=6
+            if x_dir == 1:  pos=7
 
-            env = self._tile.env_rings[0]
-            move_target = env[pos]
-            if move_target.walkable(self.lvl):
-                return move_target
+        env = self._tile.env_rings[0]
+        target_tile = env[pos]
+        if target_tile.walkable(self.lvl):
+            return target_tile
 
 
     def move(self):
