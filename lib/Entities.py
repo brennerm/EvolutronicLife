@@ -629,7 +629,7 @@ class SmallCarnivore(Carnivore):
         self._lvl = 0
         self._time_to_live = 50
         self._food = 10
-        self._energy = 10
+        self._energy = 5
         self._evolved_class = BigCarnivore
         self._view_range = 4
         self._attack = 5
@@ -640,7 +640,7 @@ class BigCarnivore(SmallCarnivore):
         self._lvl = 1
         self._time_to_live = 100
         self._food = 10
-        self._energy = 12
+        self._energy = 7
         self._evolved_class = SmartCarnivore
         self._view_range = 6
         self._attack = 10
@@ -651,7 +651,7 @@ class SmartCarnivore(BigCarnivore):
         self._lvl = 2
         self._time_to_live = 150
         self._food = 10
-        self._energy = 15
+        self._energy = 10
         self._evolved_class = SmartCarnivore
         self._view_range = 8
         self._attack = 15

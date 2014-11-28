@@ -6,6 +6,10 @@ anim_toggler = False
 watched_entity = None
 single_step = False
 swap_step_duration = None
+starved = 0
+trampled = 0
+eaten = 0
+age = 0
 
 WHITE_ON_BLACK = 0
 WHITE_ON_BLUE = 1
