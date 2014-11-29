@@ -32,7 +32,7 @@ class InfoWindow(Window):
 			+ "\t{:4s} {:4d}".format(' eaten:', global_vars.eaten)
 			+ "\t{:4s} {:4d}".format(' starved:', global_vars.starved)
 			+ "\t{:4s} {:4d}".format(' trampled:', global_vars.trampled)
-            + "\t{:4s} {:4d}".format(' age:', global_vars.age)
+            + "\t{:4s} {:4d}".format(' natural death:', global_vars.age)
         )
 
         self._curses_window.noutrefresh()
