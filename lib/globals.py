@@ -6,10 +6,13 @@ anim_toggler = False
 watched_entity = None
 single_step = False
 swap_step_duration = None
-starved = 0
-trampled = 0
-eaten = 0
-age = 0
+h_starved = 0
+h_trampled = 0
+h_eaten = 0
+h_age = 0
+c_starved = 0
+c_trampled = 0
+c_age = 0
 
 WHITE_ON_BLACK = 0
 WHITE_ON_BLUE = 1

@@ -14,7 +14,6 @@ class InfoWindow(Window):
         super().__init__(height, width, pos_y, pos_x)
         self.simulation_start = time()
 
-
     def update(self):
         """
         puts updated information into info window
@@ -29,14 +28,19 @@ class InfoWindow(Window):
                 ' steps per s:', round(1 / global_vars.step_duration, 1)
             )
             + "\t{:4s} {:4d}".format(' step:', global_vars.step)
-			+ "\t{:4s} {:4d}".format(' eaten:', global_vars.eaten)
-			+ "\t{:4s} {:4d}".format(' starved:', global_vars.starved)
-			+ "\t{:4s} {:4d}".format(' trampled:', global_vars.trampled)
-            + "\t{:4s} {:4d}".format(' natural death:', global_vars.age)
+			+ "\n{:4s} {:4d}{:1s}".format('Death cause.. eaten:', global_vars.h_eaten, 'h')
+			+ "\t{:4s} {:4d}{:1s}{:4d}{:1s}".format(
+                'starved:', global_vars.h_starved, 'h/', global_vars.c_starved, 'c'
+            )
+			+ "\t{:4s} {:4d}{:1s}{:4d}{:1s}".format(
+                'trampled:', global_vars.h_trampled, 'h/', global_vars.c_trampled, 'c'
+            )
+            + "\t{:4s} {:4d}{:1s}{:4d}{:1s}".format(
+                'natural death:', global_vars.h_age, 'h/', global_vars.c_age, 'c'
+            )
         )
 
         self._curses_window.noutrefresh()
-
 
 
 class MapWindow(Window):

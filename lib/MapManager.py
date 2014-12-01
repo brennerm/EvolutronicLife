@@ -145,24 +145,32 @@ def _handle_animal_type(hunter_class, prey_class):
     for hunter in hunter_list:
         if hunter.life_over():
             hunter_list.remove(hunter.die())
-            global_vars.age += 1
+            if hunter_class == Carnivore:
+                global_vars.c_age += 1
+            else:
+                global_vars.h_age += 1
 
         elif hunter.is_hungry():
             dead_animal = hunter.hunger_game()
             if isinstance(dead_animal, prey_class):      #ate whole food
                 prey_list.remove(dead_animal)
                 if hunter_class == Carnivore:
-                    global_vars.eaten += 1
+                    global_vars.h_eaten += 1
             elif isinstance(dead_animal, hunter_class):  #starved
                 hunter_list.remove(dead_animal)
-                global_vars.starved += 1
+                if hunter_class == Carnivore:
+                    global_vars.c_starved += 1
+                else:
+                    global_vars.h_starved += 1
             elif dead_animal is True:                  #ate part of food
                 continue
             else:   #hunter moves if it couldn't find food / didn't starve
                 if not hunter.move():
                     hunter_list.remove(hunter.die())
-                    global_vars.trampled += 1
-
+                    if hunter_class == Carnivore:
+                        global_vars.c_trampled += 1
+                    else:
+                        global_vars.h_trampled += 1
         else:   #hunter tries to reproduce only if it is not hungry
             newborn_hunter = hunter.try_reproduction()
             if newborn_hunter:
@@ -170,7 +178,10 @@ def _handle_animal_type(hunter_class, prey_class):
             else:   #hunter tries to move if it couldn't find partner
                 if not hunter.move():   #hunter dies if it can't move
                     hunter_list.remove(hunter.die())
-                    global_vars.trampled += 1
+                    if hunter_class == Carnivore:
+                        global_vars.c_trampled += 1
+                    else:
+                        global_vars.h_trampled += 1
 
     hunter_list.extend(born_hunters)
 

@@ -34,16 +34,16 @@ def init():
     init subwindows
     """
     global _info_win, _map_win, _option_pane, _tile_win
-    _info_win = InfoWindow(1, 140, 0, 0)
-    _map_win = MapWindow(35, 140, 1, 0)
+    _info_win = InfoWindow(2, 140, 0, 0)
+    _map_win = MapWindow(35, 140, 2, 0)
     _option_pane = OptionPane(
-        1, 140, 36, 0,
+        1, 140, 37, 0,
         "Pause".center(options_padding),
         "Faster".center(options_padding),
         "Slower".center(options_padding),
         "Exit".center(options_padding)
     )
-    _tile_win = TileWindow(10, 140, 37, 0)
+    _tile_win = TileWindow(10, 140, 38, 0)
 
 
 def update(the_map=None, tile_info=None):
