@@ -90,10 +90,10 @@ def terminate():
     curses.endwin()
 
 def progress_info(end):
+    global _progress_win
     try:
         _progress_win.clear()
     except NameError:
-        global _progress_win
         _progress_win = curses.newwin(2, 140, 0, 0)
 
     _progress_win.addstr(0, 0, "Generating step: %d/%d" % (global_vars.step, end))
