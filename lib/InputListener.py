@@ -46,7 +46,7 @@ class InputListener(Thread):
                         break
                     elif key == curses.KEY_MOUSE:
                         id, x, y, z, bstate = curses.getmouse()
-                        MapMan.set_watched_entity(y - 1, x)
+                        MapMan.set_watched_entity(y - 2, x)
                         WinMan.update(tile_info=MapMan.watch_info())
                     sleep(0.01)
 
@@ -71,6 +71,6 @@ class InputListener(Thread):
 
             elif key == curses.KEY_MOUSE:
                 id, x, y, z, bstate = curses.getmouse()
-                MapMan.set_watched_entity(y - 1, x)
+                MapMan.set_watched_entity(y - 2, x)
 
             sleep(0.01)
