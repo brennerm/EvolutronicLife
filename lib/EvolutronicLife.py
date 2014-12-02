@@ -21,21 +21,21 @@ def run(map_filename, starting_step, bg_sound):
 
     MapMan.init_map(map_filename)
 
-    visual_run = False
+    hidden_run = True
     while not global_vars.quit:
         global_vars.step += 1
         step_start = time()
 
         MapMan.update()
 
-        if not visual_run:
+        if hidden_run:
             if global_vars.step >= starting_step:
                 WinMan.init()
-                visual_run = True
+                hidden_run = False
             else:
                 WinMan.progress_info(starting_step)
 
-        if visual_run:
+        else:
             WinMan.update(MapMan.token_map(), MapMan.watch_info())
 
             current_time = time()

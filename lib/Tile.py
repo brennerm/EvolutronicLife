@@ -16,17 +16,14 @@ class Tile(object):
 
     @property
     def tile_info(self):
-        tile_info = []
-        for entity in reversed(self._entity_stack):
-            tile_info.append(entity.info)
-
-        return tile_info
+        return [entity.info for entity in reversed(self._entity_stack)]
 
     @property
     def env_rings(self):
         return self._env_rings
 
-    def set_env_rings(self, env_rings):
+    @env_rings.setter
+    def env_rings(self, env_rings):
         self._env_rings = env_rings
 
 

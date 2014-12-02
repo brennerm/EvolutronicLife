@@ -4,38 +4,36 @@ import globals as global_vars
 
 
 class Entity(object):
-    def __init__(self, tile):
+    def __init__(self, tile=None):
         if tile: self._associate_tile(tile)
 
 
-    def __str__(self):
-        return self._token
-
+    @property
+    def tile(self):
+        return self._tile
 
     @property
     def pos_y(self):
         """
-        return this Entity's y position by returning the y position of
+        Return this Entity's y position by returning the y position of
         the associated tile.
         :return: the associated tile's y position
         """
         return self._tile.pos_y
 
-
     @property
     def pos_x(self):
         """
-        return this Entity's x position by returning the x position of
+        Return this Entity's x position by returning the x position of
         the associated tile.
         :return: the associated tile's x position
         """
         return self._tile.pos_x
 
-
     @property
     def blocks_step(self):
         """
-        returns whether this Entity blocks land animals from stepping onto
+        Returns whether this Entity blocks land animals from stepping onto
         the associated tile.
         :return: True if the associated tile can be stepped upon by
         LandAnimals, False otherwise
@@ -57,16 +55,16 @@ class Entity(object):
 
     def _associate_tile(self, new_tile):
         """
-        pushes this Entity on the given tile and sets reference to the tile
+        Pushes this Entity on the given tile and sets reference to the tile.
         :param new_tile: the tile to associate the Entity with
         """
         self._tile = new_tile
         new_tile.push_entity(self)
 
 
-    @property
-    def tile(self):
-        return self._tile
+    def __str__(self):
+        return self._token
+
 
 
 class Limit(Entity):
@@ -91,7 +89,7 @@ class HorizLimitBottom(Limit):
 
 
 class VertLimit(Limit):
-    def __init__(self,tile):
+    def __init__(self, tile):
         super().__init__(tile)
         self._token = "|"
 
@@ -105,9 +103,8 @@ class Water(Limit): #inherits from limit so land animals won't step onto water
 
     def try_spawning(self):
         """
-        tries to spawn a new Protozoan. has a certain percentage of a chance
-        to succeed. also, its tile shall not already hold a Protozoan.
-        :param env: the surrounding tiles of this Water entity
+        Tries to spawn a new Protozoan. has a certain percentage of a chance
+        to succeed. Also, its tile shall not already hold a Protozoan.
         :return: a new instance of Protozoan or None
         """
         if random() < 0.01 and not self._tile.holds_entity(Protozoan):
@@ -133,8 +130,8 @@ class Creature(Entity):
 
     def die(self):
         """
-        kills this Creature by popping it from the corresponding tile's
-        entity stack and returning it for destruction
+        Kills this Creature by popping it from the corresponding tile's
+        entity stack and returning it for destruction.
         :return: this Creature
         """
         self._tile.pop_entity(self)
@@ -159,7 +156,7 @@ class RainForest(Creature):
 
     def wants_to_grow(self):
         """
-        reports whether this RainForest is ready to grow
+        Reports whether this RainForest is ready to grow.
         :return: True if RainForest wants to grow, False otherwise
         """
         self._steps_to_reproduce -= 1
@@ -171,12 +168,11 @@ class RainForest(Creature):
 
     def try_growth(self):
         """
-        lets this Vegetation try to grow. if it grows, the
-        new offspring will be returned by this method.
-        :param env: the surrounding tiles of this Vegetation
+        Lets this Vegetation try to grow. If it grows, the new offspring will
+        be returned by this method.
         :return: a new level 0 Vegetation instance or None
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
         free_tiles = [tile for tile in env if tile.empty()]
         if free_tiles:       #reproduce if plant has space
             return Vegetation(0, choice(free_tiles))
@@ -188,7 +184,7 @@ class RainForest(Creature):
 
 
 class Vegetation(RainForest):
-    def __init__(self, lvl, tile):
+    def __init__(self, lvl, tile=None):
         super().__init__(tile)
         self._tokens = ("ʷʬY", "ʷʬϒ")
         self._lvl = lvl
@@ -216,11 +212,9 @@ class Vegetation(RainForest):
         ]
         return info
 
-
     @property
     def health(self):
         return self._health
-
 
     @health.setter
     def health(self, new_health):
@@ -229,13 +223,12 @@ class Vegetation(RainForest):
 
     def try_growth(self):
         """
-        lets this Vegetation try to grow. growing could be either producing
-        a new offspring or rising in level. in the former case, the
+        Lets this Vegetation try to grow. growing could be either producing
+        a new offspring or rising in level. In the former case, the
         new offspring will be returned by this method.
-        :param env: the surrounding tiles of this Vegetation
         :return: a new level 0 Vegetation instance or None
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
         offspring = super().try_growth()
         if offspring:
             return offspring
@@ -244,10 +237,9 @@ class Vegetation(RainForest):
 
     def _evolve(self):
         """
-        lets this Vegetation try to evolve. must not succeed.
-        :param env: the surrounding tiles of this Vegetation
+        Lets this Vegetation try to evolve. Must not succeed.
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
         if self._lvl == 2:
             return
         if self._chance_to_evolve < randint(0, 100):
@@ -260,7 +252,17 @@ class Vegetation(RainForest):
             self._lvl = min(self._lvl + 1, 2)
             self._nutrition = min(self.nutrition + 5, 15)
             self._blocks_step = max(self._blocks_step - 1, 1)
-            self._health = min(self._health * 2, 20)
+            self._health = min(self._health + 5, 15)
+
+
+    def devolve(self):
+        """
+        Lets this Vegetation drop in level if health is in a certain range.
+        """
+        if 0 < self._health <= 5:
+            self.__init__(0)
+        elif 5 < self._health <= 10:
+            self.__init__(1)
 
 
     def __str__(self):
@@ -275,6 +277,10 @@ class Animal(Creature):
 
 
     def _step_on_tile(self, new_tile):
+        """
+        Lets this Animal move from its old tile to a new tile.
+        :param new_tile: The new tile to step onto
+        """
         self._tile.pop_entity(self)
         self._associate_tile(new_tile)
 
@@ -287,24 +293,32 @@ class Protozoan(Animal):
         self._token = '§'
 
 
+    @property
+    def info(self):
+        info = [
+            "name: " + self.__class__.__name__,
+            "token: " + str(self),
+            "ttl: " + str(self._time_to_live)
+        ]
+        return info
+
+
     def beach_reachable(self):
         """
-        returns whether an adjacent Beach entity can be seen.
-        :param env: the surrounding tiles of this Protozoan
-        :return: True if an adjacent tile holds a free Beach entity,
-        False otherwise
+        Returns whether an adjacent Beach entity can be seen.
+        :return: True if an adjacent tile can be walked upon, False otherwise
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
         self._beach_tiles = [tile for tile in env if tile.walkable()]
         return True if self._beach_tiles else False
 
 
     def jump_on_beach(self):
         """
-        lets this Protozoan move onto the beach and transform itself into
+        Lets this Protozoan move onto the beach and transform itself into
         a SmallHerbivore or SmallCarnivore.
         :return: tuple containing old Protozoan entity and new LandAnimal
-        entity
+                 entity
         """
         if random() <= 0.8:
             new_animal = SmallHerbivore(choice(self._beach_tiles))
@@ -315,12 +329,11 @@ class Protozoan(Animal):
 
     def move(self):
         """
-        lets this Protozoan move on a random tile holding only Water. death
-        is possible if this protozoan runs out of lifetime.
-        :param env: the surrounding tiles of this Protozoan
+        Lets this Protozoan move on a random tile holding only Water. Death
+        is possible if this Protozoan runs out of lifetime.
         :return: this Protozoan if it has died, None otherwise
         """
-        env = self.tile.env_rings[0]
+        env = self._tile.env_rings[0]
 
         self._time_to_live -= 1
         if not self._time_to_live:
@@ -332,16 +345,6 @@ class Protozoan(Animal):
         if swimmable_tiles:
             self._step_on_tile(choice(swimmable_tiles))
 
-    @property
-    def info(self):
-        info = [
-            "name: " + self.__class__.__name__,
-            "token: " + str(self),
-            "ttl: " + str(self._time_to_live)
-        ]
-        return info
-
-
 
 
 class LandAnimal(Animal):
@@ -350,10 +353,10 @@ class LandAnimal(Animal):
         self._lvl = 0
         self._rdy_to_copulate = False
 
+
     @property
     def lvl(self):
         return self._lvl
-
 
     @property
     def view_range(self):
@@ -370,6 +373,7 @@ class LandAnimal(Animal):
             "rdy_to_copulate: " + str(self._rdy_to_copulate)
         ]
         return info
+
 
     def life_over(self):
         self._time_to_live -= 1
@@ -388,81 +392,89 @@ class LandAnimal(Animal):
         self._rdy_to_copulate = False
 
 
-    def search_for_target(self, target_entity):
+    def search_for_target(self, target_entity, lvl=None):
         """
-        Lets this LandAnimal search for other entities. This can be
-        used for the search for food or a mating partner. Returns a tile
-        if a entity is in looking range and the best way isn't blocked.
-        :param env: field of view of the animal
+        Lets this LandAnimal search for entities of class target_entity. This
+        can be used for searching food or a mating partner. In the former case,
+        no level argument should be passed so the method detects the nearest
+        food entity. In the latter case, a level should be passed because a
+        partner should be of the same level. Returns a Tile if an entity was
+        found and the best way isn't blocked.
         :param target_entity: class of searched entity
-        :return: best tile for proceeding if no blocked
+        :param lvl: the level of the searched entity (makes sense for mating
+                    partners)
+        :return: best Tile for proceeding, or None if this Tile is not walkable
+                 or no target could be found
         """
-        possible_targets = None
-        for env in self.tile.env_rings[1:self.view_range]:
+        for env in self._tile.env_rings[1:self.view_range]:
             possible_targets = [
-                tile.entity(target_entity, self._lvl) for tile in env
-                if tile.holds_entity(target_entity, self._lvl) and
-                tile.entity(target_entity, self._lvl) != self
+                tile.entity(target_entity, lvl) for tile in env
+                if tile.holds_entity(target_entity, lvl)
             ]
             if possible_targets:
                 break
+        else: return    #stop when no target could be found
 
-        if possible_targets:
+        if lvl is None:
+            highest_target_lvl = max(possible_targets, key=lambda t: t.lvl).lvl
+            wanted_target = choice(tuple(
+                filter(lambda t: t.lvl == highest_target_lvl, possible_targets)
+            ))   #pick the highest level entity of the found targets
+        else:
             wanted_target = choice(possible_targets)
 
-            x_dir = (wanted_target.pos_x > self.pos_x) - (wanted_target.pos_x < self.pos_x) # signum
-            y_dir = (wanted_target.pos_y > self.pos_y) - (wanted_target.pos_y < self.pos_y)
-            if y_dir == -1:
-                if x_dir == -1:
-                    pos=0
-                if x_dir == 0:
-                    pos=1
-                if x_dir == 1:
-                    pos=2
-            elif y_dir == 0:
-                if x_dir == -1:
-                    pos=3
-                if x_dir == 1:
-                    pos=4
-            elif y_dir == 1:
-                if x_dir == -1:
-                    pos=5
-                if x_dir == 0:
-                    pos=6
-                if x_dir == 1:
-                    pos=7
+        immediate_env = self._tile.env_rings[0]
+        step_position = self._calculate_step(wanted_target)
+        target_tile = immediate_env[step_position]
 
-            env = self.tile.env_rings[0]
-            move_target = env[pos]
-            if move_target.walkable(self.lvl):
-                return move_target
+        if target_tile.walkable(self.lvl):
+            return target_tile
+
+
+    def _calculate_step(self, wanted_target):
+        """
+        Calculates step position in the immediate environment based on the
+        position of the wanted target.
+        :param wanted_target: the target entity to move towards
+        :return: one of these positions in the immediate environment:
+                    [0][1][2]
+                    [3][x][4]
+                    [5][6][7]
+        """
+        x_dir = ((wanted_target.pos_x > self.pos_x) -       #signum
+                (wanted_target.pos_x < self.pos_x))
+        y_dir = ((wanted_target.pos_y > self.pos_y) -
+                (wanted_target.pos_y < self.pos_y))
+        if y_dir == -1:
+            if x_dir == -1: return 0
+            if x_dir == 0:  return 1
+            if x_dir == 1:  return 2
+        elif y_dir == 0:
+            if x_dir == -1: return 3
+            if x_dir == 1:  return 4
+        elif y_dir == 1:
+            if x_dir == -1: return 5
+            if x_dir == 0:  return 6
+            if x_dir == 1:  return 7
 
 
     def move(self):
         """
-        if this LandAnimal can see a suitable target (food or mating partner)
-        in its looking environment, it tries to move in its direction. if no
-        target can be found, it tries to move on a walkable tile of the
-        immediate environment. moving consumes 1 food, or 1 energy if this
-        LandAnimal has run out of food. running out of food also triggers
+        If this LandAnimal can see a suitable target (food or mating partner)
+        in its looking environment, it tries to move in its direction. If no
+        target could be found, it tries to move on a walkable tile of the
+        immediate environment. Moving consumes 1 food, or 1 energy if this
+        LandAnimal has run out of food. Running out of food also triggers
         non-readyness for reproduction.
-        :param immediate_env: the surrounding tiles of this LandAnimal of
-        distance 1
-        :param looking_env: the surrounding tiles of this LandAnimal of a
-        distance >= 1
         :return: True if this LandAnimal was able to move, False otherwise
         """
         target_tile = None
-        immediate_env = self.tile.env_rings[0]
+        immediate_env = self._tile.env_rings[0]
 
         if self.is_hungry():
-            target_tile = self.search_for_target(
-                target_entity=self._prey_class
-            )
+            target_tile = self.search_for_target(self._prey_class)
         elif self.is_horny():
-            target_tile = self.search_for_target(
-                target_entity=self.__class__
-            )
+            target_tile = self.search_for_target(self.__class__, self._lvl)
 
         if not target_tile:     #no target entity found:
             walkable_tiles = [  #choose any free surrounding tile
@@ -485,14 +497,16 @@ class LandAnimal(Animal):
 
     def hunger_game(self):
         """
-        lets this LandAnimal try to eat a prey Creature of the same
-        level. this must not succeed. if it succeeds, food, energy
-        and libido levels will be filled up and the eaten Creature will be
-        returned for destruction. The searching LandAnimal may also die
-        at this point if it has run out of energy and couldn't find any prey.
-        In this case, the LandAnimal itself will be returned for destruction.
-        :param env: the surrounding tiles of this LandAnimal
-        :return: a deceased instance of LandAnimal or None
+        Lets this LandAnimal try to eat a prey Creature. This must not succeed.
+        If it succeeds, food, energy and libido levels will be filled up and
+        the eaten Creature will be returned for destruction. This LandAnimal
+        may just eat a part of a prey Creature, in which case True is returned.
+        The searching LandAnimal may also die if it has run out of energy and
+        couldn't find any prey. In this case, the LandAnimal itself will be
+        returned for destruction.
+        :return: a deceased instance of a Creature if a whole Creature died,
+                 True if part of a Creature was eaten,
+                 None if none of the above occured
         """
         env =  self._tile.env_rings[0]
         eatable_prey = [
@@ -509,6 +523,8 @@ class LandAnimal(Animal):
             if prey.health <= 0:
                 return prey.die()
             else:
+                if isinstance(prey, Vegetation) and prey.lvl > 0:
+                    prey.devolve()  #plants can shrink
                 return True
         elif not self._energy:
             return self.die()
@@ -516,12 +532,11 @@ class LandAnimal(Animal):
 
     def try_reproduction(self):
         """
-        lets this LandAnimal try to reproduce with a partner. if a partner can
+        Lets this LandAnimal try to reproduce with a partner. If a partner can
         be found on the surrounding tiles, a new level LandAnimal will be
-        created and 1 food consumed. this new LandAnimal will be placed on any
-        walkable surrounding tile. reproduction fails if no walkable tile can
-        be found. on success, the new LandAnimal will be returned.
-        :param env: the surrounding tiles of this LandAnimal
+        created and 1 food consumed. This new LandAnimal will be placed on any
+        walkable surrounding tile. Reproduction fails if no walkable tile can
+        be found. On success, the new LandAnimal will be returned.
         :return: new instance of a LandAnimal
         """
         env = self._tile.env_rings[0]
@@ -546,8 +561,10 @@ class LandAnimal(Animal):
             else:
                 return self.__class__(choice(birthplaces))
 
+
     def __str__(self):
         return self._tokens[self._lvl]
+
 
 
 class Herbivore(LandAnimal):
@@ -574,15 +591,14 @@ class Herbivore(LandAnimal):
         ]
         return info
 
-
     @property
     def health(self):
         return self._health
 
-
     @health.setter
     def health(self, new_health):
         self._health = new_health
+
 
 
 class SmallHerbivore(Herbivore):
@@ -624,7 +640,7 @@ class SmartHerbivore(BigHerbivore):
         self._view_range = 8
         self._nutrition = 8
         self._health = 15
-        self._attack = 20
+        self._attack = 15
 
 
 class Carnivore(LandAnimal):
@@ -640,7 +656,7 @@ class SmallCarnivore(Carnivore):
         self._lvl = 0
         self._time_to_live = 50
         self._food = 10
-        self._energy = 10
+        self._energy = 5
         self._evolved_class = BigCarnivore
         self._view_range = 4
         self._attack = 5
@@ -651,7 +667,7 @@ class BigCarnivore(SmallCarnivore):
         self._lvl = 1
         self._time_to_live = 100
         self._food = 10
-        self._energy = 20
+        self._energy = 7
         self._evolved_class = SmartCarnivore
         self._view_range = 6
         self._attack = 10
@@ -662,7 +678,7 @@ class SmartCarnivore(BigCarnivore):
         self._lvl = 2
         self._time_to_live = 150
         self._food = 10
-        self._energy = 30
+        self._energy = 10
         self._evolved_class = SmartCarnivore
         self._view_range = 8
         self._attack = 15

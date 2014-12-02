@@ -25,7 +25,7 @@ class InputListener(Thread):
                 global_vars.pause = True
                 WinMan.replace_option("Pause", "Resume")
                 WinMan.replace_option("Faster", "Single Step")
-                WinMan.replace_option("Slower", "    ")
+                WinMan.replace_option("Slower", "")
                 WinMan.update()
                 global_vars.swap_step_duration = global_vars.step_duration
                 global_vars.step_duration = 0.1
@@ -37,7 +37,7 @@ class InputListener(Thread):
                         global_vars.step_duration = global_vars.swap_step_duration
                         WinMan.replace_option("Resume", "Pause")
                         WinMan.replace_option("Single Step", "Faster")
-                        WinMan.replace_option("    ", "Slower")
+                        WinMan.replace_option("", "Slower")
                         break
                     elif key == 266:
                         global_vars.single_step = True
@@ -46,7 +46,8 @@ class InputListener(Thread):
                         break
                     elif key == curses.KEY_MOUSE:
                         id, x, y, z, bstate = curses.getmouse()
-                        MapMan.set_watched_entity(y - 1, x)
+                        MapMan.set_watched_entity(y - 2, x)
+                        WinMan.update(tile_info=MapMan.watch_info())
                     sleep(0.01)
 
             elif key == 266:        #F2 / Faster
@@ -70,6 +71,6 @@ class InputListener(Thread):
 
             elif key == curses.KEY_MOUSE:
                 id, x, y, z, bstate = curses.getmouse()
-                MapMan.set_watched_entity(y - 1, x)
+                MapMan.set_watched_entity(y - 2, x)
 
             sleep(0.01)

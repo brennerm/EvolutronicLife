@@ -145,26 +145,43 @@ def _handle_animal_type(hunter_class, prey_class):
     for hunter in hunter_list:
         if hunter.life_over():
             hunter_list.remove(hunter.die())
+            if hunter_class == Carnivore:
+                global_vars.c_age += 1
+            else:
+                global_vars.h_age += 1
 
         elif hunter.is_hungry():
             dead_animal = hunter.hunger_game()
-            if isinstance(dead_animal, prey_class):      #found food
+            if isinstance(dead_animal, prey_class):      #ate whole food
                 prey_list.remove(dead_animal)
+                if hunter_class == Carnivore:
+                    global_vars.h_eaten += 1
             elif isinstance(dead_animal, hunter_class):  #starved
                 hunter_list.remove(dead_animal)
-            elif dead_animal == True:
+                if hunter_class == Carnivore:
+                    global_vars.c_starved += 1
+                else:
+                    global_vars.h_starved += 1
+            elif dead_animal is True:                  #ate part of food
                 continue
             else:   #hunter moves if it couldn't find food / didn't starve
                 if not hunter.move():
                     hunter_list.remove(hunter.die())
-
+                    if hunter_class == Carnivore:
+                        global_vars.c_trampled += 1
+                    else:
+                        global_vars.h_trampled += 1
         else:   #hunter tries to reproduce only if it is not hungry
             newborn_hunter = hunter.try_reproduction()
             if newborn_hunter:
                 born_hunters.append(newborn_hunter)
-            else:   #hunter moves if it couldn't find partner
-                if not hunter.move():
+            else:   #hunter tries to move if it couldn't find partner
+                if not hunter.move():   #hunter dies if it can't move
                     hunter_list.remove(hunter.die())
+                    if hunter_class == Carnivore:
+                        global_vars.c_trampled += 1
+                    else:
+                        global_vars.h_trampled += 1
 
     hunter_list.extend(born_hunters)
 
@@ -222,13 +239,12 @@ def _init_env_rings(tile_map, num_rings=8):
     :param tile_map: 2D list containing all tiles of the map
     :param num_rings: the number of environment rings to set up for each tile
     """
-
     for y, row in enumerate(tile_map):
         for x, tile in enumerate(row):
             env_rings = []
             for scope in range(1, num_rings+1):
                 env_rings.append(_calculate_env_ring(tile_map, y, x, scope))
-            tile.set_env_rings(env_rings)
+            tile.env_rings = env_rings
 
 
 def _calculate_env_ring(tile_map, center_y, center_x, scope):

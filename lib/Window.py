@@ -14,7 +14,6 @@ class InfoWindow(Window):
         super().__init__(height, width, pos_y, pos_x)
         self.simulation_start = time()
 
-
     def update(self):
         """
         puts updated information into info window
@@ -29,10 +28,19 @@ class InfoWindow(Window):
                 ' steps per s:', round(1 / global_vars.step_duration, 1)
             )
             + "\t{:4s} {:4d}".format(' step:', global_vars.step)
+			+ "\n{:4s} {:4d}{:1s}".format('Death cause.. eaten:', global_vars.h_eaten, 'h')
+			+ "\t{:4s} {:4d}{:1s}{:4d}{:1s}".format(
+                'starved:', global_vars.h_starved, 'h/', global_vars.c_starved, 'c'
+            )
+			+ "\t{:4s} {:4d}{:1s}{:4d}{:1s}".format(
+                'trampled:', global_vars.h_trampled, 'h/', global_vars.c_trampled, 'c'
+            )
+            + "\t{:4s} {:4d}{:1s}{:4d}{:1s}".format(
+                'natural death:', global_vars.h_age, 'h/', global_vars.c_age, 'c'
+            )
         )
 
         self._curses_window.noutrefresh()
-
 
 
 class MapWindow(Window):
@@ -86,6 +94,7 @@ class OptionPane(Window):
 
         self._curses_window.noutrefresh()
 
+
     def replace_option(self, option_to_replace, new_option):
         """
         replaces option_to_replace with new_option
@@ -94,6 +103,7 @@ class OptionPane(Window):
         """
         self._options[self._options.index(option_to_replace)] = new_option
         self.update()
+
 
 
 class TileWindow(Window):
@@ -110,5 +120,3 @@ class TileWindow(Window):
                     self._curses_window.addstr(y, x * 30, line + "\n")
 
         self._curses_window.noutrefresh()
-
-
