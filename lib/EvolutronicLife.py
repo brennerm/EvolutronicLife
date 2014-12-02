@@ -16,17 +16,16 @@ def run(map_filename, starting_step):
     input_listener.start()
     MapMan.init_map(map_filename)
 
-    hidden_run = True
     while not global_vars.quit:
         global_vars.step += 1
         step_start = time()
 
         MapMan.update()
 
-        if hidden_run:
+        if global_vars.hidden_run:
             if global_vars.step >= starting_step:
                 WinMan.init()
-                hidden_run = False
+                global_vars.hidden_run = False
             else:
                 WinMan.progress_info(starting_step)
 

@@ -19,7 +19,15 @@ class InputListener(Thread):
         """
         while not global_vars.quit:
 
+            sleep(0.01)
             key = WinMan.key_pressed()
+
+            if key == 268:        #F4 / Quit
+                global_vars.quit = True
+                continue
+
+            if global_vars.hidden_run:
+                continue
 
             if key == 265:          #F1 / Pause
                 global_vars.pause = True
@@ -66,11 +74,6 @@ class InputListener(Thread):
                     global_vars.step_duration = 2
                 WinMan.update()
 
-            elif key == 268:        #F4 / Quit
-                global_vars.quit = True
-
             elif key == curses.KEY_MOUSE:
                 id, x, y, z, bstate = curses.getmouse()
                 MapMan.set_watched_entity(y - 2, x)
-
-            sleep(0.01)

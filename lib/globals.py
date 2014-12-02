@@ -5,6 +5,7 @@ quit = False
 anim_toggler = False
 watched_entity = None
 single_step = False
+hidden_run = True
 swap_step_duration = None
 h_starved = 0
 h_trampled = 0

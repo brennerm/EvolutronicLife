@@ -90,5 +90,15 @@ def terminate():
     curses.endwin()
 
 def progress_info(end):
-    _main_win.addstr(0, 0, "Generating step: %d/%d" % (global_vars.step, end))
-    _main_win.refresh()
+    try:
+        _progress_win.clear()
+    except NameError:
+        global _progress_win
+        _progress_win = curses.newwin(2, 140, 0, 0)
+
+    _progress_win.addstr(0, 0, "Generating step: %d/%d" % (global_vars.step, end))
+
+    # progress bar
+    progress = int((global_vars.step / end) * 20)
+    _progress_win.addstr(1, 0, "[%-20s] %d%%" % ('='*progress, 5*progress))
+    _progress_win.refresh()
