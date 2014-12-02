@@ -1,12 +1,13 @@
 import atexit
 from time import sleep, time
 from InputListener import InputListener
+from SoundManager import SoundManager
 import WindowManager as WinMan
 import MapManager as MapMan
 import globals as global_vars
 
 
-def run(map_filename, starting_step):
+def run(map_filename, starting_step, bg_sound):
     """
     the main game loop. runs until user hits quit button (F4)
     """
@@ -14,6 +15,10 @@ def run(map_filename, starting_step):
 
     input_listener = InputListener()
     input_listener.start()
+
+    sound_manager = SoundManager(bg_sound)
+    sound_manager.start()
+
     MapMan.init_map(map_filename)
 
     visual_run = False
@@ -44,3 +49,4 @@ def run(map_filename, starting_step):
                 sleep(0.01)
 
     input_listener.join()
+    sound_manager.terminate()

@@ -18,6 +18,11 @@ if __name__ == "__main__":
         '-k', '--kickstart', default=1, type=int,
         help='Specify the starting step. The preceding steps are executed hidden'
     )
+    parser.add_argument(
+        '-b', '--background_sound', default=None, type=str,
+        help='Specify the background music'
+    )
+
     args = parser.parse_args()
 
-    EvoLife.run(args.map, args.kickstart)
+    EvoLife.run(args.map, args.kickstart, args.background_sound)
