@@ -19,7 +19,7 @@ if __name__ == "__main__":
         help='Specify the starting step. The preceding steps are executed hidden'
     )
     parser.add_argument(
-        '-b', '--background_sound', default=None, type=str,
+        '-b', '--background_sound', default="res/background.mp3", type=str,
         help='Specify the background music'
     )
 
