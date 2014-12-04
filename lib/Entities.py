@@ -1,5 +1,5 @@
 from random import random, randint, choice
-from math import sqrt, floor
+from math import floor
 import globals as global_vars
 
 
