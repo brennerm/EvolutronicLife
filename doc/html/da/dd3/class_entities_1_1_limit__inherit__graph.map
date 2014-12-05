@@ -1,0 +1,7 @@
+<map id="Entities.Limit" name="Entities.Limit">
+<area shape="rect" id="node4" href="$df/dbe/class_entities_1_1_horiz_limit_bottom.html" title="Entities.HorizLimitBottom" alt="" coords="5,229,176,256"/>
+<area shape="rect" id="node5" href="$d1/d5f/class_entities_1_1_horiz_limit_top.html" title="Entities.HorizLimitTop" alt="" coords="201,229,351,256"/>
+<area shape="rect" id="node6" href="$d2/d29/class_entities_1_1_vert_limit.html" title="Entities.VertLimit" alt="" coords="376,229,499,256"/>
+<area shape="rect" id="node7" href="$d5/d08/class_entities_1_1_water.html" title="Entities.Water" alt="" coords="523,229,628,256"/>
+<area shape="rect" id="node2" href="$dd/d49/class_entities_1_1_entity.html" title="Entities.Entity" alt="" coords="304,80,408,107"/>
+</map>

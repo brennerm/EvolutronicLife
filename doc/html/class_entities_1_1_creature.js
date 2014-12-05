@@ -1,0 +1,5 @@
+var class_entities_1_1_creature =
+[
+    [ "__init__", "class_entities_1_1_creature.html#a837daa75cc90b397a3bafefcf938eb9d", null ],
+    [ "die", "class_entities_1_1_creature.html#ada4ac04498ab5ad58258088e8d01eab4", null ]
+];

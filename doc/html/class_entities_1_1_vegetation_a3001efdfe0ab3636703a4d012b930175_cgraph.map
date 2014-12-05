@@ -1,0 +1,4 @@
+<map id="Entities.Vegetation.try_growth" name="Entities.Vegetation.try_growth">
+<area shape="rect" id="node2" href="$class_entities_1_1_vegetation.html#a2581b548317c3594ef887fba1f69476e" title="Entities.Vegetation.\l_evolve" alt="" coords="229,5,365,46"/>
+<area shape="rect" id="node3" href="$class_entities_1_1_vegetation.html#a73b10cb482b911749764699eb5f4e610" title="Entities.Vegetation.nutrition" alt="" coords="206,71,389,97"/>
+</map>

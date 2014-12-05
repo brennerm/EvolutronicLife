@@ -1,0 +1,5 @@
+<map id="Entities.Vegetation.lvl" name="Entities.Vegetation.lvl">
+<area shape="rect" id="node2" href="$df/d17/class_entities_1_1_land_animal.html#aa9807b9605625c1757295cbce5625f20" title="Entities.LandAnimal.search\l_for_target" alt="" coords="203,5,384,46"/>
+<area shape="rect" id="node3" href="$df/d17/class_entities_1_1_land_animal.html#a3bea0e7a4ce1221dc27af81fbcb9aed3" title="Entities.LandAnimal.move" alt="" coords="433,41,607,68"/>
+<area shape="rect" id="node4" href="$df/d17/class_entities_1_1_land_animal.html#af24ef9419cbedbbcb870dccf97289318" title="Entities.LandAnimal.try\l_reproduction" alt="" coords="215,122,372,163"/>
+</map>
