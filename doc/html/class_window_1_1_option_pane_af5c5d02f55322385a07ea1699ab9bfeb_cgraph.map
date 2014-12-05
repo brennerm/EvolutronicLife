@@ -1,0 +1,5 @@
+<map id="Window.OptionPane.replace_option" name="Window.OptionPane.replace_option">
+<area shape="rect" id="node2" href="$class_window_1_1_info_window.html#ab1cc0f095666c424ff60f795e200b5bc" title="Window.InfoWindow.update" alt="" coords="242,5,427,32"/>
+<area shape="rect" id="node3" href="$class_window_1_1_map_window.html#ae0ffd6fb803cb852060cdddff7f0f38d" title="Window.MapWindow.update" alt="" coords="241,56,429,83"/>
+<area shape="rect" id="node4" href="$class_window_1_1_option_pane.html#ae79ab451701b28783bc8d84b0b781821" title="Window.OptionPane.update" alt="" coords="243,107,427,133"/>
+</map>

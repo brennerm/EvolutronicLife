@@ -1,0 +1,4 @@
+<map id="Entities.RainForest" name="Entities.RainForest">
+<area shape="rect" id="node2" href="$class_entities_1_1_creature.html" title="Entities.Creature" alt="" coords="12,155,132,181"/>
+<area shape="rect" id="node3" href="$class_entities_1_1_entity.html" title="Entities.Entity" alt="" coords="20,80,124,107"/>
+</map>

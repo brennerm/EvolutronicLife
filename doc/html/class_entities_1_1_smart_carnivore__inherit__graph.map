@@ -1,0 +1,9 @@
+<map id="Entities.SmartCarnivore" name="Entities.SmartCarnivore">
+<area shape="rect" id="node2" href="$class_entities_1_1_big_carnivore.html" title="Entities.BigCarnivore" alt="" coords="13,528,157,555"/>
+<area shape="rect" id="node3" href="$class_entities_1_1_small_carnivore.html" title="Entities.SmallCarnivore" alt="" coords="6,453,164,480"/>
+<area shape="rect" id="node4" href="$class_entities_1_1_carnivore.html" title="Entities.Carnivore" alt="" coords="22,379,148,405"/>
+<area shape="rect" id="node5" href="$class_entities_1_1_land_animal.html" title="Entities.LandAnimal" alt="" coords="16,304,155,331"/>
+<area shape="rect" id="node6" href="$class_entities_1_1_animal.html" title="Entities.Animal" alt="" coords="30,229,140,256"/>
+<area shape="rect" id="node7" href="$class_entities_1_1_creature.html" title="Entities.Creature" alt="" coords="25,155,145,181"/>
+<area shape="rect" id="node8" href="$class_entities_1_1_entity.html" title="Entities.Entity" alt="" coords="33,80,137,107"/>
+</map>

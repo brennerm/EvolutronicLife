@@ -1,0 +1,5 @@
+<map id="Entities.Creature.die" name="Entities.Creature.die">
+<area shape="rect" id="node2" href="$class_entities_1_1_protozoan.html#adfb97a2e03a5d8430771339b8f01129b" title="Entities.Protozoan.jump\l_on_beach" alt="" coords="225,5,386,46"/>
+<area shape="rect" id="node3" href="$class_entities_1_1_protozoan.html#af3b07db0e32d213b35750f13d9d3b3fb" title="Entities.Protozoan.move" alt="" coords="223,71,388,97"/>
+<area shape="rect" id="node4" href="$class_entities_1_1_land_animal.html#a31fa6525e72508e2dcdf0da28f607f4c" title="Entities.LandAnimal.hunger_game" alt="" coords="195,121,415,148"/>
+</map>

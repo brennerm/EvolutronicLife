@@ -1,0 +1,6 @@
+<map id="MapManager.update" name="MapManager.update">
+<area shape="rect" id="node2" href="$d7/dec/namespace_map_manager.html#ac4f7624ff0c483c2523dd2aed1805ff0" title="MapManager._handle\l_animal_type" alt="" coords="204,5,351,46"/>
+<area shape="rect" id="node3" href="$d7/dec/namespace_map_manager.html#a234b33dfb880549f75bfdadc6c4953ba" title="MapManager._veggie\l_action" alt="" coords="204,70,351,111"/>
+<area shape="rect" id="node4" href="$d7/dec/namespace_map_manager.html#a4f1b70b244e2aa9ed413a366c3dac329" title="MapManager._protozoan\l_action" alt="" coords="195,135,360,177"/>
+<area shape="rect" id="node5" href="$d7/dec/namespace_map_manager.html#ac48fcd374311e16144b106f9dbdef0d9" title="MapManager._spawner\l_action" alt="" coords="199,201,356,242"/>
+</map>

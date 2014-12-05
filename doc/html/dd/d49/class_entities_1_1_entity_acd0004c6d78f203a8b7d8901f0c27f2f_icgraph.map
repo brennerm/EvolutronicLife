@@ -1,0 +1,6 @@
+<map id="Entities.Entity.pos_x" name="Entities.Entity.pos_x">
+<area shape="rect" id="node2" href="$dd/d49/class_entities_1_1_entity.html#af7307f764bccd65a3937abbb6c1d6e04" title="Entities.Entity.pos" alt="" coords="205,5,334,32"/>
+<area shape="rect" id="node3" href="$df/d17/class_entities_1_1_land_animal.html#a8d2f328c01bece5d1a45f642c75b2612" title="Entities.LandAnimal.\l_calculate_step" alt="" coords="198,57,341,98"/>
+<area shape="rect" id="node4" href="$df/d17/class_entities_1_1_land_animal.html#aa9807b9605625c1757295cbce5625f20" title="Entities.LandAnimal.search\l_for_target" alt="" coords="389,57,571,98"/>
+<area shape="rect" id="node5" href="$df/d17/class_entities_1_1_land_animal.html#a3bea0e7a4ce1221dc27af81fbcb9aed3" title="Entities.LandAnimal.move" alt="" coords="619,64,794,91"/>
+</map>

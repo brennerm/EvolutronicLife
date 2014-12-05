@@ -1,0 +1,6 @@
+<map id="Window.Window" name="Window.Window">
+<area shape="rect" id="node3" href="$class_window_1_1_info_window.html" title="Window.InfoWindow" alt="" coords="5,155,147,181"/>
+<area shape="rect" id="node4" href="$class_window_1_1_map_window.html" title="Window.MapWindow" alt="" coords="171,155,316,181"/>
+<area shape="rect" id="node5" href="$class_window_1_1_option_pane.html" title="Window.OptionPane" alt="" coords="341,155,483,181"/>
+<area shape="rect" id="node6" href="$class_window_1_1_tile_window.html" title="Window.TileWindow" alt="" coords="507,155,648,181"/>
+</map>

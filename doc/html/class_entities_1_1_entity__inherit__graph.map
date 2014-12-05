@@ -1,0 +1,22 @@
+<map id="Entities.Entity" name="Entities.Entity">
+<area shape="rect" id="node3" href="$class_entities_1_1_beach.html" title="Entities.Beach" alt="" coords="271,81,377,108"/>
+<area shape="rect" id="node4" href="$class_entities_1_1_creature.html" title="Entities.Creature" alt="" coords="264,132,384,159"/>
+<area shape="rect" id="node18" href="$class_entities_1_1_limit.html" title="Entities.Limit" alt="" coords="275,233,373,260"/>
+<area shape="rect" id="node5" href="$class_entities_1_1_animal.html" title="Entities.Animal" alt="" coords="462,81,573,108"/>
+<area shape="rect" id="node16" href="$class_entities_1_1_rain_forest.html" title="Entities.RainForest" alt="" coords="450,132,585,159"/>
+<area shape="rect" id="node6" href="$class_entities_1_1_land_animal.html" title="Entities.LandAnimal" alt="" coords="651,31,789,57"/>
+<area shape="rect" id="node15" href="$class_entities_1_1_protozoan.html" title="Entities.Protozoan" alt="" coords="655,81,785,108"/>
+<area shape="rect" id="node7" href="$class_entities_1_1_carnivore.html" title="Entities.Carnivore" alt="" coords="838,5,965,32"/>
+<area shape="rect" id="node11" href="$class_entities_1_1_herbivore.html" title="Entities.Herbivore" alt="" coords="838,56,965,83"/>
+<area shape="rect" id="node8" href="$class_entities_1_1_small_carnivore.html" title="Entities.SmallCarnivore" alt="" coords="1014,5,1173,32"/>
+<area shape="rect" id="node9" href="$class_entities_1_1_big_carnivore.html" title="Entities.BigCarnivore" alt="" coords="1222,5,1367,32"/>
+<area shape="rect" id="node10" href="$class_entities_1_1_smart_carnivore.html" title="Entities.SmartCarnivore" alt="" coords="1417,5,1578,32"/>
+<area shape="rect" id="node12" href="$class_entities_1_1_small_herbivore.html" title="Entities.SmallHerbivore" alt="" coords="1014,56,1173,83"/>
+<area shape="rect" id="node13" href="$class_entities_1_1_big_herbivore.html" title="Entities.BigHerbivore" alt="" coords="1222,56,1367,83"/>
+<area shape="rect" id="node14" href="$class_entities_1_1_smart_herbivore.html" title="Entities.SmartHerbivore" alt="" coords="1417,56,1578,83"/>
+<area shape="rect" id="node17" href="$class_entities_1_1_vegetation.html" title="Entities.Vegetation" alt="" coords="654,132,786,159"/>
+<area shape="rect" id="node19" href="$class_entities_1_1_horiz_limit_bottom.html" title="Entities.HorizLimitBottom" alt="" coords="432,183,603,209"/>
+<area shape="rect" id="node20" href="$class_entities_1_1_horiz_limit_top.html" title="Entities.HorizLimitTop" alt="" coords="442,233,593,260"/>
+<area shape="rect" id="node21" href="$class_entities_1_1_vert_limit.html" title="Entities.VertLimit" alt="" coords="456,284,579,311"/>
+<area shape="rect" id="node22" href="$class_entities_1_1_water.html" title="Entities.Water" alt="" coords="465,335,570,361"/>
+</map>

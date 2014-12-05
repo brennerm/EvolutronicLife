@@ -1,0 +1,4 @@
+<map id="Entities.Protozoan.move" name="Entities.Protozoan.move">
+<area shape="rect" id="node2" href="$class_entities_1_1_creature.html#ada4ac04498ab5ad58258088e8d01eab4" title="Entities.Creature.die" alt="" coords="221,5,363,32"/>
+<area shape="rect" id="node3" href="$class_entities_1_1_animal.html#a794001b1d81f6aba3ee1196db31749ef" title="Entities.Animal._step\l_on_tile" alt="" coords="219,57,365,98"/>
+</map>

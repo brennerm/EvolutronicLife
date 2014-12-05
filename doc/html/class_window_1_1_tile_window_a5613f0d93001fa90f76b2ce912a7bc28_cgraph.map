@@ -1,0 +1,6 @@
+<map id="Window.TileWindow.__init__" name="Window.TileWindow.__init__">
+<area shape="rect" id="node2" href="$class_window_1_1_info_window.html#ab1cc0f095666c424ff60f795e200b5bc" title="Window.InfoWindow.update" alt="" coords="202,5,387,32"/>
+<area shape="rect" id="node3" href="$class_window_1_1_map_window.html#ae0ffd6fb803cb852060cdddff7f0f38d" title="Window.MapWindow.update" alt="" coords="201,56,389,83"/>
+<area shape="rect" id="node4" href="$class_window_1_1_option_pane.html#ae79ab451701b28783bc8d84b0b781821" title="Window.OptionPane.update" alt="" coords="203,107,387,133"/>
+<area shape="rect" id="node5" href="$class_window_1_1_tile_window.html#aa2a3ce46e353e1112ba6c1fc39eb0ccb" title="Window.TileWindow.update" alt="" coords="203,157,387,184"/>
+</map>
