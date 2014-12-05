@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import atexit
 from time import sleep, time
 from InputListener import InputListener
