@@ -1,0 +1,140 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>EvolutronicLife &mdash; EvolutronicLife 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="EvolutronicLife 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">EvolutronicLife 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for EvolutronicLife</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">atexit</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">InputListener</span> <span class="kn">import</span> <span class="n">InputListener</span>
+<span class="kn">import</span> <span class="nn">WindowManager</span> <span class="kn">as</span> <span class="nn">WinMan</span>
+<span class="kn">import</span> <span class="nn">MapManager</span> <span class="kn">as</span> <span class="nn">MapMan</span>
+<span class="kn">import</span> <span class="nn">globals</span> <span class="kn">as</span> <span class="nn">global_vars</span>
+
+
+<div class="viewcode-block" id="run"><a class="viewcode-back" href="../source/EvolutronicLife.html#EvolutronicLife.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">map_filename</span><span class="p">,</span> <span class="n">starting_step</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    the main game loop. runs until user hits quit button (F4)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">WinMan</span><span class="o">.</span><span class="n">terminate</span><span class="p">)</span>
+
+    <span class="n">input_listener</span> <span class="o">=</span> <span class="n">InputListener</span><span class="p">()</span>
+    <span class="n">input_listener</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">MapMan</span><span class="o">.</span><span class="n">init_map</span><span class="p">(</span><span class="n">map_filename</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">quit</span><span class="p">:</span>
+        <span class="n">global_vars</span><span class="o">.</span><span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">step_start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+        <span class="n">MapMan</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">hidden_run</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">step</span> <span class="o">&gt;=</span> <span class="n">starting_step</span><span class="p">:</span>
+                <span class="n">WinMan</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+                <span class="n">global_vars</span><span class="o">.</span><span class="n">hidden_run</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">WinMan</span><span class="o">.</span><span class="n">progress_info</span><span class="p">(</span><span class="n">starting_step</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">WinMan</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">MapMan</span><span class="o">.</span><span class="n">token_map</span><span class="p">(),</span> <span class="n">MapMan</span><span class="o">.</span><span class="n">watch_info</span><span class="p">())</span>
+
+            <span class="n">current_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">current_time</span> <span class="o">-</span> <span class="n">step_start</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">step_duration</span><span class="p">:</span>
+                <span class="n">sleep</span><span class="p">(</span><span class="n">global_vars</span><span class="o">.</span><span class="n">step_duration</span> <span class="o">-</span> <span class="p">(</span><span class="n">current_time</span> <span class="o">-</span> <span class="n">step_start</span><span class="p">))</span>
+
+            <span class="k">while</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">pause</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">quit</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">single_step</span><span class="p">:</span>
+                    <span class="n">global_vars</span><span class="o">.</span><span class="n">single_step</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="k">break</span>
+                <span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+    <span class="n">input_listener</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">EvolutronicLife 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Markus Appel, Max Brenner, Dirk Jerke.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

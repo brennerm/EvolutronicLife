@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from random import random, randint, choice
 from math import floor
 import globals as global_vars
@@ -317,8 +318,7 @@ class Protozoan(Animal):
         """
         Lets this Protozoan move onto the beach and transform itself into
         a SmallHerbivore or SmallCarnivore.
-        :return: tuple containing old Protozoan entity and new LandAnimal
-                 entity
+        :return: tuple containing old Protozoan entity and new LandAnimal entity
         """
         if random() <= 0.8:
             new_animal = SmallHerbivore(choice(self._beach_tiles))
@@ -402,9 +402,9 @@ class LandAnimal(Animal):
         found and the best way isn't blocked.
         :param target_entity: class of searched entity
         :param lvl: the level of the searched entity (makes sense for mating
-                    partners)
+        partners)
         :return: best Tile for proceeding, or None if this Tile is not walkable
-                 or no target could be found
+        or no target could be found
         """
         for env in self._tile.env_rings[1:self.view_range]:
             possible_targets = [
@@ -505,10 +505,10 @@ class LandAnimal(Animal):
         couldn't find any prey. In this case, the LandAnimal itself will be
         returned for destruction.
         :return: a deceased instance of a Creature if a whole Creature died,
-                 True if part of a Creature was eaten,
-                 None if none of the above occured
+        True if part of a Creature was eaten,
+        None if none of the above occured
         """
-        env =  self._tile.env_rings[0]
+        env = self._tile.env_rings[0]
         eatable_prey = [
             tile.entity(self._prey_class) for tile in env
             if tile.holds_entity(self._prey_class)

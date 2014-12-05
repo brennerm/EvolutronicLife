@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Tile(object):
     def __init__(self, pos_y=None, pos_x=None, entity=None):
         self._entity_stack = []
@@ -34,7 +35,7 @@ class Tile(object):
         given, the topmost entity of the entity stack is returned.
         :param entity_class: the class of the searched entity
         :param lvl: the level of the searched entity (makes only sense for
-            vegetation)
+        vegetation)
         :return: found entity
         """
         if entity_class:
@@ -52,7 +53,7 @@ class Tile(object):
         checks for the entity level if lvl is given.
         :param entity_class: the class of the searched entity
         :param lvl: the level of the searched entity (makes only sense for
-            vegetation)
+        vegetation)
         :return: boolean indicating whether the tile holds such an entity
         """
         return any(

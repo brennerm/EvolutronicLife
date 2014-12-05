@@ -1,0 +1,778 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Entities &mdash; EvolutronicLife 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="EvolutronicLife 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">EvolutronicLife 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for Entities</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span><span class="p">,</span> <span class="n">randint</span><span class="p">,</span> <span class="n">choice</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">floor</span>
+<span class="kn">import</span> <span class="nn">globals</span> <span class="kn">as</span> <span class="nn">global_vars</span>
+
+
+<div class="viewcode-block" id="Entity"><a class="viewcode-back" href="../source/Entities.html#Entities.Entity">[docs]</a><span class="k">class</span> <span class="nc">Entity</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tile</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_associate_tile</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.tile"><a class="viewcode-back" href="../source/Entities.html#Entities.Entity.tile">[docs]</a>    <span class="k">def</span> <span class="nf">tile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.pos_y"><a class="viewcode-back" href="../source/Entities.html#Entities.Entity.pos_y">[docs]</a>    <span class="k">def</span> <span class="nf">pos_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return this Entity&#39;s y position by returning the y position of</span>
+<span class="sd">        the associated tile.</span>
+<span class="sd">        :return: the associated tile&#39;s y position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">pos_y</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.pos_x"><a class="viewcode-back" href="../source/Entities.html#Entities.Entity.pos_x">[docs]</a>    <span class="k">def</span> <span class="nf">pos_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return this Entity&#39;s x position by returning the x position of</span>
+<span class="sd">        the associated tile.</span>
+<span class="sd">        :return: the associated tile&#39;s x position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">pos_x</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.blocks_step"><a class="viewcode-back" href="../source/Entities.html#Entities.Entity.blocks_step">[docs]</a>    <span class="k">def</span> <span class="nf">blocks_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether this Entity blocks land animals from stepping onto</span>
+<span class="sd">        the associated tile.</span>
+<span class="sd">        :return: True if the associated tile can be stepped upon by</span>
+<span class="sd">        LandAnimals, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_step</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.pos"><a class="viewcode-back" href="../source/Entities.html#Entities.Entity.pos">[docs]</a>    <span class="k">def</span> <span class="nf">pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_x</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Entity.info"><a class="viewcode-back" href="../source/Entities.html#Entities.Entity.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&quot;name: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+            <span class="s">&quot;token: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">_associate_tile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_tile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pushes this Entity on the given tile and sets reference to the tile.</span>
+<span class="sd">        :param new_tile: the tile to associate the Entity with</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span> <span class="o">=</span> <span class="n">new_tile</span>
+        <span class="n">new_tile</span><span class="o">.</span><span class="n">push_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token</span>
+
+
+</div>
+<div class="viewcode-block" id="Limit"><a class="viewcode-back" href="../source/Entities.html#Entities.Limit">[docs]</a><span class="k">class</span> <span class="nc">Limit</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_step</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+
+</div>
+<div class="viewcode-block" id="HorizLimitTop"><a class="viewcode-back" href="../source/Entities.html#Entities.HorizLimitTop">[docs]</a><span class="k">class</span> <span class="nc">HorizLimitTop</span><span class="p">(</span><span class="n">Limit</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token</span> <span class="o">=</span> <span class="s">&quot;_&quot;</span>
+
+
+</div>
+<div class="viewcode-block" id="HorizLimitBottom"><a class="viewcode-back" href="../source/Entities.html#Entities.HorizLimitBottom">[docs]</a><span class="k">class</span> <span class="nc">HorizLimitBottom</span><span class="p">(</span><span class="n">Limit</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token</span> <span class="o">=</span> <span class="s">&quot;‾&quot;</span>
+
+
+</div>
+<div class="viewcode-block" id="VertLimit"><a class="viewcode-back" href="../source/Entities.html#Entities.VertLimit">[docs]</a><span class="k">class</span> <span class="nc">VertLimit</span><span class="p">(</span><span class="n">Limit</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token</span> <span class="o">=</span> <span class="s">&quot;|&quot;</span>
+
+
+</div>
+<div class="viewcode-block" id="Water"><a class="viewcode-back" href="../source/Entities.html#Entities.Water">[docs]</a><span class="k">class</span> <span class="nc">Water</span><span class="p">(</span><span class="n">Limit</span><span class="p">):</span> <span class="c">#inherits from limit so land animals won&#39;t step onto water</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="s">&quot;~∽&quot;</span>
+
+
+<div class="viewcode-block" id="Water.try_spawning"><a class="viewcode-back" href="../source/Entities.html#Entities.Water.try_spawning">[docs]</a>    <span class="k">def</span> <span class="nf">try_spawning</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Tries to spawn a new Protozoan. has a certain percentage of a chance</span>
+<span class="sd">        to succeed. Also, its tile shall not already hold a Protozoan.</span>
+<span class="sd">        :return: a new instance of Protozoan or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.01</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">holds_entity</span><span class="p">(</span><span class="n">Protozoan</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Protozoan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">[</span><span class="n">global_vars</span><span class="o">.</span><span class="n">anim_toggler</span><span class="p">]</span>
+
+
+</div>
+<div class="viewcode-block" id="Beach"><a class="viewcode-back" href="../source/Entities.html#Entities.Beach">[docs]</a><span class="k">class</span> <span class="nc">Beach</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token</span> <span class="o">=</span> <span class="s">&quot;:&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_step</span> <span class="o">=</span> <span class="mi">3</span>
+
+
+</div>
+<div class="viewcode-block" id="Creature"><a class="viewcode-back" href="../source/Entities.html#Entities.Creature">[docs]</a><span class="k">class</span> <span class="nc">Creature</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Creature.die"><a class="viewcode-back" href="../source/Entities.html#Entities.Creature.die">[docs]</a>    <span class="k">def</span> <span class="nf">die</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Kills this Creature by popping it from the corresponding tile&#39;s</span>
+<span class="sd">        entity stack and returning it for destruction.</span>
+<span class="sd">        :return: this Creature</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">pop_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">global_vars</span><span class="o">.</span><span class="n">watched_entity</span> <span class="o">==</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">global_vars</span><span class="o">.</span><span class="n">watched_entity</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+</div></div>
+<div class="viewcode-block" id="RainForest"><a class="viewcode-back" href="../source/Entities.html#Entities.RainForest">[docs]</a><span class="k">class</span> <span class="nc">RainForest</span><span class="p">(</span><span class="n">Creature</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="s">&#39;Ϋϔ&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_step</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_steps_to_reproduce</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="RainForest.lvl"><a class="viewcode-back" href="../source/Entities.html#Entities.RainForest.lvl">[docs]</a>    <span class="k">def</span> <span class="nf">lvl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">2</span>
+
+</div>
+<div class="viewcode-block" id="RainForest.wants_to_grow"><a class="viewcode-back" href="../source/Entities.html#Entities.RainForest.wants_to_grow">[docs]</a>    <span class="k">def</span> <span class="nf">wants_to_grow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reports whether this RainForest is ready to grow.</span>
+<span class="sd">        :return: True if RainForest wants to grow, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_steps_to_reproduce</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_steps_to_reproduce</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_steps_to_reproduce</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+</div>
+<div class="viewcode-block" id="RainForest.try_growth"><a class="viewcode-back" href="../source/Entities.html#Entities.RainForest.try_growth">[docs]</a>    <span class="k">def</span> <span class="nf">try_growth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this Vegetation try to grow. If it grows, the new offspring will</span>
+<span class="sd">        be returned by this method.</span>
+<span class="sd">        :return: a new level 0 Vegetation instance or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">free_tiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">tile</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">env</span> <span class="k">if</span> <span class="n">tile</span><span class="o">.</span><span class="n">empty</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">free_tiles</span><span class="p">:</span>       <span class="c">#reproduce if plant has space</span>
+            <span class="k">return</span> <span class="n">Vegetation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">choice</span><span class="p">(</span><span class="n">free_tiles</span><span class="p">))</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">[</span><span class="n">global_vars</span><span class="o">.</span><span class="n">anim_toggler</span><span class="p">]</span>
+
+
+</div>
+<div class="viewcode-block" id="Vegetation"><a class="viewcode-back" href="../source/Entities.html#Entities.Vegetation">[docs]</a><span class="k">class</span> <span class="nc">Vegetation</span><span class="p">(</span><span class="n">RainForest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lvl</span><span class="p">,</span> <span class="n">tile</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;ʷʬY&quot;</span><span class="p">,</span> <span class="s">&quot;ʷʬϒ&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="n">lvl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chance_to_evolve</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nutrition</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_step</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">=</span> <span class="mi">5</span>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Vegetation.lvl"><a class="viewcode-back" href="../source/Entities.html#Entities.Vegetation.lvl">[docs]</a>    <span class="k">def</span> <span class="nf">lvl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span>
+
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Vegetation.nutrition"><a class="viewcode-back" href="../source/Entities.html#Entities.Vegetation.nutrition">[docs]</a>    <span class="k">def</span> <span class="nf">nutrition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nutrition</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Vegetation.info"><a class="viewcode-back" href="../source/Entities.html#Entities.Vegetation.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&quot;name: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+            <span class="s">&quot;token: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="s">&quot;health: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_health</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">info</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">health</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_health</span>
+
+    <span class="nd">@health.setter</span>
+<div class="viewcode-block" id="Vegetation.health"><a class="viewcode-back" href="../source/Entities.html#Entities.Vegetation.health">[docs]</a>    <span class="k">def</span> <span class="nf">health</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_health</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">=</span> <span class="n">new_health</span>
+
+</div>
+<div class="viewcode-block" id="Vegetation.try_growth"><a class="viewcode-back" href="../source/Entities.html#Entities.Vegetation.try_growth">[docs]</a>    <span class="k">def</span> <span class="nf">try_growth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this Vegetation try to grow. growing could be either producing</span>
+<span class="sd">        a new offspring or rising in level. In the former case, the</span>
+<span class="sd">        new offspring will be returned by this method.</span>
+<span class="sd">        :return: a new level 0 Vegetation instance or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">offspring</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">try_growth</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">offspring</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">offspring</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_evolve</span><span class="p">()</span>    <span class="c">#try to rise in lvl when not reproducing</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">_evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this Vegetation try to evolve. Must not succeed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chance_to_evolve</span> <span class="o">&lt;</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_chance_to_evolve</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="n">tile</span><span class="o">.</span><span class="n">holds_entity</span><span class="p">(</span><span class="n">RainForest</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tile</span><span class="o">.</span><span class="n">entity</span><span class="p">()</span><span class="o">.</span><span class="n">lvl</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="ow">or</span>
+            <span class="n">tile</span><span class="o">.</span><span class="n">holds_entity</span><span class="p">(</span><span class="n">Limit</span><span class="p">)</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">env</span><span class="p">):</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nutrition</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nutrition</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_step</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_blocks_step</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Vegetation.devolve"><a class="viewcode-back" href="../source/Entities.html#Entities.Vegetation.devolve">[docs]</a>    <span class="k">def</span> <span class="nf">devolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this Vegetation drop in level if health is in a certain range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">[</span><span class="n">global_vars</span><span class="o">.</span><span class="n">anim_toggler</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span><span class="p">]</span>
+
+
+</div>
+<div class="viewcode-block" id="Animal"><a class="viewcode-back" href="../source/Entities.html#Entities.Animal">[docs]</a><span class="k">class</span> <span class="nc">Animal</span><span class="p">(</span><span class="n">Creature</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_blocks_step</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+
+    <span class="k">def</span> <span class="nf">_step_on_tile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_tile</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this Animal move from its old tile to a new tile.</span>
+<span class="sd">        :param new_tile: The new tile to step onto</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">pop_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_associate_tile</span><span class="p">(</span><span class="n">new_tile</span><span class="p">)</span>
+
+
+</div>
+<div class="viewcode-block" id="Protozoan"><a class="viewcode-back" href="../source/Entities.html#Entities.Protozoan">[docs]</a><span class="k">class</span> <span class="nc">Protozoan</span><span class="p">(</span><span class="n">Animal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token</span> <span class="o">=</span> <span class="s">&#39;§&#39;</span>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Protozoan.info"><a class="viewcode-back" href="../source/Entities.html#Entities.Protozoan.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&quot;name: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+            <span class="s">&quot;token: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="s">&quot;ttl: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+</div>
+<div class="viewcode-block" id="Protozoan.beach_reachable"><a class="viewcode-back" href="../source/Entities.html#Entities.Protozoan.beach_reachable">[docs]</a>    <span class="k">def</span> <span class="nf">beach_reachable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether an adjacent Beach entity can be seen.</span>
+<span class="sd">        :return: True if an adjacent tile can be walked upon, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_beach_tiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">tile</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">env</span> <span class="k">if</span> <span class="n">tile</span><span class="o">.</span><span class="n">walkable</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="bp">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_beach_tiles</span> <span class="k">else</span> <span class="bp">False</span>
+
+</div>
+<div class="viewcode-block" id="Protozoan.jump_on_beach"><a class="viewcode-back" href="../source/Entities.html#Entities.Protozoan.jump_on_beach">[docs]</a>    <span class="k">def</span> <span class="nf">jump_on_beach</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this Protozoan move onto the beach and transform itself into</span>
+<span class="sd">        a SmallHerbivore or SmallCarnivore.</span>
+<span class="sd">        :return: tuple containing old Protozoan entity and new LandAnimal entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">random</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="n">new_animal</span> <span class="o">=</span> <span class="n">SmallHerbivore</span><span class="p">(</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_beach_tiles</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_animal</span> <span class="o">=</span> <span class="n">SmallCarnivore</span><span class="p">(</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_beach_tiles</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">die</span><span class="p">(),</span> <span class="n">new_animal</span>
+
+</div>
+<div class="viewcode-block" id="Protozoan.move"><a class="viewcode-back" href="../source/Entities.html#Entities.Protozoan.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this Protozoan move on a random tile holding only Water. Death</span>
+<span class="sd">        is possible if this Protozoan runs out of lifetime.</span>
+<span class="sd">        :return: this Protozoan if it has died, None otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">die</span><span class="p">()</span>
+
+        <span class="n">swimmable_tiles</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">tile</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">env</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tile</span><span class="o">.</span><span class="n">entity</span><span class="p">(),</span> <span class="n">Water</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">swimmable_tiles</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_step_on_tile</span><span class="p">(</span><span class="n">choice</span><span class="p">(</span><span class="n">swimmable_tiles</span><span class="p">))</span>
+
+
+</div></div>
+<div class="viewcode-block" id="LandAnimal"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal">[docs]</a><span class="k">class</span> <span class="nc">LandAnimal</span><span class="p">(</span><span class="n">Animal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rdy_to_copulate</span> <span class="o">=</span> <span class="bp">False</span>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="LandAnimal.lvl"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.lvl">[docs]</a>    <span class="k">def</span> <span class="nf">lvl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="LandAnimal.view_range"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.view_range">[docs]</a>    <span class="k">def</span> <span class="nf">view_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_view_range</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="LandAnimal.info"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&quot;name: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+            <span class="s">&quot;token: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="s">&quot;ttl: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span><span class="p">),</span>
+            <span class="s">&quot;food: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_food</span><span class="p">),</span>
+            <span class="s">&quot;energy: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_energy</span><span class="p">),</span>
+            <span class="s">&quot;rdy_to_copulate: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rdy_to_copulate</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+</div>
+<div class="viewcode-block" id="LandAnimal.life_over"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.life_over">[docs]</a>    <span class="k">def</span> <span class="nf">life_over</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span>
+
+</div>
+<div class="viewcode-block" id="LandAnimal.is_hungry"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.is_hungry">[docs]</a>    <span class="k">def</span> <span class="nf">is_hungry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_food</span>
+
+</div>
+<div class="viewcode-block" id="LandAnimal.is_horny"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.is_horny">[docs]</a>    <span class="k">def</span> <span class="nf">is_horny</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rdy_to_copulate</span>
+
+</div>
+<div class="viewcode-block" id="LandAnimal.have_sex"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.have_sex">[docs]</a>    <span class="k">def</span> <span class="nf">have_sex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rdy_to_copulate</span> <span class="o">=</span> <span class="bp">False</span>
+
+</div>
+<div class="viewcode-block" id="LandAnimal.search_for_target"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.search_for_target">[docs]</a>    <span class="k">def</span> <span class="nf">search_for_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_entity</span><span class="p">,</span> <span class="n">lvl</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this LandAnimal search for entities of class target_entity. This</span>
+<span class="sd">        can be used for searching food or a mating partner. In the former case,</span>
+<span class="sd">        no level argument should be passed so the method detects the nearest</span>
+<span class="sd">        food entity. In the latter case, a level should be passed because a</span>
+<span class="sd">        partner should be of the same level. Returns a Tile if an entity was</span>
+<span class="sd">        found and the best way isn&#39;t blocked.</span>
+<span class="sd">        :param target_entity: class of searched entity</span>
+<span class="sd">        :param lvl: the level of the searched entity (makes sense for mating</span>
+<span class="sd">        partners)</span>
+<span class="sd">        :return: best Tile for proceeding, or None if this Tile is not walkable</span>
+<span class="sd">        or no target could be found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">view_range</span><span class="p">]:</span>
+            <span class="n">possible_targets</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">tile</span><span class="o">.</span><span class="n">entity</span><span class="p">(</span><span class="n">target_entity</span><span class="p">,</span> <span class="n">lvl</span><span class="p">)</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">env</span>
+                <span class="k">if</span> <span class="n">tile</span><span class="o">.</span><span class="n">holds_entity</span><span class="p">(</span><span class="n">target_entity</span><span class="p">,</span> <span class="n">lvl</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="n">possible_targets</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">return</span>    <span class="c">#stop when no target could be found</span>
+
+        <span class="k">if</span> <span class="n">lvl</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">highest_target_lvl</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">possible_targets</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">lvl</span><span class="p">)</span><span class="o">.</span><span class="n">lvl</span>
+            <span class="n">wanted_target</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span>
+                <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">lvl</span> <span class="o">==</span> <span class="n">highest_target_lvl</span><span class="p">,</span> <span class="n">possible_targets</span><span class="p">)</span>
+            <span class="p">))</span>   <span class="c">#pick the highest level entity of the found targets</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">wanted_target</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">possible_targets</span><span class="p">)</span>
+
+        <span class="n">immediate_env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">step_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_step</span><span class="p">(</span><span class="n">wanted_target</span><span class="p">)</span>
+        <span class="n">target_tile</span> <span class="o">=</span> <span class="n">immediate_env</span><span class="p">[</span><span class="n">step_position</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">target_tile</span><span class="o">.</span><span class="n">walkable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lvl</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">target_tile</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">_calculate_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wanted_target</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates step position in the immediate environment based on the</span>
+<span class="sd">        position of the wanted target.</span>
+<span class="sd">        :param wanted_target: the target entity to move towards</span>
+<span class="sd">        :return: one of these positions in the immediate environment:</span>
+<span class="sd">                    [0][1][2]</span>
+<span class="sd">                    [3][x][4]</span>
+<span class="sd">                    [5][6][7]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x_dir</span> <span class="o">=</span> <span class="p">((</span><span class="n">wanted_target</span><span class="o">.</span><span class="n">pos_x</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_x</span><span class="p">)</span> <span class="o">-</span>       <span class="c">#signum</span>
+                <span class="p">(</span><span class="n">wanted_target</span><span class="o">.</span><span class="n">pos_x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_x</span><span class="p">))</span>
+        <span class="n">y_dir</span> <span class="o">=</span> <span class="p">((</span><span class="n">wanted_target</span><span class="o">.</span><span class="n">pos_y</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_y</span><span class="p">)</span> <span class="o">-</span>
+                <span class="p">(</span><span class="n">wanted_target</span><span class="o">.</span><span class="n">pos_y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_y</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">y_dir</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x_dir</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">x_dir</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="k">return</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">x_dir</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="k">return</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">y_dir</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x_dir</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="mi">3</span>
+            <span class="k">if</span> <span class="n">x_dir</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="k">return</span> <span class="mi">4</span>
+        <span class="k">elif</span> <span class="n">y_dir</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x_dir</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="mi">5</span>
+            <span class="k">if</span> <span class="n">x_dir</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="k">return</span> <span class="mi">6</span>
+            <span class="k">if</span> <span class="n">x_dir</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="k">return</span> <span class="mi">7</span>
+
+
+<div class="viewcode-block" id="LandAnimal.move"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If this LandAnimal can see a suitable target (food or mating partner)</span>
+<span class="sd">        in its looking environment, it tries to move in its direction. If no</span>
+<span class="sd">        target could be found, it tries to move on a walkable tile of the</span>
+<span class="sd">        immediate environment. Moving consumes 1 food, or 1 energy if this</span>
+<span class="sd">        LandAnimal has run out of food. Running out of food also triggers</span>
+<span class="sd">        non-readyness for reproduction.</span>
+<span class="sd">        :return: True if this LandAnimal was able to move, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">target_tile</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">immediate_env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_hungry</span><span class="p">():</span>
+            <span class="n">target_tile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_for_target</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prey_class</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_horny</span><span class="p">():</span>
+            <span class="n">target_tile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_for_target</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">target_tile</span><span class="p">:</span>     <span class="c">#no target entity found:</span>
+            <span class="n">walkable_tiles</span> <span class="o">=</span> <span class="p">[</span>  <span class="c">#choose any free surrounding tile</span>
+                <span class="n">tile</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">immediate_env</span> <span class="k">if</span> <span class="n">tile</span><span class="o">.</span><span class="n">walkable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lvl</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="n">walkable_tiles</span><span class="p">:</span>
+                <span class="n">target_tile</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">walkable_tiles</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>               <span class="c">#no free surrounding tile: abort</span>
+                <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_step_on_tile</span><span class="p">(</span><span class="n">target_tile</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_food</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rdy_to_copulate</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">return</span> <span class="bp">True</span>
+
+</div>
+<div class="viewcode-block" id="LandAnimal.hunger_game"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.hunger_game">[docs]</a>    <span class="k">def</span> <span class="nf">hunger_game</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this LandAnimal try to eat a prey Creature. This must not succeed.</span>
+<span class="sd">        If it succeeds, food, energy and libido levels will be filled up and</span>
+<span class="sd">        the eaten Creature will be returned for destruction. This LandAnimal</span>
+<span class="sd">        may just eat a part of a prey Creature, in which case True is returned.</span>
+<span class="sd">        The searching LandAnimal may also die if it has run out of energy and</span>
+<span class="sd">        couldn&#39;t find any prey. In this case, the LandAnimal itself will be</span>
+<span class="sd">        returned for destruction.</span>
+<span class="sd">        :return: a deceased instance of a Creature if a whole Creature died,</span>
+<span class="sd">        True if part of a Creature was eaten,</span>
+<span class="sd">        None if none of the above occured</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">eatable_prey</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">tile</span><span class="o">.</span><span class="n">entity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prey_class</span><span class="p">)</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">env</span>
+            <span class="k">if</span> <span class="n">tile</span><span class="o">.</span><span class="n">holds_entity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prey_class</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">eatable_prey</span><span class="p">:</span>
+            <span class="n">prey</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">eatable_prey</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">+=</span> <span class="n">prey</span><span class="o">.</span><span class="n">nutrition</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rdy_to_copulate</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">prey</span><span class="o">.</span><span class="n">health</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attack</span>
+            <span class="k">if</span> <span class="n">prey</span><span class="o">.</span><span class="n">health</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">prey</span><span class="o">.</span><span class="n">die</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prey</span><span class="p">,</span> <span class="n">Vegetation</span><span class="p">)</span> <span class="ow">and</span> <span class="n">prey</span><span class="o">.</span><span class="n">lvl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">prey</span><span class="o">.</span><span class="n">devolve</span><span class="p">()</span>  <span class="c">#plants can shrink</span>
+                <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">die</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="LandAnimal.try_reproduction"><a class="viewcode-back" href="../source/Entities.html#Entities.LandAnimal.try_reproduction">[docs]</a>    <span class="k">def</span> <span class="nf">try_reproduction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lets this LandAnimal try to reproduce with a partner. If a partner can</span>
+<span class="sd">        be found on the surrounding tiles, a new level LandAnimal will be</span>
+<span class="sd">        created and 1 food consumed. This new LandAnimal will be placed on any</span>
+<span class="sd">        walkable surrounding tile. Reproduction fails if no walkable tile can</span>
+<span class="sd">        be found. On success, the new LandAnimal will be returned.</span>
+<span class="sd">        :return: new instance of a LandAnimal</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tile</span><span class="o">.</span><span class="n">env_rings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">mating_partners</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">tile</span><span class="o">.</span><span class="n">entity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span><span class="p">)</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">env</span>
+            <span class="k">if</span> <span class="n">tile</span><span class="o">.</span><span class="n">holds_entity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">mating_partners</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">mate</span> <span class="k">for</span> <span class="n">mate</span> <span class="ow">in</span> <span class="n">mating_partners</span>
+            <span class="k">if</span> <span class="n">mate</span><span class="o">.</span><span class="n">is_horny</span><span class="p">()</span> <span class="ow">and</span> <span class="n">mate</span> <span class="o">!=</span> <span class="bp">self</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">mating_partners</span><span class="p">:</span>
+            <span class="n">birthplaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">tile</span> <span class="k">for</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">env</span> <span class="k">if</span> <span class="n">tile</span><span class="o">.</span><span class="n">walkable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lvl</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">birthplaces</span><span class="p">:</span> <span class="k">return</span>
+            <span class="n">partner</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">mating_partners</span><span class="p">)</span>
+            <span class="n">partner</span><span class="o">.</span><span class="n">have_sex</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rdy_to_copulate</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evolved_class</span><span class="p">(</span><span class="n">choice</span><span class="p">(</span><span class="n">birthplaces</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="n">choice</span><span class="p">(</span><span class="n">birthplaces</span><span class="p">))</span>
+
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span><span class="p">]</span>
+
+
+</div>
+<div class="viewcode-block" id="Herbivore"><a class="viewcode-back" href="../source/Entities.html#Entities.Herbivore">[docs]</a><span class="k">class</span> <span class="nc">Herbivore</span><span class="p">(</span><span class="n">LandAnimal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="s">&#39;җҖӜ&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prey_class</span> <span class="o">=</span> <span class="n">Vegetation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nutrition</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Herbivore.nutrition"><a class="viewcode-back" href="../source/Entities.html#Entities.Herbivore.nutrition">[docs]</a>    <span class="k">def</span> <span class="nf">nutrition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nutrition</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Herbivore.info"><a class="viewcode-back" href="../source/Entities.html#Entities.Herbivore.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&quot;name: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+            <span class="s">&quot;token: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+            <span class="s">&quot;ttl: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span><span class="p">),</span>
+            <span class="s">&quot;food: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_food</span><span class="p">),</span>
+            <span class="s">&quot;energy: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_energy</span><span class="p">),</span>
+            <span class="s">&quot;health: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_health</span><span class="p">),</span>
+            <span class="s">&quot;rdy_to_copulate: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rdy_to_copulate</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">info</span>
+</div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">health</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_health</span>
+
+    <span class="nd">@health.setter</span>
+<div class="viewcode-block" id="Herbivore.health"><a class="viewcode-back" href="../source/Entities.html#Entities.Herbivore.health">[docs]</a>    <span class="k">def</span> <span class="nf">health</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_health</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">=</span> <span class="n">new_health</span>
+
+
+</div></div>
+<div class="viewcode-block" id="SmallHerbivore"><a class="viewcode-back" href="../source/Entities.html#Entities.SmallHerbivore">[docs]</a><span class="k">class</span> <span class="nc">SmallHerbivore</span><span class="p">(</span><span class="n">Herbivore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_evolved_class</span> <span class="o">=</span> <span class="n">BigHerbivore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_view_range</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nutrition</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attack</span> <span class="o">=</span> <span class="mi">5</span>
+
+</div>
+<div class="viewcode-block" id="BigHerbivore"><a class="viewcode-back" href="../source/Entities.html#Entities.BigHerbivore">[docs]</a><span class="k">class</span> <span class="nc">BigHerbivore</span><span class="p">(</span><span class="n">SmallHerbivore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_evolved_class</span> <span class="o">=</span> <span class="n">SmartHerbivore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_view_range</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nutrition</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attack</span> <span class="o">=</span> <span class="mi">10</span>
+
+</div>
+<div class="viewcode-block" id="SmartHerbivore"><a class="viewcode-back" href="../source/Entities.html#Entities.SmartHerbivore">[docs]</a><span class="k">class</span> <span class="nc">SmartHerbivore</span><span class="p">(</span><span class="n">BigHerbivore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">=</span> <span class="mi">150</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_evolved_class</span> <span class="o">=</span> <span class="n">SmartHerbivore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_view_range</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nutrition</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_health</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attack</span> <span class="o">=</span> <span class="mi">15</span>
+
+</div>
+<div class="viewcode-block" id="Carnivore"><a class="viewcode-back" href="../source/Entities.html#Entities.Carnivore">[docs]</a><span class="k">class</span> <span class="nc">Carnivore</span><span class="p">(</span><span class="n">LandAnimal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="s">&#39;ԅԇʡ&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prey_class</span> <span class="o">=</span> <span class="n">Herbivore</span>
+
+</div>
+<div class="viewcode-block" id="SmallCarnivore"><a class="viewcode-back" href="../source/Entities.html#Entities.SmallCarnivore">[docs]</a><span class="k">class</span> <span class="nc">SmallCarnivore</span><span class="p">(</span><span class="n">Carnivore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_evolved_class</span> <span class="o">=</span> <span class="n">BigCarnivore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_view_range</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attack</span> <span class="o">=</span> <span class="mi">5</span>
+</div>
+<div class="viewcode-block" id="BigCarnivore"><a class="viewcode-back" href="../source/Entities.html#Entities.BigCarnivore">[docs]</a><span class="k">class</span> <span class="nc">BigCarnivore</span><span class="p">(</span><span class="n">SmallCarnivore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_evolved_class</span> <span class="o">=</span> <span class="n">SmartCarnivore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_view_range</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attack</span> <span class="o">=</span> <span class="mi">10</span>
+</div>
+<div class="viewcode-block" id="SmartCarnivore"><a class="viewcode-back" href="../source/Entities.html#Entities.SmartCarnivore">[docs]</a><span class="k">class</span> <span class="nc">SmartCarnivore</span><span class="p">(</span><span class="n">BigCarnivore</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lvl</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_to_live</span> <span class="o">=</span> <span class="mi">150</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_energy</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_evolved_class</span> <span class="o">=</span> <span class="n">SmartCarnivore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_view_range</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attack</span> <span class="o">=</span> <span class="mi">15</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">EvolutronicLife 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Markus Appel, Max Brenner, Dirk Jerke.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

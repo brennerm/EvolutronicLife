@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Tile import Tile
 from Entities import *
 import globals as global_vars

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import curses
 from Window import InfoWindow, MapWindow, OptionPane, TileWindow
 import globals as global_vars
