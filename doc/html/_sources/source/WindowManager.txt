@@ -1,0 +1,7 @@
+WindowManager Module
+====================
+
+.. automodule:: WindowManager
+    :members:
+    :undoc-members:
+    :show-inheritance:

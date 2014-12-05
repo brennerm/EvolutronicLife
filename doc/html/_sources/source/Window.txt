@@ -1,0 +1,7 @@
+Window Module
+=============
+
+.. automodule:: Window
+    :members:
+    :undoc-members:
+    :show-inheritance:

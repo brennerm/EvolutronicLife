@@ -1,0 +1,7 @@
+MapManager Module
+=================
+
+.. automodule:: MapManager
+    :members:
+    :undoc-members:
+    :show-inheritance:
