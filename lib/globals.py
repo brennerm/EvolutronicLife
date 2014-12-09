@@ -25,11 +25,12 @@ YELLOW_ON_BLACK = 5
 CYAN_ON_BLACK = 6
 MAGENTA_ON_BLACK = 7
 WHITE_ON_CYAN = 8
+MAGENTA_ON_CYAN = 9
 
 color = {
     '~': WHITE_ON_CYAN,
     '∽': WHITE_ON_CYAN,
-    '§': WHITE_ON_CYAN,
+    '§': MAGENTA_ON_CYAN,
     'ʷ': GREEN_ON_BLACK,
     'ʬ': GREEN_ON_BLACK,
     'ϒ': GREEN_ON_BLACK,
@@ -39,5 +40,6 @@ color = {
     'ʡ': RED_ON_BLACK,
     'җ': YELLOW_ON_BLACK,
     'Җ': YELLOW_ON_BLACK,
-    'Ӝ': YELLOW_ON_BLACK
+    'Ӝ': YELLOW_ON_BLACK,
+    ':': YELLOW_ON_BLACK,
 }
