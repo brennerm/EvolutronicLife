@@ -42,4 +42,6 @@ color = {
     'Җ': YELLOW_ON_BLACK,
     'Ӝ': YELLOW_ON_BLACK,
     ':': YELLOW_ON_BLACK,
+    'Ϋ': GREEN_ON_BLACK,
+    'ϔ': GREEN_ON_BLACK
 }

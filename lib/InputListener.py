@@ -54,9 +54,12 @@ class InputListener(Thread):
                         global_vars.quit = True
                         break
                     elif key == curses.KEY_MOUSE:
-                        id, x, y, z, bstate = curses.getmouse()
-                        MapMan.set_watched_entity(y - 2, x)
-                        WinMan.update(tile_info=MapMan.watch_info())
+                        try:
+                            id, x, y, z, bstate = curses.getmouse()
+                            MapMan.set_watched_entity(y - 2, x)
+                            WinMan.update(tile_info=MapMan.watch_info())
+                        except:
+                            pass
                     sleep(0.01)
 
             elif key == 266:        #F2 / Faster
