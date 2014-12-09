@@ -521,7 +521,7 @@ class LandAnimal(Animal):
         if eatable_prey:
             prey = choice(eatable_prey)
             self._food += prey.nutrition
-            self._energy = 10
+            #self._energy = 10
             self._rdy_to_copulate = True
             prey.health -= self._attack
             if prey.health <= 0:
