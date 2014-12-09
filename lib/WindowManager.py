@@ -26,6 +26,7 @@ curses.init_pair(global_vars.YELLOW_ON_BLACK, curses.COLOR_YELLOW, curses.COLOR_
 curses.init_pair(global_vars.CYAN_ON_BLACK, curses.COLOR_CYAN, curses.COLOR_BLACK)
 curses.init_pair(global_vars.MAGENTA_ON_BLACK, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
 curses.init_pair(global_vars.WHITE_ON_CYAN, curses.COLOR_WHITE, curses.COLOR_CYAN)
+curses.init_pair(global_vars.MAGENTA_ON_CYAN, curses.COLOR_MAGENTA, curses.COLOR_CYAN)
 
 options_padding = 14
 
