@@ -321,9 +321,13 @@ class Protozoan(Animal):
         :return: tuple containing old Protozoan entity and new LandAnimal entity
         """
         if random() <= 0.8:
-            new_animal = SmallHerbivore(choice(self._beach_tiles))
+            new_animal = SmallHerbivore(
+                choice(self._beach_tiles), rdy_to_copulate=True
+            )    #fresh herbies can reproduce right away
         else:
-            new_animal = SmallCarnivore(choice(self._beach_tiles))
+            new_animal = SmallCarnivore(
+                choice(self._beach_tiles), energy=3
+            )
         return self.die(), new_animal
 
 
@@ -517,7 +521,7 @@ class LandAnimal(Animal):
         if eatable_prey:
             prey = choice(eatable_prey)
             self._food += prey.nutrition
-            self._energy = 10
+            #self._energy = 10
             self._rdy_to_copulate = True
             prey.health -= self._attack
             if prey.health <= 0:
@@ -602,8 +606,9 @@ class Herbivore(LandAnimal):
 
 
 class SmallHerbivore(Herbivore):
-    def __init__(self, tile):
+    def __init__(self, tile, rdy_to_copulate = False):
         super().__init__(tile)
+        self._rdy_to_copulate = rdy_to_copulate
         self._lvl = 0
         self._time_to_live = 50
         self._food = 10
@@ -651,12 +656,12 @@ class Carnivore(LandAnimal):
 
 
 class SmallCarnivore(Carnivore):
-    def __init__(self, tile):
+    def __init__(self, tile, energy=5):
         super().__init__(tile)
         self._lvl = 0
         self._time_to_live = 50
         self._food = 10
-        self._energy = 5
+        self._energy = energy
         self._evolved_class = BigCarnivore
         self._view_range = 4
         self._attack = 5
