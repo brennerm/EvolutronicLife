@@ -610,9 +610,9 @@ class Herbivore(LandAnimal):
         veggie = birthplace.entity(Vegetation)
         veggie_lvl = veggie.lvl
 
-        if veggie_lvl == 1:
+        if veggie_lvl == 2:
             return BigHerbivore(birthplace)
-        if veggie_lvl == 0:
+        if veggie_lvl == 1:
             return SmallHerbivore(birthplace)
 
 
@@ -669,9 +669,9 @@ class Carnivore(LandAnimal):
         veggie = birthplace.entity(Vegetation)
         veggie_lvl = veggie.lvl
 
-        if veggie_lvl == 1:
+        if veggie_lvl == 2:
             return BigCarnivore(birthplace)
-        if veggie_lvl == 0:
+        if veggie_lvl == 1:
             return SmallCarnivore(birthplace)
 
 class SmallCarnivore(Carnivore):
