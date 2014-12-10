@@ -475,10 +475,10 @@ class LandAnimal(Animal):
         target_tile = None
         immediate_env = self._tile.env_rings[0]
 
-        if self.is_hungry():
-            target_tile = self.search_for_target(self._prey_class)
-        elif self.is_horny():
+        if self.is_horny():
             target_tile = self.search_for_target(self.__class__, self._lvl)
+        elif self.is_hungry() or self.lvl  == 2:
+            target_tile = self.search_for_target(self._prey_class)
 
         if not target_tile:     #no target entity found:
             walkable_tiles = [  #choose any free surrounding tile
@@ -554,16 +554,19 @@ class LandAnimal(Animal):
         ]
 
         if mating_partners:
-            birthplaces = [tile for tile in env if tile.walkable(self.lvl)]
+            birthplaces = [tile for tile in env if tile.walkable()]
             if not birthplaces: return
             partner = choice(mating_partners)
             partner.have_sex()
             self._rdy_to_copulate = False
             self._food -= 1
-            if random() < 0.5:
-                return self._evolved_class(choice(birthplaces))
+            birthplace = choice(birthplaces)
+            if random() < 0.5 and birthplace.walkable(self.lvl + 1):
+                return self._evolved_class(birthplace)
+            elif birthplace.walkable(self.lvl):
+                return self.__class__(birthplace)
             else:
-                return self.__class__(choice(birthplaces))
+                return self.devolve(birthplace)
 
 
     def __str__(self):
@@ -603,6 +606,14 @@ class Herbivore(LandAnimal):
     def health(self, new_health):
         self._health = new_health
 
+    def devolve(self, birthplace):
+        veggie = birthplace.entity(Vegetation)
+        veggie_lvl = veggie.lvl
+
+        if veggie_lvl == 2:
+            return BigHerbivore(birthplace)
+        if veggie_lvl == 1:
+            return SmallHerbivore(birthplace)
 
 
 class SmallHerbivore(Herbivore):
@@ -654,6 +665,14 @@ class Carnivore(LandAnimal):
         self._tokens = 'ԅԇʡ'
         self._prey_class = Herbivore
 
+    def devolve(self, birthplace):
+        veggie = birthplace.entity(Vegetation)
+        veggie_lvl = veggie.lvl
+
+        if veggie_lvl == 2:
+            return BigCarnivore(birthplace)
+        if veggie_lvl == 1:
+            return SmallCarnivore(birthplace)
 
 class SmallCarnivore(Carnivore):
     def __init__(self, tile, energy=5):
