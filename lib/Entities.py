@@ -475,10 +475,10 @@ class LandAnimal(Animal):
         target_tile = None
         immediate_env = self._tile.env_rings[0]
 
-        if self.is_hungry():
-            target_tile = self.search_for_target(self._prey_class)
-        elif self.is_horny():
+        if self.is_horny():
             target_tile = self.search_for_target(self.__class__, self._lvl)
+        elif self.is_hungry() or self.lvl  == 2:
+            target_tile = self.search_for_target(self._prey_class)
 
         if not target_tile:     #no target entity found:
             walkable_tiles = [  #choose any free surrounding tile
