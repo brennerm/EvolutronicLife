@@ -1,48 +1,38 @@
 --- Evolutronic Life ---
 
-Textbasiertes Simulationsprogramm. Pflanzen, Pflanzenfresser und
-Fleischfresser stehen im Wettstreit um die Vorherrschaft in der Natur.
+Text based life simulation with an ongoing fight for survival between plants, carnivores and herbivores.
 
+-- Linux Dependencies--
 
--- Linux --
-
-Abhängigkeiten:
 -> Python 3.X (https://www.python.org/)
--> UTF8-fähiges und farbfähiges Terminal (z.B. Terminator)
+-> terminal with UTF8 and color support (e.g. Terminator)
 
-Programmstart:
--> Navigation in Programmordner
--> $python3 evo\_life
+-- Windows Dependencies--
 
-
--- Windows --
-
-Abhängigkeiten:
 -> Cygwin (https://www.cygwin.com/)
--> UTF8-fähiges und farbfähiges Terminal (Cygwin Terminal)
--> Python 3.X, installierbar über Cygwin installer
+-> Python 3.X, installable with Cygwin installer
+-> terminal with UTF8 and color support (e.g. Cygwin Terminal)
 
-Programmstart
--> Navigation in Programmordner
--> $python3 evo\_life
-
-
--- Parameter für Programmstart --
-
--m<map> / --map=<map>
--> Auswahl der Karte für die Simulation
--> muss eine der im Ordner 'maps' enthaltenen .map Dateien sein
-
--k<num> / --kickstart=<num>
--> Anzahl von Durchläufen ohne visuelle Darstellung
--> Effekt ist Sprung auf die entsprechende Generation
+Execution:
+$ python3 evo\_life
 
 
--- Steuerung der Simulation --
+-- Parameters --
 
-F1: Pause / Fortsetzen der Simulation
-F2: Beschleunigung der Simulation
-F2: (im Pausemodus) Simulation schrittweise ausführen
-F3: Verlangsamung der Simulation
-F4: Beendigung des Programms
-Mausklick auf Element: Aufruf eines Anzeigefensters mit Elementinformationen
+-m <map> / --map=<map>
+-> selection of map for simulation
+-> map needs to be one of the .map files in maps folder
+
+-k <num> / --kickstart=<num>
+-> jump directly to a specific step of the simulation
+-> previous steps will be calculated without visualization
+
+
+-- Controlling the simulation --
+
+F1: Pause / Continue
+F2: Speed up simulation
+F2: (while paused) stepwise simulation execution
+F3: Slow down simulation
+F4: Exit simulation
+Click on element: Open window with information about element
