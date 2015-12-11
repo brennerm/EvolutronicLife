@@ -1,5 +1,5 @@
 --- Evolutronic Life ---
-
+![Alt text](/doc/graphics/screen.png?raw=true)
 Text based life simulation with an ongoing fight for survival between plants, carnivores and herbivores.
 
 -- Linux Dependencies--
