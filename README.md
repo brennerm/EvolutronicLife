@@ -1,7 +1,7 @@
 ## Evolutronic Life [![Docker Build Status](https://img.shields.io/docker/build/brennerm/evo_life.svg)](https://hub.docker.com/r/brennerm/evo_life/)
 
 ![Alt text](/doc/graphics/screen.png?raw=true)
-Text based life simulation with an ongoing fight for survival between plants, carnivores and herbivores.
+Text-based life simulation with an ongoing fight for survival between plants, carnivores and herbivores.
 
 ### Linux Dependencies
 
