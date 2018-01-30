@@ -1,23 +1,28 @@
---- Evolutronic Life ---
+## Evolutronic Life
 ![Alt text](/doc/graphics/screen.png?raw=true)
 Text based life simulation with an ongoing fight for survival between plants, carnivores and herbivores.
 
--- Linux Dependencies--
+### Linux Dependencies
 
 - Python 3.X (https://www.python.org/)
 - terminal with UTF8 and color support (e.g. Terminator)
 
--- Windows Dependencies--
+### Windows Dependencies
 
 - Cygwin (https://www.cygwin.com/)
 - Python 3.X, installable with Cygwin installer
 - terminal with UTF8 and color support (e.g. Cygwin Terminal)
 
-Execution:
+### Execution:
+
+$ docker run -ti brennerm/evo_life
+
+or
+
 $ python3 evo\_life
 
 
--- Parameters --
+### Parameters
 
 -m <map> / --map=<map>
 - selection of map for simulation
@@ -28,7 +33,7 @@ $ python3 evo\_life
 - previous steps will be calculated without visualization
 
 
--- Controlling the simulation --
+### Controlling the simulation
 
 - F1: Pause / Continue
 - F2: Speed up simulation
